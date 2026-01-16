@@ -62,3 +62,36 @@
 3. **FORMAT:** Output ต้องสวยงาม อ่านง่าย
 4. **NEVER STOP:** ห้ามหยุด ต้องวนลูปไปเรื่อยๆ
 5. **INCREMENTAL PUSH:** ทยอย push ทุกครั้งที่ทำ feature เสร็จ (อย่ารอ push ทีเดียวตอนจบ)
+
+---
+
+## 🧠 MCP MEMORY PROTOCOL
+
+**MCP Memory พร้อมใช้งาน!** ใช้สำหรับเก็บความรู้ถาวรข้าม session
+
+### Available Tools:
+| Tool | Description |
+|------|-------------|
+| `mcp__memory__create_entities` | สร้าง entities ใหม่ใน knowledge graph |
+| `mcp__memory__create_relations` | สร้างความสัมพันธ์ระหว่าง entities |
+| `mcp__memory__add_observations` | เพิ่ม observations ให้ entity ที่มีอยู่ |
+| `mcp__memory__search_nodes` | ค้นหา nodes ตาม query |
+| `mcp__memory__open_nodes` | เปิดดู nodes ตามชื่อ |
+| `mcp__memory__read_graph` | อ่าน knowledge graph ทั้งหมด |
+
+### When to Use:
+- **เก็บข้อมูลสำคัญ** ที่ต้องจำข้าม session (user preferences, project facts)
+- **เก็บ learnings** จากการทำงาน (patterns, solutions ที่เจอ)
+- **เก็บ context** ที่สำคัญของโปรเจค
+
+### Example:
+```javascript
+// สร้าง entity สำหรับโปรเจค
+mcp__memory__create_entities({
+  entities: [{
+    name: "CoffeeTunerProject",
+    entityType: "Project",
+    observations: ["Vue 3 CDN", "Tailwind CSS", "localStorage for persistence"]
+  }]
+})
+```
