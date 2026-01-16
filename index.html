@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coffee Dial-In | จูนรสชาติกาแฟ</title>
+  <title>WANWAN COFFEE | Dial-In System</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -46,14 +46,22 @@
 <body class="bg-coffee-50 min-h-screen">
   <div id="app" v-cloak>
     <!-- Header -->
-    <header class="bg-coffee-900 text-white py-4 px-4 sticky top-0 z-50 shadow-lg">
+    <header class="bg-gradient-to-r from-coffee-900 via-coffee-800 to-coffee-900 text-white py-4 px-4 sticky top-0 z-50 shadow-lg">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-xl font-bold flex items-center gap-2">
-          <span>☕</span> Coffee Dial-In
-        </h1>
-        <p class="text-coffee-300 text-sm mt-1">
-          Appia Life XT (12 bar) | F64 Evo Pro (1.1-12.0)
-        </p>
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold flex items-center gap-2">
+              <span class="text-2xl">🐕</span> WANWAN COFFEE
+            </h1>
+            <p class="text-coffee-300 text-xs mt-1">
+              Dial-In System Pro
+            </p>
+          </div>
+          <div class="text-right text-xs text-coffee-400">
+            <p>Nuova Simonelli Appia Life XT 2GR</p>
+            <p>Fiorenzato F64 Evo Pro GBW</p>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -261,15 +269,15 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-coffee-700 mb-1">เบอร์บด</label>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">เบอร์บด (F64)</label>
             <input
               type="number"
               v-model.number="currentShot.grindSize"
               step="0.1"
-              min="1.1"
+              min="1.0"
               max="12.0"
               class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
-              placeholder="1.1 - 12.0"
+              placeholder="1.0 - 12.0"
             >
           </div>
 
@@ -338,6 +346,63 @@
           </div>
         </div>
 
+        <!-- Flavor Wheel Section -->
+        <div class="mt-4 pt-4 border-t border-coffee-100">
+          <label class="block text-sm font-medium text-coffee-700 mb-3 flex items-center gap-2">
+            <span>🎨</span> Flavor Notes
+            <span class="text-xs text-coffee-400">(เลือกรสชาติที่ชิมได้)</span>
+          </label>
+
+          <!-- Main Categories -->
+          <div class="flex flex-wrap gap-2 mb-3">
+            <button
+              v-for="cat in flavorCategories"
+              :key="cat.id"
+              @click="toggleFlavorCategory(cat.id)"
+              class="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
+              :class="selectedCategory === cat.id
+                ? 'ring-2 ring-offset-1'
+                : 'hover:opacity-80'"
+              :style="{
+                backgroundColor: selectedCategory === cat.id ? cat.color : cat.color + '40',
+                color: selectedCategory === cat.id ? 'white' : cat.color,
+                ringColor: cat.color
+              }"
+            >
+              {{ cat.icon }} {{ cat.name }}
+            </button>
+          </div>
+
+          <!-- Sub-flavors (shown when category selected) -->
+          <div v-if="selectedCategory" class="bg-coffee-50 rounded-xl p-3 mb-3">
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="flavor in currentSubFlavors"
+                :key="flavor"
+                @click="toggleFlavor(flavor)"
+                class="px-3 py-1 rounded-full text-sm transition-all"
+                :class="currentShot.flavors?.includes(flavor)
+                  ? 'bg-coffee-700 text-white'
+                  : 'bg-white text-coffee-700 border border-coffee-200 hover:border-coffee-400'"
+              >
+                {{ flavor }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Selected Flavors Display -->
+          <div v-if="currentShot.flavors?.length > 0" class="flex flex-wrap gap-1">
+            <span
+              v-for="flavor in currentShot.flavors"
+              :key="flavor"
+              class="inline-flex items-center gap-1 px-2 py-1 bg-coffee-100 text-coffee-700 rounded-full text-xs"
+            >
+              {{ flavor }}
+              <button @click="removeFlavor(flavor)" class="hover:text-red-500">×</button>
+            </span>
+          </div>
+        </div>
+
         <!-- Computed Values -->
         <div class="mt-4 pt-4 border-t border-coffee-100">
           <div class="flex justify-between text-sm">
@@ -396,23 +461,28 @@
           <div
             v-for="(shot, index) in reversedHistory"
             :key="shot.id"
-            class="flex items-center gap-3 p-3 bg-coffee-50 rounded-lg"
+            class="p-3 bg-coffee-50 rounded-lg"
           >
-            <span class="text-lg">{{ getZoneEmoji(shot.extractionYield, shot.tds) }}</span>
-            <div class="flex-1 text-sm">
-              <div class="font-medium text-coffee-900">
-                #{{ history.length - index }} | {{ shot.grindSize }} | {{ shot.dose }}g → {{ shot.yield }}g
+            <div class="flex items-center gap-3">
+              <span class="text-lg">{{ getZoneEmoji(shot.extractionYield, shot.tds) }}</span>
+              <div class="flex-1 text-sm">
+                <div class="font-medium text-coffee-900">
+                  #{{ history.length - index }} | {{ shot.grindSize }} | {{ shot.dose }}g → {{ shot.yield }}g
+                </div>
+                <div class="text-coffee-600">
+                  {{ shot.time }}s | TDS {{ shot.tds }}% | EY {{ shot.extractionYield.toFixed(1) }}%
+                </div>
               </div>
-              <div class="text-coffee-600">
-                {{ shot.time }}s | TDS {{ shot.tds }}% | EY {{ shot.extractionYield.toFixed(1) }}%
-              </div>
+              <button
+                @click="deleteShot(shot.id)"
+                class="text-red-400 hover:text-red-600 p-1"
+              >
+                🗑️
+              </button>
             </div>
-            <button
-              @click="deleteShot(shot.id)"
-              class="text-red-400 hover:text-red-600 p-1"
-            >
-              🗑️
-            </button>
+            <div v-if="shot.flavors?.length > 0" class="mt-2 flex flex-wrap gap-1">
+              <span v-for="f in shot.flavors" :key="f" class="px-2 py-0.5 bg-coffee-100 text-coffee-600 rounded-full text-xs">{{ f }}</span>
+            </div>
           </div>
         </div>
 
@@ -429,6 +499,7 @@
                 <th class="pb-2">TDS</th>
                 <th class="pb-2">EY%</th>
                 <th class="pb-2">Zone</th>
+                <th class="pb-2">Flavors</th>
                 <th class="pb-2"></th>
               </tr>
             </thead>
@@ -446,6 +517,12 @@
                 <td class="py-2">{{ shot.tds }}%</td>
                 <td class="py-2">{{ shot.extractionYield.toFixed(1) }}%</td>
                 <td class="py-2">{{ getZoneEmoji(shot.extractionYield, shot.tds) }}</td>
+                <td class="py-2">
+                  <div v-if="shot.flavors?.length > 0" class="flex flex-wrap gap-1 max-w-[150px]">
+                    <span v-for="f in shot.flavors" :key="f" class="px-1.5 py-0.5 bg-coffee-100 text-coffee-600 rounded text-xs">{{ f }}</span>
+                  </div>
+                  <span v-else class="text-coffee-300">-</span>
+                </td>
                 <td class="py-2">
                   <button
                     @click="deleteShot(shot.id)"
@@ -477,6 +554,12 @@
           <hr class="border-coffee-200 my-2">
           <p>TDS: <strong>{{ currentShot.tds }}%</strong> | Brix: <strong>{{ currentShot.brix }}%</strong></p>
           <p>EY: <strong>{{ extractionYield.toFixed(1) }}%</strong> {{ getZoneEmoji(extractionYield, currentShot.tds) }}</p>
+          <div v-if="currentShot.flavors?.length > 0" class="mt-2">
+            <p class="text-coffee-600">🎨 Flavors:</p>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <span v-for="f in currentShot.flavors" :key="f" class="px-2 py-0.5 bg-coffee-200 text-coffee-700 rounded-full text-xs">{{ f }}</span>
+            </div>
+          </div>
         </div>
 
         <div class="flex gap-3">
@@ -498,7 +581,8 @@
 
     <!-- Footer -->
     <footer class="text-center py-6 text-sm text-coffee-400">
-      Coffee Dial-In v1.0 | Made with ☕
+      <p class="font-medium">🐕 WANWAN COFFEE Dial-In v2.0</p>
+      <p class="text-xs mt-1">Precision Brewing System</p>
     </footer>
   </div>
 
@@ -514,8 +598,34 @@
           yield: null,
           time: null,
           tds: null,
-          brix: null
+          brix: null,
+          flavors: []
         })
+
+        const selectedCategory = ref(null)
+
+        // Flavor Wheel Data (based on SCA Coffee Taster's Flavor Wheel)
+        const flavorCategories = ref([
+          { id: 'fruity', name: 'Fruity', icon: '🍓', color: '#e11d48' },
+          { id: 'sweet', name: 'Sweet', icon: '🍯', color: '#f59e0b' },
+          { id: 'floral', name: 'Floral', icon: '🌸', color: '#ec4899' },
+          { id: 'nutty', name: 'Nutty', icon: '🥜', color: '#92400e' },
+          { id: 'chocolate', name: 'Chocolate', icon: '🍫', color: '#78350f' },
+          { id: 'spicy', name: 'Spicy', icon: '🌶️', color: '#dc2626' },
+          { id: 'roasted', name: 'Roasted', icon: '🔥', color: '#1c1917' },
+          { id: 'green', name: 'Green', icon: '🌿', color: '#16a34a' }
+        ])
+
+        const flavorSubCategories = {
+          fruity: ['Berry', 'Citrus', 'Stone Fruit', 'Tropical', 'Apple', 'Grape', 'Dried Fruit'],
+          sweet: ['Honey', 'Caramel', 'Brown Sugar', 'Maple', 'Molasses', 'Vanilla'],
+          floral: ['Jasmine', 'Rose', 'Lavender', 'Chamomile', 'Orange Blossom'],
+          nutty: ['Almond', 'Hazelnut', 'Peanut', 'Walnut', 'Pecan', 'Cocoa'],
+          chocolate: ['Dark Chocolate', 'Milk Chocolate', 'Cocoa', 'Mocha', 'Brownie'],
+          spicy: ['Cinnamon', 'Clove', 'Pepper', 'Ginger', 'Cardamom', 'Nutmeg'],
+          roasted: ['Smoky', 'Tobacco', 'Burnt', 'Ashy', 'Toasty', 'Malty'],
+          green: ['Grassy', 'Herbal', 'Vegetal', 'Tea-like', 'Olive', 'Raw']
+        }
 
         const history = ref([])
         const showConfirmDialog = ref(false)
@@ -632,6 +742,11 @@
           return [...history.value].reverse()
         })
 
+        const currentSubFlavors = computed(() => {
+          if (!selectedCategory.value) return []
+          return flavorSubCategories[selectedCategory.value] || []
+        })
+
         const getArrowEndX = computed(() => {
           const ey = extractionYield.value
           const targetEY = ey < 18 ? 18 : ey > 22 ? 22 : 20
@@ -685,6 +800,32 @@
           return '🟢'
         }
 
+        // Flavor Wheel Methods
+        function toggleFlavorCategory(catId) {
+          selectedCategory.value = selectedCategory.value === catId ? null : catId
+        }
+
+        function toggleFlavor(flavor) {
+          if (!currentShot.value.flavors) {
+            currentShot.value.flavors = []
+          }
+          const index = currentShot.value.flavors.indexOf(flavor)
+          if (index === -1) {
+            currentShot.value.flavors.push(flavor)
+          } else {
+            currentShot.value.flavors.splice(index, 1)
+          }
+        }
+
+        function removeFlavor(flavor) {
+          if (currentShot.value.flavors) {
+            const index = currentShot.value.flavors.indexOf(flavor)
+            if (index !== -1) {
+              currentShot.value.flavors.splice(index, 1)
+            }
+          }
+        }
+
         function saveShot() {
           const shot = {
             id: Date.now().toString(),
@@ -696,12 +837,14 @@
             tds: currentShot.value.tds,
             brix: currentShot.value.brix || 0,
             ratio: ratio.value,
-            extractionYield: extractionYield.value
+            extractionYield: extractionYield.value,
+            flavors: [...(currentShot.value.flavors || [])]
           }
 
           history.value.push(shot)
           saveToLocalStorage()
           showConfirmDialog.value = false
+          selectedCategory.value = null
         }
 
         function deleteShot(id) {
@@ -797,7 +940,14 @@
           saveShot,
           deleteShot,
           exportData,
-          importData
+          importData,
+          // Flavor Wheel
+          selectedCategory,
+          flavorCategories,
+          currentSubFlavors,
+          toggleFlavorCategory,
+          toggleFlavor,
+          removeFlavor
         }
       }
     }).mount('#app')
