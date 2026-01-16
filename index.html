@@ -1247,14 +1247,16 @@
           // Step 1: ปรับเบอร์บดก่อน (จน EY 18-22%) - ถ้ายังไม่ lock
           if (!fixedGrind.value) {
             if (Math.abs(eyError) > EY_TOLERANCE) {
-              // Calculate smart correction
+              // Calculate smart correction - ใช้ค่าจาก validRanges (grind: min=1, max=12)
+              const GRIND_MIN = 1.0
+              const GRIND_MAX = 12.0
               const correction = calculateGrindCorrection(g, eyError, shotNumber.value)
-              const newGrindVal = Math.max(1.0, Math.min(12.0, g - correction))
+              const newGrindVal = Math.max(GRIND_MIN, Math.min(GRIND_MAX, g - correction))
               const newGrind = newGrindVal.toFixed(1)
 
               // ตรวจสอบว่าติดขอบเขตหรือไม่
-              const atMinBoundary = newGrindVal <= 1.0 && eyError > 0
-              const atMaxBoundary = newGrindVal >= 12.0 && eyError < 0
+              const atMinBoundary = newGrindVal <= GRIND_MIN && eyError > 0
+              const atMaxBoundary = newGrindVal >= GRIND_MAX && eyError < 0
               const noChange = parseFloat(newGrind) === parseFloat(g)
 
               const direction = eyError > 0 ? 'ละเอียดขึ้น' : 'หยาบขึ้น'
@@ -1266,7 +1268,7 @@
               if (atMinBoundary || (noChange && eyError > 0)) {
                 return {
                   step: 1,
-                  do: `⚠️ เบอร์บดต่ำสุดแล้ว (1.0)`,
+                  do: `⚠️ เบอร์บดต่ำสุดแล้ว (${GRIND_MIN})`,
                   reason: reason,
                   hint: `ลองเพิ่ม Dose หรือลด Yield แทน`,
                   lockGrind: false,
@@ -1277,7 +1279,7 @@
               if (atMaxBoundary || (noChange && eyError < 0)) {
                 return {
                   step: 1,
-                  do: `⚠️ เบอร์บดสูงสุดแล้ว (12.0)`,
+                  do: `⚠️ เบอร์บดสูงสุดแล้ว (${GRIND_MAX})`,
                   reason: reason,
                   hint: `ลองลด Dose หรือเพิ่ม Yield แทน`,
                   lockGrind: false,
@@ -1313,11 +1315,14 @@
           // Step 2: Grind locked แล้ว → ปรับ TDS ผ่าน Yield
           if (Math.abs(tdsError) > TDS_TOLERANCE) {
             const correction = calculateYieldCorrection(yld, tdsError)
-            const newYield = Math.max(20, Math.min(80, yld + correction))
+            // ใช้ค่าจาก validRanges (yield: min=15, max=80)
+            const YIELD_MIN = 15
+            const YIELD_MAX = 80
+            const newYield = Math.max(YIELD_MIN, Math.min(YIELD_MAX, yld + correction))
 
             // ตรวจสอบว่าติดขอบเขตหรือไม่
-            const atMinBoundary = newYield <= 20 && tdsError < 0
-            const atMaxBoundary = newYield >= 80 && tdsError > 0
+            const atMinBoundary = newYield <= YIELD_MIN && tdsError < 0
+            const atMaxBoundary = newYield >= YIELD_MAX && tdsError > 0
             const noChange = newYield === yld
 
             const direction = tdsError > 0 ? 'เพิ่ม' : 'ลด'
@@ -1329,7 +1334,7 @@
             if (atMinBoundary || (noChange && tdsError < 0)) {
               return {
                 step: 2,
-                do: `⚠️ Yield ต่ำสุดแล้ว (20g)`,
+                do: `⚠️ Yield ต่ำสุดแล้ว (${YIELD_MIN}g)`,
                 reason: reason,
                 hint: `ลองเพิ่ม Dose หรือบดละเอียดขึ้นแทน`,
                 lockGrind: false,
@@ -1340,7 +1345,7 @@
             if (atMaxBoundary || (noChange && tdsError > 0)) {
               return {
                 step: 2,
-                do: `⚠️ Yield สูงสุดแล้ว (80g)`,
+                do: `⚠️ Yield สูงสุดแล้ว (${YIELD_MAX}g)`,
                 reason: reason,
                 hint: `ลองลด Dose หรือบดหยาบขึ้นแทน`,
                 lockGrind: false,
