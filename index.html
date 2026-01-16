@@ -135,35 +135,84 @@
     <main class="max-w-md mx-auto px-5 py-6 pb-24">
       <!-- ==================== PAGE 1: INPUT ==================== -->
       <div v-if="page === 'input'" class="page-slide space-y-6">
-        <!-- Title -->
+        <!-- Smart Tuning Header -->
         <div class="text-center pt-2">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4">
-            <span class="text-3xl">☕</span>
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-3">
+            <span class="text-3xl">{{ shotNumber === 1 ? '☕' : (fixedGrind ? '🎯' : '🔧') }}</span>
           </div>
           <h2 class="text-2xl font-bold">Shot #{{ shotNumber }}</h2>
-          <p class="text-dark-400 text-sm mt-1">กรอกค่าที่วัดได้</p>
+
+          <!-- Tuning Progress -->
+          <div class="mt-4 px-4">
+            <div class="flex items-center justify-between text-xs font-medium mb-2">
+              <span :class="!fixedGrind ? 'text-accent' : 'text-green-500'">
+                {{ !fixedGrind ? '🔧 Step 1: หาเบอร์บด' : '✅ เบอร์บด OK' }}
+              </span>
+              <span :class="fixedGrind && !tdsIsGood ? 'text-accent' : (tdsIsGood ? 'text-green-500' : 'text-dark-600')">
+                {{ tdsIsGood ? '✅ TDS OK' : (fixedGrind ? '🎯 Step 2: ปรับ Yield' : '⏳ รอ') }}
+              </span>
+            </div>
+            <div class="h-2 bg-dark-800 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500"
+                :class="tdsIsGood && fixedGrind ? 'bg-green-500 w-full' : (fixedGrind ? 'bg-accent w-1/2' : 'bg-accent/50 w-1/4')"
+                :style="{ width: tdsIsGood && fixedGrind ? '100%' : (fixedGrind ? '75%' : '25%') }">
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Hint -->
+          <p class="text-dark-400 text-sm mt-3">
+            {{ shotNumber === 1 ? '📝 ใส่ค่าทั้ง 6 ช่อง แล้วกดวิเคราะห์' :
+               (!fixedGrind ? '🔧 กำลังหาเบอร์บดที่ใช่ (EY 18-22%)' : '🎯 เบอร์บดโอเคแล้ว! ปรับ Yield ให้ TDS 8-12%') }}
+          </p>
         </div>
 
         <!-- Input Card -->
         <div class="card p-5 space-y-5">
+          <!-- Bean Name (only on first shot) -->
+          <div v-if="shotNumber === 1">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">☕ เมล็ดกาแฟ</label>
+              <span class="text-[10px] text-dark-600">ไม่บังคับ</span>
+            </div>
+            <input type="text" v-model="beanName" placeholder="เช่น Ethiopia Yirgacheffe, Brazil..."
+              class="input-field w-full h-12 text-sm text-center rounded-xl outline-none px-4">
+          </div>
+
+          <!-- Show Bean Name (locked after first shot) -->
+          <div v-else-if="beanName" class="text-center">
+            <span class="px-4 py-2 rounded-full text-sm font-medium bg-accent/10 text-accent">
+              ☕ {{ beanName }}
+            </span>
+          </div>
+
           <!-- Row 1: Grind + Dose -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">เบอร์บด</label>
-              <input type="number" v-model.number="shot.grind" step="0.1" min="1" max="12"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">เบอร์บด</label>
+                <span v-if="fixedGrind" class="text-[10px] text-green-500 font-medium">✅ Locked</span>
+                <span v-else-if="!fixedGrind && shotNumber > 1" class="text-[10px] text-accent font-medium animate-pulse">🔧 ปรับตรงนี้!</span>
+                <span v-else class="text-[10px] text-dark-600">1-12</span>
+              </div>
+              <input type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
+                :disabled="fixedGrind"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="[
+                  fixedGrind ? 'border-green-500/30 bg-green-500/5 opacity-70' : '',
+                  (!fixedGrind && shotNumber > 1) ? 'border-accent ring-2 ring-accent/30' : '',
+                  shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500/50' : ''
+                ]">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Dose</label>
-                <label class="flex items-center gap-1.5 text-xs text-dark-500 cursor-pointer">
-                  <input type="checkbox" v-model="fixedDose" class="w-3 h-3 accent-accent rounded">
-                  <span>Fixed</span>
-                </label>
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Dose (g)</label>
+                <span v-if="fixedDose" class="text-[10px] text-accent font-medium">🔒 Fixed</span>
               </div>
-              <input type="number" v-model.number="shot.dose" step="0.1"
+              <input type="number" v-model.number="shot.dose" step="0.1" min="10" max="30" placeholder="18"
+                :disabled="fixedDose"
                 class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
-                :class="fixedDose ? 'border-accent/30 bg-accent/5' : ''">
+                :class="[fixedDose ? 'border-accent/30 bg-accent/5 opacity-70' : '', shot.dose && (shot.dose < 10 || shot.dose > 30) ? 'border-red-500/50' : '']">
             </div>
           </div>
 
@@ -171,16 +220,26 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Yield</label>
-                <span v-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Yield (g)</label>
+                <span v-if="fixedGrind && !tdsIsGood && shotNumber > 1" class="text-[10px] text-accent font-medium animate-pulse">🎯 ปรับตรงนี้!</span>
+                <span v-else-if="targetYield && shot.dose" class="text-[10px] text-dark-500 font-medium">เป้า {{ targetYield }}g (1:{{ (targetYield / shot.dose).toFixed(1) }})</span>
+                <span v-else-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
               </div>
-              <input type="number" v-model.number="shot.yield" step="0.1"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
+              <input type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" :placeholder="targetYield || 36"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="[
+                  (fixedGrind && !tdsIsGood && shotNumber > 1) ? 'border-accent ring-2 ring-accent/30' : '',
+                  shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''
+                ]">
             </div>
             <div>
-              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">Time</label>
-              <input type="number" v-model.number="shot.time"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Time (s)</label>
+                <span class="text-[10px] text-dark-600">15-60</span>
+              </div>
+              <input type="number" v-model.number="shot.time" min="15" max="60" placeholder="28"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500/50' : ''">
             </div>
           </div>
 
@@ -194,16 +253,75 @@
           <!-- Row 3: TDS + Brix -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">TDS %</label>
-              <input type="number" v-model.number="shot.tds" step="0.1"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">TDS %</label>
+                <span class="text-[10px] text-dark-600">8-12 ideal</span>
+              </div>
+              <input type="number" v-model.number="shot.tds" step="0.1" min="1" max="20" placeholder="10"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="shot.tds && (shot.tds < 1 || shot.tds > 20) ? 'border-red-500/50' : ''">
             </div>
             <div>
-              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">Brix %</label>
-              <input type="number" v-model.number="shot.brix" step="0.1"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Brix %</label>
+                <span class="text-[10px] text-dark-600">1-25</span>
+              </div>
+              <input type="number" v-model.number="shot.brix" step="0.1" min="1" max="25" placeholder="12"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="shot.brix && (shot.brix < 1 || shot.brix > 25) ? 'border-red-500/50' : ''">
             </div>
           </div>
+
+          <!-- Rating Stars -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">⭐ Rating</label>
+              <span class="text-[10px] text-dark-600">ให้คะแนนรสชาติ</span>
+            </div>
+            <div class="flex justify-center gap-2">
+              <button v-for="star in 5" :key="star" @click="shot.rating = star"
+                class="text-3xl transition-all duration-150 hover:scale-110"
+                :class="shot.rating >= star ? 'text-yellow-400' : 'text-dark-700'">
+                {{ shot.rating >= star ? '★' : '☆' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Flavor Tags -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">🍒 รสชาติ</label>
+              <span class="text-[10px] text-dark-600">เลือกที่ชิมได้</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2">
+              <button v-for="flavor in flavorOptions" :key="flavor.id"
+                @click="toggleFlavor(flavor.id)"
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150"
+                :class="shot.flavors.includes(flavor.id)
+                  ? 'bg-accent text-dark-900 ring-2 ring-accent/50'
+                  : 'bg-dark-800 text-dark-400 hover:bg-dark-700'">
+                {{ flavor.icon }} {{ flavor.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Notes Field -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">📝 Notes</label>
+              <span class="text-[10px] text-dark-600">ไม่บังคับ</span>
+            </div>
+            <input type="text" v-model="shot.notes" placeholder="รสชาติ, ความรู้สึก..."
+              class="input-field w-full h-12 text-sm text-center rounded-xl outline-none px-4">
+          </div>
+        </div>
+
+        <!-- Validation Errors -->
+        <div v-if="validationErrors.length > 0" class="card p-4 border-red-500/20 bg-red-500/5">
+          <p class="text-xs text-red-500/70 font-medium mb-2">⚠️ ค่าไม่ถูกต้อง:</p>
+          <ul class="text-sm text-red-400 space-y-1">
+            <li v-for="err in validationErrors" :key="err">• {{ err }}</li>
+          </ul>
         </div>
 
         <!-- Submit Button -->
@@ -223,13 +341,13 @@
             <span class="text-4xl">{{ isPerfect ? '🎯' : (direction === 'under' ? '🔵' : '🔴') }}</span>
           </div>
           <h2 class="text-2xl font-bold" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">
-            {{ isPerfect ? 'Perfect Shot!' : (direction === 'under' ? 'Under Extracted' : 'Over Extracted') }}
+            {{ isPerfect ? 'สมบูรณ์แบบ!' : (direction === 'under' ? 'สกัดน้อยไป' : 'สกัดมากไป') }}
           </h2>
         </div>
 
         <!-- Extraction Chart -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">Extraction Map</p>
+          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">แผนที่การสกัด</p>
           <svg viewBox="0 0 200 120" class="w-full h-32">
             <!-- Grid lines -->
             <line x1="10" y1="60" x2="190" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
@@ -283,7 +401,7 @@
 
         <!-- Flavor Tags -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">Expected Flavor</p>
+          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">รสชาติที่คาดว่าจะได้</p>
           <div class="flex flex-wrap justify-center gap-2">
             <span v-for="flavor in expectedFlavors" :key="flavor.name"
               class="px-3 py-1.5 rounded-full text-sm font-medium"
@@ -295,40 +413,132 @@
           </div>
         </div>
 
-        <!-- Action Card -->
-        <div v-if="!isPerfect" class="card p-5 border-amber-500/20 bg-amber-500/5">
-          <p class="text-xs text-amber-500/70 text-center mb-2 font-medium uppercase tracking-wider">Next Shot Adjustment</p>
-          <p class="text-2xl font-bold text-center text-amber-400">{{ action.do }}</p>
-          <p class="text-sm text-amber-500/70 text-center mt-2">{{ action.reason }}</p>
+        <!-- Smart Tuning Progress (Result Page) -->
+        <div class="card p-4">
+          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">🎯 Tuning Progress</p>
+          <div class="flex items-center justify-between text-xs font-medium mb-2">
+            <span :class="eyIsGood ? 'text-green-500' : 'text-accent'">
+              {{ eyIsGood ? '✅ EY OK' : '🔧 EY: ' + ey + '%' }}
+            </span>
+            <span :class="tdsIsGood ? 'text-green-500' : (eyIsGood ? 'text-accent' : 'text-dark-600')">
+              {{ tdsIsGood ? '✅ TDS OK' : '🎯 TDS: ' + shot.tds + '%' }}
+            </span>
+          </div>
+          <div class="h-3 bg-dark-800 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500"
+              :class="isPerfect ? 'bg-green-500' : (eyIsGood ? 'bg-accent' : 'bg-amber-500/70')"
+              :style="{ width: isPerfect ? '100%' : (eyIsGood ? '75%' : '35%') }">
+            </div>
+          </div>
+          <p class="text-xs text-dark-500 text-center mt-2">
+            {{ isPerfect ? '🎉 สมบูรณ์แบบ!' : (eyIsGood ? 'Step 2: ปรับ Yield ให้ TDS 8-12%' : 'Step 1: ปรับเบอร์บดให้ EY 18-22%') }}
+          </p>
         </div>
 
-        <div v-else class="card p-5 border-green-500/20 bg-green-500/5">
-          <p class="text-xl font-bold text-center text-green-400">Recipe Found!</p>
-          <p class="text-sm text-green-500/70 text-center mt-2">
-            Grind {{ shot.grind }} · Dose {{ shot.dose }}g · Yield {{ shot.yield }}g · {{ shot.time }}s
-          </p>
+        <!-- Action Card (Smart & Clear) -->
+        <div v-if="!isPerfect" class="card p-6 border-2"
+          :class="action.step === 1 ? 'border-amber-500/30 bg-amber-500/5' : 'border-blue-500/30 bg-blue-500/5'">
+
+          <!-- What to do - BIG & CLEAR -->
+          <div class="text-center mb-4">
+            <p class="text-4xl font-black mb-2" :class="action.step === 1 ? 'text-amber-400' : 'text-blue-400'">
+              {{ action.do }}
+            </p>
+            <p class="text-sm" :class="action.step === 1 ? 'text-amber-500/70' : 'text-blue-500/70'">
+              {{ action.reason }}
+            </p>
+          </div>
+
+          <!-- Visual Explanation -->
+          <div class="bg-dark-900/50 rounded-xl p-4 text-center">
+            <div v-if="action.step === 1" class="space-y-2">
+              <p class="text-xs text-dark-400">เป้าหมาย: EY 18-22%</p>
+              <div class="flex items-center justify-center gap-3">
+                <span class="text-2xl">{{ ey < 18 ? '⬇️' : '⬆️' }}</span>
+                <span class="text-lg font-bold" :class="ey < 18 ? 'text-blue-400' : 'text-red-400'">
+                  EY {{ ey }}% → 18-22%
+                </span>
+              </div>
+              <p class="text-sm text-dark-300 mt-2">
+                {{ ey < 18 ? '🔵 สกัดน้อยไป → บดละเอียดขึ้น' : '🔴 สกัดมากไป → บดหยาบขึ้น' }}
+              </p>
+            </div>
+            <div v-else class="space-y-2">
+              <p class="text-xs text-dark-400">เป้าหมาย: TDS 8-12%</p>
+              <div class="flex items-center justify-center gap-3">
+                <span class="text-2xl">{{ shot.tds > 12 ? '💧' : '☕' }}</span>
+                <span class="text-lg font-bold" :class="shot.tds > 12 ? 'text-orange-400' : 'text-cyan-400'">
+                  TDS {{ shot.tds }}% → 8-12%
+                </span>
+              </div>
+              <p class="text-sm text-dark-300 mt-2">
+                {{ shot.tds > 12 ? '🍊 เข้มไป → เพิ่ม yield (เจือจาง)' : '💧 จืดไป → ลด yield (เข้มขึ้น)' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Tip -->
+          <p class="text-xs text-dark-500 text-center mt-3">💡 {{ action.hint }}</p>
+        </div>
+
+        <!-- Perfect Result -->
+        <div v-else class="card p-6 border-2 border-green-500/30 bg-green-500/5">
+          <div class="text-center">
+            <span class="text-5xl mb-3 block">🎉</span>
+            <p class="text-2xl font-bold text-green-400 mb-2">พบสูตรที่ใช่แล้ว!</p>
+            <p v-if="beanName" class="text-sm text-accent mb-2">☕ {{ beanName }}</p>
+            <div class="bg-dark-900/50 rounded-xl p-4 mt-4">
+              <p class="text-lg font-bold text-white">
+                🔧 Grind {{ shot.grind }} · ☕ Dose {{ shot.dose }}g
+              </p>
+              <p class="text-lg font-bold text-white mt-1">
+                🍯 Yield {{ shot.yield }}g · ⏱️ {{ shot.time }}s
+              </p>
+              <p class="text-sm text-green-400 mt-2">EY {{ ey }}% · TDS {{ shot.tds }}%</p>
+            </div>
+            <p class="text-sm text-green-500/70 mt-3">บันทึกสูตรนี้ไว้ใช้ครั้งหน้า!</p>
+
+            <!-- Copy Recipe Button -->
+            <button @click="copyRecipe" class="mt-4 px-6 py-2 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-medium text-white transition-all">
+              {{ copied ? '✅ คัดลอกแล้ว!' : '📋 Copy สูตร' }}
+            </button>
+          </div>
         </div>
 
         <!-- Next Button -->
         <button @click="nextShot"
           class="btn-primary w-full h-14 rounded-xl font-semibold text-lg text-dark-900">
-          {{ isPerfect ? 'New Shot' : 'Next Shot →' }}
+          {{ isPerfect ? '🎉 เริ่ม Session ใหม่' : '→ Shot ถัดไป (ปรับตามคำแนะนำ)' }}
+        </button>
+
+        <!-- Reset Button (when not perfect) -->
+        <button v-if="!isPerfect && shotNumber > 2" @click="resetSession"
+          class="w-full text-center text-sm text-dark-500 hover:text-red-400 py-2 mt-2">
+          🔄 เริ่มจูนใหม่ทั้งหมด
         </button>
 
         <!-- History -->
         <button v-if="history.length > 0" @click="showHistory = !showHistory"
           class="w-full text-center text-sm text-dark-500 hover:text-dark-300 py-2">
-          {{ showHistory ? '▲ Hide History' : '▼ History (' + history.length + ')' }}
+          {{ showHistory ? '▲ ซ่อนประวัติ' : '▼ ประวัติ (' + history.length + ')' }}
         </button>
 
         <div v-if="showHistory && history.length > 0" class="card p-4 space-y-2">
           <div v-for="(h, i) in reversedHistory" :key="h.id"
-            class="flex items-center gap-3 p-3 bg-white/3 rounded-xl">
-            <span class="text-xl">{{ h.isPerfect ? '🎯' : '🔄' }}</span>
-            <div class="flex-1">
-              <p class="font-medium text-sm">#{{ history.length - i }} · Grind {{ h.grind }} · {{ h.time }}s</p>
-              <p class="text-xs text-dark-500">EY {{ h.ey }}% · TDS {{ h.tds }}%</p>
+            class="p-3 bg-white/3 rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-xl">{{ h.isPerfect ? '🎯' : '🔄' }}</span>
+              <div class="flex-1">
+                <p class="font-medium text-sm">#{{ history.length - i }} · Grind {{ h.grind }} · {{ h.time }}s</p>
+                <p class="text-xs text-dark-500">EY {{ h.ey }}% · TDS {{ h.tds }}%
+                  <span v-if="h.rating" class="text-yellow-400 ml-1">{{ '★'.repeat(h.rating) }}{{ '☆'.repeat(5 - h.rating) }}</span>
+                </p>
+              </div>
             </div>
+            <p v-if="h.flavors && h.flavors.length" class="text-xs text-dark-400 mt-2 pl-9">
+              🍒 {{ h.flavors.map(f => flavorOptions.find(o => o.id === f)?.icon + flavorOptions.find(o => o.id === f)?.name).join(' · ') }}
+            </p>
+            <p v-if="h.notes" class="text-xs text-dark-400 mt-1 pl-9">📝 {{ h.notes }}</p>
           </div>
         </div>
       </div>
@@ -336,7 +546,7 @@
 
     <!-- Footer -->
     <footer class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 py-3 text-center">
-      <p class="text-xs text-dark-600">WANWAN COFFEE TUNER v5.0</p>
+      <p class="text-xs text-dark-600">WANWAN COFFEE TUNER v6.1 · Smart Tuning</p>
     </footer>
   </div>
 
@@ -348,19 +558,67 @@
         const page = ref('input')
         const shotNumber = ref(1)
         const showHistory = ref(false)
-        const fixedDose = ref(true)
+        const copied = ref(false)
+
+        // Bean name (set on first shot)
+        const beanName = ref('')
+
+        // Flavor options for selection
+        const flavorOptions = [
+          { id: 'sweet', icon: '🍯', name: 'หวาน' },
+          { id: 'sour', icon: '🍋', name: 'เปรี้ยว' },
+          { id: 'bitter', icon: '☕', name: 'ขม' },
+          { id: 'fruity', icon: '🍒', name: 'ผลไม้' },
+          { id: 'nutty', icon: '🥜', name: 'ถั่ว' },
+          { id: 'chocolate', icon: '🍫', name: 'ช็อกโกแลต' },
+          { id: 'floral', icon: '🌸', name: 'ดอกไม้' },
+          { id: 'spicy', icon: '🌶️', name: 'เครื่องเทศ' }
+        ]
+        const fixedDose = ref(false)   // Lock Dose after Shot 1
+        const targetYield = ref(null)  // Target Yield (can vary slightly)
+        const fixedGrind = ref(false)  // Lock Grind when EY is good
 
         const shot = ref({
           grind: null, dose: null, yield: null,
-          time: null, tds: null, brix: null
+          time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
         })
 
         const history = ref([])
 
-        const canAnalyze = computed(() =>
-          shot.value.grind && shot.value.dose && shot.value.yield &&
-          shot.value.time && shot.value.tds && shot.value.brix
-        )
+        // Input validation rules
+        const validRanges = {
+          grind: { min: 1, max: 12, label: 'เบอร์บด' },
+          dose: { min: 10, max: 30, label: 'Dose' },
+          yield: { min: 15, max: 80, label: 'Yield' },
+          time: { min: 15, max: 60, label: 'Time' },
+          tds: { min: 1, max: 20, label: 'TDS' },
+          brix: { min: 1, max: 25, label: 'Brix' }
+        }
+
+        const validateField = (field, value) => {
+          if (value === null || value === undefined || value === '') return false
+          const range = validRanges[field]
+          return value >= range.min && value <= range.max
+        }
+
+        const validationErrors = computed(() => {
+          const errors = []
+          for (const [field, range] of Object.entries(validRanges)) {
+            const val = shot.value[field]
+            if (val !== null && val !== undefined && val !== '') {
+              if (val < range.min) errors.push(`${range.label} ต่ำเกินไป (min: ${range.min})`)
+              else if (val > range.max) errors.push(`${range.label} สูงเกินไป (max: ${range.max})`)
+            }
+          }
+          return errors
+        })
+
+        const canAnalyze = computed(() => {
+          const hasAllValues = shot.value.grind && shot.value.dose && shot.value.yield &&
+            shot.value.time && shot.value.tds && shot.value.brix
+          const noErrors = validationErrors.value.length === 0
+          return hasAllValues && noErrors
+        })
 
         const ratio = computed(() => {
           if (!shot.value.dose || !shot.value.yield) return '-'
@@ -399,25 +657,43 @@
           const tds = shot.value.tds
 
           if (eyv < 18) {
-            flavors.push({ icon: '🍋', name: 'Sour', type: 'bad' })
-            flavors.push({ icon: '💧', name: 'Watery', type: 'bad' })
+            flavors.push({ icon: '🍋', name: 'เปรี้ยว', type: 'bad' })
+            flavors.push({ icon: '💧', name: 'จืด', type: 'bad' })
           } else if (eyv > 22) {
-            flavors.push({ icon: '☕', name: 'Bitter', type: 'bad' })
-            flavors.push({ icon: '🔥', name: 'Harsh', type: 'bad' })
+            flavors.push({ icon: '☕', name: 'ขม', type: 'bad' })
+            flavors.push({ icon: '🔥', name: 'ฝาด', type: 'bad' })
           } else {
-            flavors.push({ icon: '🍯', name: 'Sweet', type: 'good' })
-            flavors.push({ icon: '⚖️', name: 'Balanced', type: 'good' })
+            flavors.push({ icon: '🍯', name: 'หวาน', type: 'good' })
+            flavors.push({ icon: '⚖️', name: 'สมดุล', type: 'good' })
           }
 
           if (tds > 12) {
-            flavors.push({ icon: '💪', name: 'Strong', type: 'warn' })
+            flavors.push({ icon: '💪', name: 'เข้มมาก', type: 'warn' })
           } else if (tds < 8) {
-            flavors.push({ icon: '💧', name: 'Weak', type: 'warn' })
+            flavors.push({ icon: '💧', name: 'เบาบาง', type: 'warn' })
           } else {
-            flavors.push({ icon: '👌', name: 'Body OK', type: 'good' })
+            flavors.push({ icon: '👌', name: 'บอดี้ดี', type: 'good' })
           }
 
           return flavors
+        })
+
+        // EY is good? (18-22%)
+        const eyIsGood = computed(() => {
+          const eyv = eyVal.value
+          return eyv >= 18 && eyv <= 22
+        })
+
+        // TDS is good? (8-12%)
+        const tdsIsGood = computed(() => {
+          const tds = shot.value.tds
+          return tds >= 8 && tds <= 12
+        })
+
+        // Tuning step: 1 = Grind (EY), 2 = Yield (TDS)
+        const tuningStep = computed(() => {
+          if (!eyIsGood.value && !fixedGrind.value) return 1  // ปรับเบอร์บดก่อน
+          return 2  // EY ดีแล้ว หรือ Grind locked → ปรับ Yield
         })
 
         const action = computed(() => {
@@ -425,65 +701,247 @@
           const eyv = eyVal.value
           const tds = shot.value.tds
 
-          if (eyv < 18) {
-            const newGrind = Math.max(1.0, g - 0.3).toFixed(1)
-            return { do: `Grind ${g} → ${newGrind}`, reason: `EY ${eyv}% too low` }
+          // Step 1: ปรับเบอร์บดก่อน (จน EY 18-22%) - ถ้ายังไม่ lock
+          if (!fixedGrind.value) {
+            if (eyv < 18) {
+              const newGrind = Math.max(1.0, g - 0.3).toFixed(1)
+              const timeHint = shot.value.time < 20 ? ' (เวลาจะเพิ่มขึ้น)' : ''
+              return {
+                step: 1,
+                do: `เบอร์บด ${g} → ${newGrind}`,
+                reason: `EY ${eyv}% ต่ำไป (เป้า 18-22%)`,
+                hint: `บดละเอียดขึ้น → สกัดมากขึ้น${timeHint}`,
+                lockGrind: false
+              }
+            }
+            if (eyv > 22) {
+              const newGrind = Math.min(12.0, parseFloat(g) + 0.3).toFixed(1)
+              const timeHint = shot.value.time > 35 ? ' (เวลาจะลดลง)' : ''
+              return {
+                step: 1,
+                do: `เบอร์บด ${g} → ${newGrind}`,
+                reason: `EY ${eyv}% สูงไป (เป้า 18-22%)`,
+                hint: `บดหยาบขึ้น → สกัดน้อยลง${timeHint}`,
+                lockGrind: false
+              }
+            }
+            // EY ดีแล้ว → Lock Grind!
+            if (eyIsGood.value && !tdsIsGood.value) {
+              return {
+                step: 1,
+                do: `🔒 Lock เบอร์บด ${g}`,
+                reason: `EY ${eyv}% ดีแล้ว!`,
+                hint: 'กด "Shot ถัดไป" เพื่อไปปรับ Yield',
+                lockGrind: true
+              }
+            }
           }
-          if (eyv > 22) {
-            const newGrind = Math.min(12.0, parseFloat(g) + 0.3).toFixed(1)
-            return { do: `Grind ${g} → ${newGrind}`, reason: `EY ${eyv}% too high` }
-          }
+
+          // Step 2: Grind locked แล้ว → ปรับ TDS ผ่าน Yield
           if (tds > 12) {
             const newYield = Math.round(shot.value.yield + 4)
-            return { do: `Yield → ${newYield}g`, reason: `TDS ${tds}% too strong` }
+            return {
+              step: 2,
+              do: `Yield ${shot.value.yield}g → ${newYield}g`,
+              reason: `TDS ${tds}% เข้มไป (เป้า 8-12%)`,
+              hint: 'กดหยุดที่ yield ' + newYield + 'g (อ่านเวลาจากจอ)',
+              lockGrind: false
+            }
           }
           if (tds < 8) {
-            const newYield = Math.round(shot.value.yield - 4)
-            return { do: `Yield → ${newYield}g`, reason: `TDS ${tds}% too weak` }
+            const newYield = Math.max(20, Math.round(shot.value.yield - 4))
+            return {
+              step: 2,
+              do: `Yield ${shot.value.yield}g → ${newYield}g`,
+              reason: `TDS ${tds}% จืดไป (เป้า 8-12%)`,
+              hint: 'กดหยุดที่ yield ' + newYield + 'g (อ่านเวลาจากจอ)',
+              lockGrind: false
+            }
           }
-          return { do: 'Perfect!', reason: '' }
+          return { step: 0, do: 'สมบูรณ์แบบ!', reason: '', hint: '', lockGrind: false }
         })
 
         const reversedHistory = computed(() => [...history.value].reverse())
 
+        function toggleFlavor(id) {
+          const idx = shot.value.flavors.indexOf(id)
+          if (idx >= 0) {
+            shot.value.flavors.splice(idx, 1)
+          } else {
+            shot.value.flavors.push(id)
+          }
+        }
+
         function analyze() { page.value = 'result' }
 
         function nextShot() {
+          // Save to history
           history.value.push({
             id: Date.now().toString(),
+            bean: beanName.value || '',
             grind: shot.value.grind, dose: shot.value.dose,
             yield: shot.value.yield, time: shot.value.time,
             tds: shot.value.tds, brix: shot.value.brix,
+            notes: shot.value.notes || '', rating: shot.value.rating || 0,
+            flavors: [...shot.value.flavors],
             ratio: ratio.value, ey: ey.value, isPerfect: isPerfect.value
           })
           localStorage.setItem('wanwan_history', JSON.stringify(history.value))
 
+          // If perfect, reset for new session
+          if (isPerfect.value) {
+            history.value = []
+            localStorage.removeItem('wanwan_history')
+            localStorage.removeItem('wanwan_session')
+            shotNumber.value = 1
+            fixedDose.value = false
+            fixedGrind.value = false
+            targetYield.value = null
+            beanName.value = ''
+            shot.value = {
+              grind: null, dose: null, yield: null,
+              time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
+            }
+            showHistory.value = false
+            page.value = 'input'
+            return
+          }
+
+          // Continue tuning
           const lastGrind = shot.value.grind
           const lastDose = shot.value.dose
+          const lastYield = shot.value.yield
+          const lastTds = shot.value.tds
+          const currentEy = eyVal.value
+
+          // After first shot, lock dose and set target yield
+          if (shotNumber.value === 1) {
+            fixedDose.value = true
+            targetYield.value = lastYield
+          }
+
+          // Lock grind when EY is good
+          if (action.value.lockGrind) {
+            fixedGrind.value = true
+          }
+
+          // Calculate recommended values for next shot
+          let nextGrind = lastGrind
+          let nextYield = targetYield.value || lastYield
+
+          // Step 1: Adjust grind if EY not in range
+          if (!fixedGrind.value) {
+            if (currentEy < 18) {
+              nextGrind = Math.max(1.0, lastGrind - 0.3)
+            } else if (currentEy > 22) {
+              nextGrind = Math.min(12.0, lastGrind + 0.3)
+            }
+          }
+
+          // Step 2: Adjust yield if TDS not in range (and grind is locked)
+          if (fixedGrind.value || action.value.lockGrind) {
+            if (lastTds > 12) {
+              nextYield = Math.round(lastYield + 4)
+            } else if (lastTds < 8) {
+              nextYield = Math.max(20, Math.round(lastYield - 4))
+            }
+            targetYield.value = nextYield
+          }
 
           shot.value = {
-            grind: lastGrind, dose: lastDose,
-            yield: null, time: null, tds: null, brix: null
+            grind: parseFloat(nextGrind.toFixed(1)), dose: lastDose,
+            yield: null,  // User will input actual yield
+            time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
           }
 
           shotNumber.value++
           showHistory.value = false
           page.value = 'input'
+
+          // Save session state for page refresh
+          saveSessionState()
+        }
+
+        function copyRecipe() {
+          const recipe = `☕ ${beanName.value || 'Coffee Recipe'}
+🔧 Grind: ${shot.value.grind}
+☕ Dose: ${shot.value.dose}g
+🍯 Yield: ${shot.value.yield}g
+⏱️ Time: ${shot.value.time}s
+📊 EY: ${ey.value}% | TDS: ${shot.value.tds}%
+${shot.value.rating ? '⭐ Rating: ' + '★'.repeat(shot.value.rating) + '☆'.repeat(5 - shot.value.rating) : ''}
+${shot.value.notes ? '📝 Notes: ' + shot.value.notes : ''}
+---
+Made with WANWAN COFFEE TUNER`
+
+          navigator.clipboard.writeText(recipe.trim()).then(() => {
+            copied.value = true
+            setTimeout(() => { copied.value = false }, 2000)
+          })
+        }
+
+        function resetSession() {
+          if (confirm('🔄 เริ่มจูนใหม่ทั้งหมด?\n\n⚠️ ประวัติ shot จะถูกลบ')) {
+            history.value = []
+            localStorage.removeItem('wanwan_history')
+            localStorage.removeItem('wanwan_session')
+            shotNumber.value = 1
+            fixedDose.value = false
+            fixedGrind.value = false
+            targetYield.value = null
+            beanName.value = ''
+            shot.value = {
+              grind: null, dose: null, yield: null,
+              time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
+            }
+            showHistory.value = false
+            page.value = 'input'
+          }
+        }
+
+        // Save session state (for page refresh)
+        function saveSessionState() {
+          const state = {
+            shotNumber: shotNumber.value,
+            fixedDose: fixedDose.value,
+            fixedGrind: fixedGrind.value,
+            targetYield: targetYield.value,
+            beanName: beanName.value,
+            lastGrind: shot.value.grind,
+            lastDose: shot.value.dose
+          }
+          localStorage.setItem('wanwan_session', JSON.stringify(state))
         }
 
         onMounted(() => {
+          // Load history
           const saved = localStorage.getItem('wanwan_history')
           if (saved) {
             history.value = JSON.parse(saved)
+          }
+
+          // Load session state
+          const session = localStorage.getItem('wanwan_session')
+          if (session && history.value.length > 0) {
+            const state = JSON.parse(session)
+            shotNumber.value = state.shotNumber || history.value.length + 1
+            fixedDose.value = state.fixedDose || false
+            fixedGrind.value = state.fixedGrind || false
+            targetYield.value = state.targetYield || null
+            beanName.value = state.beanName || ''
+            if (state.lastGrind) shot.value.grind = state.lastGrind
+            if (state.lastDose) shot.value.dose = state.lastDose
+          } else {
             shotNumber.value = history.value.length + 1
           }
         })
 
         return {
-          page, shotNumber, showHistory, fixedDose, shot, history,
-          canAnalyze, ratio, ey, isPerfect, direction,
+          page, shotNumber, showHistory, fixedDose, fixedGrind, targetYield, shot, history,
+          canAnalyze, ratio, ey, isPerfect, direction, tuningStep, eyIsGood, tdsIsGood,
           chartX, chartY, expectedFlavors, action, reversedHistory,
-          analyze, nextShot
+          validationErrors, validRanges, copied,
+          analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName, copyRecipe
         }
       }
     }).mount('#app')

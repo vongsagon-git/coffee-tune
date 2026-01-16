@@ -4,7 +4,7 @@
 
 ## 📋 [C001] Coffee Dial-In Web App
 **Created:** 2026-01-17
-**Status:** In Progress
+**Status:** ✅ COMPLETED
 **Deploy:** GitHub Pages (https://vongsagon-git.github.io/coffee-tune/)
 
 ### Phase 1: Foundation
@@ -34,17 +34,35 @@
 
 ---
 
-## ✅ COMPLETED
-**Live URL:** https://vongsagon-git.github.io/coffee-tune/
+## 📋 [C002] Enhancements v6.1 - Smart Tuning
+**Status:** ✅ COMPLETED
+**Priority:** High
+**Version:** 6.1
+
+### Phase 1: Critical
+- [x] [E001] Input validation (ป้องกัน edge cases - ค่าติดลบ, ค่าเกิน, null) ✅
+- [x] [E001.1] Dose Fixed หลัง Shot แรก (กรอกครั้งเดียว) ✅
+- [x] [E001.2] Step-by-step tuning recommendation ✅
+- [x] [SMART] Smart Tuning UI (Progress bar, Visual hints, Clear instructions) ✅
+
+### Phase 2: Nice to Have
+- [x] [E002] Notes field (บันทึกโน้ตแต่ละ shot) ✅
+- [x] [E003] Rating stars (1-5 ดาว) ✅
+- [x] [E004] Flavor Tags (เลือกรสชาติที่ชิมได้) ✅
+- [x] [E005] Bean Name input (ระบุชื่อเมล็ดกาแฟ) ✅
+
+### Phase 3: v6.1 Improvements
+- [x] [E006] Auto pre-fill recommended grind/yield ✅
+- [x] [E007] Session state persistence (refresh safe) ✅
 
 ---
 
-## 📋 [C002] Enhancements (จาก Self-Check)
-**Status:** Pending
-**Priority:** Medium
+## 📊 Research Verified
+- [x] EY% formula: (Yield × TDS%) / Dose ✅
+- [x] Perfect Zone: EY 18-22%, TDS 8-12% (SCA Standards) ✅
 
-- [ ] [C002.1] เพิ่ม Flavor Wheel component (เลือกรสชาติที่ชิมได้)
-- [ ] [C002.2] เพิ่ม Notes field (บันทึกโน้ตเพิ่มเติม)
-- [ ] [C002.3] เพิ่ม Rating stars (ให้คะแนน 1-5 ดาว)
-- [ ] [C002.4] เพิ่ม Input validation (ป้องกัน edge cases)
-- [ ] [C002.5] เพิ่ม Batch/Bean tracking (แยกตามเมล็ดกาแฟ)
+---
+
+## ✅ ALL COMPLETED
+**Live URL:** https://vongsagon-git.github.io/coffee-tune/
+**Version:** 6.1 Smart Tuning
