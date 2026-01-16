@@ -171,7 +171,20 @@
 
 ---
 
-## 📋 [C010] Future Backlog
+## 📋 [C010] v7.1 - Edge Case Handling
+
+**Status:** ✅ COMPLETED
+**Version:** 7.1
+
+### Boundary Handling
+- [x] [C010.1] Handle grind MIN (1.0) boundary with alternative suggestions
+- [x] [C010.2] Handle grind MAX (12.0) boundary with alternative suggestions
+- [x] [C010.3] Handle yield MIN/MAX boundaries (15g-80g)
+- [x] [C010.4] Bump service worker cache to v5
+
+---
+
+## 📋 [C011] Future Backlog
 
 **Status:** 🔮 FUTURE
 **Priority:** Low
@@ -190,7 +203,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 7.0 Share Recipe
+**Current Version:** 7.1 Edge Case Handling
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -205,3 +218,4 @@
 | v6.8    | Settings Enhancements            | 2026-01-17 |
 | v6.9    | UI Polish                        | 2026-01-17 |
 | v7.0    | Share Recipe (Web Share API)     | 2026-01-17 |
+| v7.1    | Edge Case Handling, Boundaries   | 2026-01-17 |
