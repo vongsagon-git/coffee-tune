@@ -205,12 +205,12 @@
   <div id="app" v-cloak role="application" aria-label="WANWAN Coffee Tuner Application">
     <!-- Onboarding Modal (First-time users) -->
     <div v-if="showOnboarding" class="fixed inset-0 bg-black/70 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label="คู่มือการใช้งาน">
-      <div class="bg-white w-full sm:max-w-sm sm:rounded-none p-5 sm:p-6 shadow-xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-none" :class="darkMode ? 'bg-dark-800 text-white' : 'bg-white'">
+      <div class="w-full sm:max-w-sm sm:rounded-none p-5 sm:p-6 shadow-xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-none" :class="darkMode ? 'bg-dark-800 text-dark-100' : 'bg-white text-sbux-brown'">
         <div v-if="onboardingStep === 1" class="text-center">
           <span class="text-5xl mb-4 block">☕</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">ยินดีต้อนรับสู่ WANWAN COFFEE TUNER</h2>
-          <p class="text-sm text-gray-600 mb-4">แอปช่วยจูนกาแฟ Espresso ให้ได้รสชาติที่สมบูรณ์แบบ</p>
-          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">แอปช่วยจูนกาแฟ Espresso ให้ได้รสชาติที่สมบูรณ์แบบ</p>
+          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
             <p><b>🎯 เป้าหมาย:</b> EY 18-22% และ TDS 8-12%</p>
             <p><b>📊 หลักการ:</b> ใช้มาตรฐาน SCA (Specialty Coffee Association)</p>
           </div>
@@ -218,27 +218,27 @@
         <div v-if="onboardingStep === 2" class="text-center">
           <span class="text-5xl mb-4 block">🔧</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">Step 1: ปรับเบอร์บด</h2>
-          <p class="text-sm text-gray-600 mb-4">ปรับเบอร์บดจน EY อยู่ในช่วง 18-22%</p>
-          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
-            <p>• <b>EY ต่ำไป (< 18%)</b> → บดละเอียดขึ้น</p>
-            <p>• <b>EY สูงไป (> 22%)</b> → บดหยาบขึ้น</p>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">ปรับเบอร์บดจน EY อยู่ในช่วง 18-22%</p>
+          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
+            <p>• <b>EY ต่ำไป (&lt; 18%)</b> → บดละเอียดขึ้น</p>
+            <p>• <b>EY สูงไป (&gt; 22%)</b> → บดหยาบขึ้น</p>
             <p>• ⚠️ <b>บดทิ้ง 2-3g ก่อนทุกครั้ง</b>ที่ปรับเบอร์บด</p>
           </div>
         </div>
         <div v-if="onboardingStep === 3" class="text-center">
           <span class="text-5xl mb-4 block">🎯</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">Step 2: ปรับ Yield</h2>
-          <p class="text-sm text-gray-600 mb-4">เมื่อ EY ดีแล้ว ปรับ Yield ให้ TDS อยู่ในช่วง 8-12%</p>
-          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
-            <p>• <b>TDS สูงไป (> 12%)</b> → เพิ่ม Yield (กดหยุดช้าลง)</p>
-            <p>• <b>TDS ต่ำไป (< 8%)</b> → ลด Yield (กดหยุดเร็วขึ้น)</p>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">เมื่อ EY ดีแล้ว ปรับ Yield ให้ TDS อยู่ในช่วง 8-12%</p>
+          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
+            <p>• <b>TDS สูงไป (&gt; 12%)</b> → เพิ่ม Yield (กดหยุดช้าลง)</p>
+            <p>• <b>TDS ต่ำไป (&lt; 8%)</b> → ลด Yield (กดหยุดเร็วขึ้น)</p>
             <p>• 💡 <b>Dose คงที่</b>หลังจาก Shot แรก</p>
           </div>
         </div>
         <div v-if="onboardingStep === 4" class="text-center">
           <span class="text-5xl mb-4 block">📊</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">ค่าที่ต้องกรอก (6 ค่า)</h2>
-          <div class="bg-sbux-mint p-4 text-left space-y-1 text-sm">
+          <div class="p-4 text-left space-y-1 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
             <p>1️⃣ <b>เบอร์บด</b> - ตั้งที่เครื่องบด</p>
             <p>2️⃣ <b>Dose</b> - น้ำหนักกาแฟบด (g)</p>
             <p>3️⃣ <b>Yield</b> - น้ำหนักกาแฟที่ชงได้ (g)</p>
@@ -250,8 +250,8 @@
         <div v-if="onboardingStep === 5" class="text-center">
           <span class="text-5xl mb-4 block">🎉</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">พร้อมแล้ว!</h2>
-          <p class="text-sm text-gray-600 mb-4">เริ่มจูนกาแฟช็อตแรกได้เลย</p>
-          <div class="bg-green-100 p-4 text-left space-y-2 text-sm text-green-800">
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">เริ่มจูนกาแฟช็อตแรกได้เลย</p>
+          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-green-500/20 text-green-300' : 'bg-green-100 text-green-800'">
             <p>✅ ใส่ค่าทั้ง 6 ช่อง</p>
             <p>✅ กด "วิเคราะห์ผล"</p>
             <p>✅ ทำตามคำแนะนำ</p>
@@ -260,13 +260,13 @@
         </div>
 
         <div class="flex justify-between items-center mt-6">
-          <button v-if="onboardingStep > 1" @click="onboardingStep--" class="text-sm text-gray-500 hover:text-sbux-green">
+          <button v-if="onboardingStep > 1" @click="onboardingStep--" class="text-sm" :class="darkMode ? 'text-dark-400 hover:text-sbux-greenLight' : 'text-gray-500 hover:text-sbux-green'">
             ← ย้อนกลับ
           </button>
           <span v-else></span>
 
           <div class="flex items-center gap-1">
-            <span v-for="s in 5" :key="s" class="w-2 h-2 rounded-full" :class="s === onboardingStep ? 'bg-sbux-green' : 'bg-gray-200'"></span>
+            <span v-for="s in 5" :key="s" class="w-2 h-2 rounded-full" :class="s === onboardingStep ? 'bg-sbux-green' : (darkMode ? 'bg-dark-600' : 'bg-gray-200')"></span>
           </div>
 
           <button v-if="onboardingStep < 5" @click="onboardingStep++" class="btn-primary px-4 py-2 text-sm rounded-none">
@@ -277,7 +277,7 @@
           </button>
         </div>
 
-        <button @click="skipOnboarding" class="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-4">
+        <button @click="skipOnboarding" class="w-full text-center text-xs mt-4" :class="darkMode ? 'text-dark-500 hover:text-dark-300' : 'text-gray-400 hover:text-gray-600'">
           ข้ามการแนะนำ
         </button>
       </div>
@@ -870,15 +870,30 @@
         <!-- Help & Tutorial -->
         <div class="card p-4">
           <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">วิธีใช้งาน</p>
-          <button @click="showTutorial" class="w-full py-3 rounded-none bg-sbux-green/10 text-sbux-green text-sm font-medium hover:bg-sbux-green/20 touch-feedback">
-            📖 ดูคู่มือการใช้งาน
+          <div class="space-y-3">
+            <button @click="showTutorial" class="w-full py-3 rounded-none bg-sbux-green/10 text-sbux-green text-sm font-medium hover:bg-sbux-green/20 touch-feedback">
+              📖 ดูคู่มือการใช้งาน
+            </button>
+            <button @click="resetOnboarding" class="w-full py-3 rounded-none text-sm font-medium touch-feedback"
+              :class="darkMode ? 'bg-dark-700 text-dark-300 hover:bg-dark-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+              🔄 รีเซ็ตการแนะนำ (สำหรับมือใหม่)
+            </button>
+          </div>
+        </div>
+
+        <!-- App Installation -->
+        <div v-if="deferredPrompt || canInstallPWA" class="card p-4">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">ติดตั้งแอป</p>
+          <button @click="installPWA" class="w-full py-3 rounded-none bg-sbux-green text-white text-sm font-medium hover:bg-sbux-greenLight touch-feedback">
+            📱 เพิ่มลงหน้า Home
           </button>
+          <p class="text-xs text-gray-400 mt-2 text-center">ใช้งานได้เร็วขึ้น แม้ไม่มีอินเทอร์เน็ต</p>
         </div>
 
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-gray-500 mt-1">v6.7 · Made with ❤️</p>
+          <p class="text-xs text-gray-500 mt-1">v6.8 · Made with ❤️</p>
           <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
@@ -1589,6 +1604,17 @@ Made with WANWAN COFFEE TUNER`
           showOnboarding.value = true
         }
 
+        function resetOnboarding() {
+          localStorage.removeItem('wanwan_onboarded')
+          onboardingStep.value = 1
+          showOnboarding.value = true
+        }
+
+        // Computed: can install PWA (show button in settings even after dismissing prompt)
+        const canInstallPWA = computed(() => {
+          return deferredPrompt.value !== null
+        })
+
         // Dark Mode functions
         function toggleDarkMode() {
           darkMode.value = !darkMode.value
@@ -1730,9 +1756,9 @@ Made with WANWAN COFFEE TUNER`
           analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
           copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
           exportData, importData, clearAllData,
-          showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial,
+          showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
-          isOnline, showInstallPrompt, installPWA, dismissInstallPrompt
+          isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt
         }
       }
     }).mount('#app')
