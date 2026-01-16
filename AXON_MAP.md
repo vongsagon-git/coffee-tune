@@ -137,7 +137,20 @@
 
 ---
 
-## 📋 [C007] Future Backlog
+## 📋 [C007] v6.8 - Settings Enhancements
+
+**Status:** ✅ COMPLETED
+**Version:** 6.8
+
+### Settings Improvements
+- [x] [C007.1] Dark Mode support for Onboarding modal
+- [x] [C007.2] Install App button in Settings
+- [x] [C007.3] Reset Onboarding option in Settings
+- [x] [C007.4] Improved hover states in dark mode
+
+---
+
+## 📋 [C008] Future Backlog
 
 **Status:** 🔮 FUTURE
 **Priority:** Low
@@ -156,7 +169,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 6.5 Starbucks Theme
+**Current Version:** 6.8 Settings Enhancements
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -168,3 +181,4 @@
 | v6.5    | Starbucks Theme, Fast Tuning     | 2026-01-17 |
 | v6.6    | Onboarding, Accessibility, Stats | 2026-01-17 |
 | v6.7    | Dark Mode, PWA Install, Offline  | 2026-01-17 |
+| v6.8    | Settings Enhancements            | 2026-01-17 |

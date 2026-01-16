@@ -2,13 +2,13 @@
 
 **Last Update:** 2026-01-17
 **Quality Score:** 99/100
-**Version:** v6.7 Dark Mode + PWA Enhancements
+**Version:** v6.8 Settings Enhancements
 
 ## 🎯 Current Execution (Resume Point)
 
-**Active Task:** v6.7 PWA Enhancements ✅
-**Progress:** C001 (15/15), C002 (8/8), C003 (8/8), Testing (12/12), C005 (6/6), C006 (4/4)
-**Last Action:** v6.7 - Dark Mode + PWA Install Prompt + Offline Indicator
+**Active Task:** v6.8 Settings Enhancements ✅
+**Progress:** C001 (15/15), C002 (8/8), C003 (8/8), Testing (12/12), C005 (6/6), C006 (4/4), C007 (4/4)
+**Last Action:** v6.8 - Dark Mode Onboarding + Install Button + Reset Onboarding
 
 ## 📋 Completed Features
 
@@ -55,6 +55,12 @@
 - ✅ PWA Install Prompt with dismiss option
 - ✅ Offline mode indicator
 
+### C007 - v6.8 Settings Enhancements (COMPLETED)
+- ✅ Dark Mode support for Onboarding modal
+- ✅ Install App button in Settings
+- ✅ Reset Onboarding option in Settings
+- ✅ Improved hover states in dark mode
+
 ## 🛠️ Active Tools Protocol
 
 - [x] Read/Write Files
@@ -65,7 +71,7 @@
 
 ## 📝 Context Dump
 
-**โปรเจค:** Coffee Dial-In Web App v6.5
+**โปรเจค:** Coffee Dial-In Web App v6.8
 **Theme:** Starbucks-inspired (Green + Cream + Sharp)
 **Equipment:** Appia Life XT (12 bar), F64 Evo Pro (1-12)
 **Formula:** EY% = (Yield × TDS) / Dose
