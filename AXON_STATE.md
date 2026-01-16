@@ -2,13 +2,13 @@
 
 **Last Update:** 2026-01-17
 **Quality Score:** 99/100
-**Version:** v6.6 Onboarding + Accessibility
+**Version:** v6.7 Dark Mode + PWA Enhancements
 
 ## 🎯 Current Execution (Resume Point)
 
-**Active Task:** v6.6 UX Improvements ✅
-**Progress:** C001 (15/15), C002 (8/8), C003 (8/8), Testing (12/12), C005 (6/6)
-**Last Action:** v6.6 - Onboarding Tutorial + Accessibility + Quick Stats
+**Active Task:** v6.7 PWA Enhancements ✅
+**Progress:** C001 (15/15), C002 (8/8), C003 (8/8), Testing (12/12), C005 (6/6), C006 (4/4)
+**Last Action:** v6.7 - Dark Mode + PWA Install Prompt + Offline Indicator
 
 ## 📋 Completed Features
 
@@ -48,6 +48,12 @@
 - ✅ ARIA labels for accessibility
 - ✅ Quick Stats Dashboard on input page
 - ✅ Show Tutorial button in Settings
+
+### C006 - v6.7 PWA Enhancements (COMPLETED)
+- ✅ Dark Mode toggle with persistence
+- ✅ Responsive onboarding modal (bottom sheet on mobile)
+- ✅ PWA Install Prompt with dismiss option
+- ✅ Offline mode indicator
 
 ## 🛠️ Active Tools Protocol
 

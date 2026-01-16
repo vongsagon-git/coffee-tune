@@ -124,7 +124,20 @@
 
 ---
 
-## 📋 [C006] Future Backlog
+## 📋 [C006] v6.7 - PWA Enhancements
+
+**Status:** ✅ COMPLETED
+**Version:** 6.7
+
+### Dark Mode & PWA
+- [x] [C006.1] Dark Mode toggle with persistence
+- [x] [C006.2] Responsive onboarding modal (bottom sheet on mobile)
+- [x] [C006.3] PWA Install Prompt with dismiss option
+- [x] [C006.4] Offline mode indicator
+
+---
+
+## 📋 [C007] Future Backlog
 
 **Status:** 🔮 FUTURE
 **Priority:** Low
@@ -154,3 +167,4 @@
 | v6.4    | Smart Algorithm, Feedback Loop   | 2026-01-17 |
 | v6.5    | Starbucks Theme, Fast Tuning     | 2026-01-17 |
 | v6.6    | Onboarding, Accessibility, Stats | 2026-01-17 |
+| v6.7    | Dark Mode, PWA Install, Offline  | 2026-01-17 |

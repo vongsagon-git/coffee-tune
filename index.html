@@ -165,13 +165,47 @@
       from { opacity: 0; transform: translateX(20px); }
       to { opacity: 1; transform: translateX(0); }
     }
+
+    /* Dark Mode Styles */
+    .dark .card {
+      background: #1a1a1a;
+      border-color: #333;
+    }
+    .dark .input-field {
+      background: #252525;
+      border-color: #444;
+      color: #f0f0f0;
+    }
+    .dark .input-field:focus {
+      background: #2a2a2a;
+      border-color: #006241;
+    }
+    .dark .stat-box {
+      background: #252525;
+    }
+    .dark .bottom-nav {
+      background: rgba(26, 26, 26, 0.95);
+      border-top-color: #333;
+    }
+    .dark .nav-item:not(.active) {
+      color: #888;
+    }
+    .dark .text-gray-500 { color: #888; }
+    .dark .text-gray-600 { color: #999; }
+    .dark .text-gray-400 { color: #777; }
+    .dark .text-sbux-brown { color: #e0e0e0; }
+    .dark .bg-gray-100 { background: #2a2a2a; }
+    .dark .bg-gray-50 { background: #252525; }
+    .dark .bg-sbux-mint { background: rgba(0, 98, 65, 0.2); }
+    .dark .bg-sbux-mint\/50 { background: rgba(0, 98, 65, 0.15); }
+    .dark .bg-sbux-mint\/30 { background: rgba(0, 98, 65, 0.1); }
   </style>
 </head>
 <body class="bg-sbux-cream text-sbux-brown min-h-screen">
   <div id="app" v-cloak role="application" aria-label="WANWAN Coffee Tuner Application">
     <!-- Onboarding Modal (First-time users) -->
-    <div v-if="showOnboarding" class="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-      <div class="bg-white max-w-sm w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+    <div v-if="showOnboarding" class="fixed inset-0 bg-black/70 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label="คู่มือการใช้งาน">
+      <div class="bg-white w-full sm:max-w-sm sm:rounded-none p-5 sm:p-6 shadow-xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-none" :class="darkMode ? 'bg-dark-800 text-white' : 'bg-white'">
         <div v-if="onboardingStep === 1" class="text-center">
           <span class="text-5xl mb-4 block">☕</span>
           <h2 class="text-xl font-bold text-sbux-green mb-3">ยินดีต้อนรับสู่ WANWAN COFFEE TUNER</h2>
@@ -249,8 +283,32 @@
       </div>
     </div>
 
+    <!-- Offline Indicator -->
+    <div v-if="!isOnline" class="fixed top-0 left-0 right-0 bg-amber-500 text-white text-center text-xs py-1 z-[110]">
+      📡 ออฟไลน์ - ข้อมูลจะบันทึกในเครื่อง
+    </div>
+
+    <!-- PWA Install Prompt -->
+    <div v-if="showInstallPrompt" class="fixed bottom-20 left-4 right-4 bg-sbux-green text-white p-4 shadow-lg z-[90] sm:left-auto sm:right-4 sm:w-80">
+      <div class="flex items-start gap-3">
+        <span class="text-2xl">📱</span>
+        <div class="flex-1">
+          <p class="font-medium text-sm">ติดตั้งแอป</p>
+          <p class="text-xs text-white/80 mt-1">เพิ่มลงหน้า Home เพื่อใช้งานได้เร็วขึ้น</p>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button @click="installPWA" class="flex-1 py-2 bg-white text-sbux-green text-sm font-medium rounded-none">
+          ติดตั้ง
+        </button>
+        <button @click="dismissInstallPrompt" class="px-4 py-2 text-white/70 text-sm hover:text-white">
+          ไม่ใช่ตอนนี้
+        </button>
+      </div>
+    </div>
+
     <!-- Header (Starbucks Style - Green Bar) -->
-    <header class="bg-sbux-green py-3 px-5 sticky top-0 z-50" role="banner">
+    <header class="bg-sbux-green py-3 px-5 sticky z-50" :class="!isOnline ? 'top-6' : 'top-0'" role="banner">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div>
           <h1 class="text-base font-bold tracking-tight text-white">WANWAN COFFEE</h1>
@@ -800,6 +858,15 @@
           </div>
         </div>
 
+        <!-- Appearance -->
+        <div class="card p-4">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">ธีม</p>
+          <button @click="toggleDarkMode" class="w-full py-3 rounded-none text-sm font-medium touch-feedback"
+            :class="darkMode ? 'bg-dark-700 text-white hover:bg-dark-600' : 'bg-gray-100 text-sbux-brown hover:bg-gray-200'">
+            {{ darkMode ? '☀️ เปลี่ยนเป็นธีมสว่าง' : '🌙 เปลี่ยนเป็นธีมมืด' }}
+          </button>
+        </div>
+
         <!-- Help & Tutorial -->
         <div class="card p-4">
           <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">วิธีใช้งาน</p>
@@ -811,7 +878,7 @@
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-gray-500 mt-1">v6.6 · Made with ❤️</p>
+          <p class="text-xs text-gray-500 mt-1">v6.7 · Made with ❤️</p>
           <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
@@ -852,6 +919,14 @@
         // Onboarding state
         const showOnboarding = ref(false)
         const onboardingStep = ref(1)
+
+        // Dark Mode state
+        const darkMode = ref(false)
+
+        // PWA & Offline state
+        const isOnline = ref(navigator.onLine)
+        const deferredPrompt = ref(null)
+        const showInstallPrompt = ref(false)
 
         // Bean name (set on first shot)
         const beanName = ref('')
@@ -1417,7 +1492,7 @@ Made with WANWAN COFFEE TUNER`
 
         function exportData() {
           const data = {
-            version: '6.6',
+            version: '6.7',
             exportedAt: new Date().toISOString(),
             recipes: recipes.value,
             history: history.value
@@ -1514,6 +1589,41 @@ Made with WANWAN COFFEE TUNER`
           showOnboarding.value = true
         }
 
+        // Dark Mode functions
+        function toggleDarkMode() {
+          darkMode.value = !darkMode.value
+          localStorage.setItem('wanwan_darkmode', darkMode.value ? 'true' : 'false')
+          applyDarkMode()
+        }
+
+        function applyDarkMode() {
+          if (darkMode.value) {
+            document.documentElement.classList.add('dark')
+            document.body.classList.remove('bg-sbux-cream', 'text-sbux-brown')
+            document.body.classList.add('bg-dark-900', 'text-dark-100')
+          } else {
+            document.documentElement.classList.remove('dark')
+            document.body.classList.remove('bg-dark-900', 'text-dark-100')
+            document.body.classList.add('bg-sbux-cream', 'text-sbux-brown')
+          }
+        }
+
+        // PWA Install functions
+        async function installPWA() {
+          if (!deferredPrompt.value) return
+          deferredPrompt.value.prompt()
+          const { outcome } = await deferredPrompt.value.userChoice
+          if (outcome === 'accepted') {
+            showInstallPrompt.value = false
+          }
+          deferredPrompt.value = null
+        }
+
+        function dismissInstallPrompt() {
+          showInstallPrompt.value = false
+          localStorage.setItem('wanwan_install_dismissed', 'true')
+        }
+
         // Save session state (for page refresh)
         function saveSessionState() {
           const state = {
@@ -1546,10 +1656,32 @@ Made with WANWAN COFFEE TUNER`
           // Add keyboard listener
           window.addEventListener('keydown', handleKeyboard)
 
+          // Online/Offline listeners
+          window.addEventListener('online', () => { isOnline.value = true })
+          window.addEventListener('offline', () => { isOnline.value = false })
+
+          // PWA Install prompt listener
+          window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault()
+            deferredPrompt.value = e
+            // Show install prompt if not dismissed before
+            const dismissed = localStorage.getItem('wanwan_install_dismissed')
+            if (!dismissed) {
+              showInstallPrompt.value = true
+            }
+          })
+
           // Check if first-time user (show onboarding)
           const onboarded = localStorage.getItem('wanwan_onboarded')
           if (!onboarded) {
             showOnboarding.value = true
+          }
+
+          // Load dark mode preference
+          const savedDarkMode = localStorage.getItem('wanwan_darkmode')
+          if (savedDarkMode === 'true') {
+            darkMode.value = true
+            applyDarkMode()
           }
 
           // Load session history
@@ -1598,7 +1730,9 @@ Made with WANWAN COFFEE TUNER`
           analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
           copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
           exportData, importData, clearAllData,
-          showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial
+          showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial,
+          darkMode, toggleDarkMode,
+          isOnline, showInstallPrompt, installPWA, dismissInstallPrompt
         }
       }
     }).mount('#app')
