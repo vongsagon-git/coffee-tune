@@ -708,12 +708,15 @@
             <p class="text-sm text-green-500/70 mt-3">บันทึกสูตรนี้ไว้ใช้ครั้งหน้า!</p>
 
             <!-- Action Buttons -->
-            <div class="flex gap-2 mt-4 justify-center">
+            <div class="flex gap-2 mt-4 justify-center flex-wrap">
               <button @click="saveRecipe" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-none text-sm font-medium text-sbux-brown transition-all">
                 {{ recipeSaved ? '✅ บันทึกแล้ว!' : '💾 บันทึกสูตร' }}
               </button>
               <button @click="copyRecipe" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-none text-sm font-medium text-sbux-brown transition-all">
                 {{ copied ? '✅ คัดลอก!' : '📋 Copy' }}
+              </button>
+              <button v-if="canShare" @click="shareRecipe" class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-none text-sm font-medium text-white transition-all">
+                📤 แชร์
               </button>
             </div>
           </div>
@@ -893,7 +896,7 @@
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-gray-500 mt-1">v6.9 · Made with ❤️</p>
+          <p class="text-xs text-gray-500 mt-1">v7.0 · Made with ❤️</p>
           <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
@@ -1466,6 +1469,32 @@ Made with WANWAN COFFEE TUNER`
           })
         }
 
+        // Web Share API
+        const canShare = computed(() => navigator.share !== undefined)
+
+        async function shareRecipe() {
+          const recipe = `☕ ${beanName.value || 'Coffee Recipe'}
+🔧 Grind: ${shot.value.grind}
+☕ Dose: ${shot.value.dose}g
+🍯 Yield: ${shot.value.yield}g
+⏱️ Time: ${shot.value.time}s
+📊 EY: ${ey.value}% | TDS: ${shot.value.tds}%
+
+Made with WANWAN COFFEE TUNER
+https://vongsagon-git.github.io/coffee-tune/`
+
+          try {
+            await navigator.share({
+              title: `☕ ${beanName.value || 'Perfect Espresso Recipe'}`,
+              text: recipe.trim(),
+              url: 'https://vongsagon-git.github.io/coffee-tune/'
+            })
+          } catch (err) {
+            // User cancelled or error
+            console.log('Share cancelled')
+          }
+        }
+
         function saveRecipe() {
           const newRecipe = {
             id: Date.now().toString(),
@@ -1754,7 +1783,7 @@ Made with WANWAN COFFEE TUNER`
           validationErrors, validRanges, copied, recipeSaved, recipes, allTimeHistory,
           confirmationMode, confirmationCount, confirmedRecipe,
           analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
-          copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
+          copyRecipe, saveRecipe, loadRecipe, deleteRecipe, canShare, shareRecipe,
           exportData, importData, clearAllData,
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
