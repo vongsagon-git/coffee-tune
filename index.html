@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TUNER">
-  <meta name="theme-color" content="#1a1a1a">
+  <meta name="theme-color" content="#006241">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +23,15 @@
             sans: ['Inter', 'system-ui', 'sans-serif'],
           },
           colors: {
+            // Starbucks-inspired palette
+            sbux: {
+              green: '#006241',      // Primary Starbucks Green
+              greenLight: '#00754A', // Lighter green
+              mint: '#D4E9E2',       // Soft mint accent
+              cream: '#F7F5F2',      // Warm cream background
+              white: '#FFFFFF',
+              brown: '#1E3932',      // Dark green-brown
+            },
             dark: {
               50: '#f7f7f7',
               100: '#e3e3e3',
@@ -37,9 +46,9 @@
               950: '#0d0d0d',
             },
             accent: {
-              DEFAULT: '#c9a227',
-              light: '#dbb84a',
-              dark: '#a6851f',
+              DEFAULT: '#006241',    // Starbucks Green
+              light: '#00754A',
+              dark: '#1E3932',
             }
           }
         }
@@ -72,48 +81,52 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Starbucks Light Theme */
     .glass {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
 
     .input-field {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
       transition: all 0.2s ease;
+      color: #1E3932;
     }
     .input-field:focus {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: #c9a227;
-      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+      background: #FFFFFF;
+      border-color: #006241;
+      box-shadow: 0 0 0 3px rgba(0, 98, 65, 0.15);
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #c9a227 0%, #a6851f 100%);
-      box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3);
+      background: linear-gradient(135deg, #006241 0%, #00754A 100%);
+      box-shadow: 0 4px 14px rgba(0, 98, 65, 0.3);
       transition: all 0.2s ease;
+      color: #FFFFFF;
     }
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary:disabled {
-      background: rgba(255, 255, 255, 0.05);
+      background: #E0E0E0;
       box-shadow: none;
-      color: rgba(255, 255, 255, 0.3);
+      color: #999999;
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
+      background: #FFFFFF;
+      border: 1px solid #E8E8E8;
+      border-radius: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .stat-box {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
+      background: #F7F5F2;
+      border-radius: 0;
     }
 
-    .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-    .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+    .glow-green { box-shadow: 0 0 20px rgba(0, 98, 65, 0.2); }
+    .glow-amber { box-shadow: 0 0 20px rgba(212, 133, 62, 0.2); }
 
     /* Native App Feel */
     .bottom-nav {
@@ -121,8 +134,9 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(26, 26, 26, 0.95);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
+      border-top: 1px solid #E8E8E8;
       -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       padding-bottom: env(safe-area-inset-bottom);
@@ -153,16 +167,16 @@
     }
   </style>
 </head>
-<body class="bg-dark-950 text-white min-h-screen">
+<body class="bg-sbux-cream text-sbux-brown min-h-screen">
   <div id="app" v-cloak>
-    <!-- Header (Minimal - Native App Style) -->
-    <header class="glass border-b border-white/5 py-3 px-5 sticky top-0 z-50">
+    <!-- Header (Starbucks Style - Green Bar) -->
+    <header class="bg-sbux-green py-3 px-5 sticky top-0 z-50">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div>
-          <h1 class="text-base font-bold tracking-tight text-accent">WANWAN COFFEE</h1>
+          <h1 class="text-base font-bold tracking-tight text-white">WANWAN COFFEE</h1>
         </div>
         <div class="text-right">
-          <p class="text-[10px] text-dark-600">Appia Life XT · F64 Evo Pro</p>
+          <p class="text-[10px] text-white/70">Appia Life XT · F64 Evo Pro</p>
         </div>
       </div>
     </header>
@@ -183,12 +197,12 @@
               <span :class="!fixedGrind ? 'text-accent' : 'text-green-500'">
                 {{ !fixedGrind ? '🔧 Step 1: หาเบอร์บด' : '✅ เบอร์บด OK' }}
               </span>
-              <span :class="fixedGrind && !tdsIsGood ? 'text-accent' : (tdsIsGood ? 'text-green-500' : 'text-dark-600')">
+              <span :class="fixedGrind && !tdsIsGood ? 'text-accent' : (tdsIsGood ? 'text-green-500' : 'text-gray-400')">
                 {{ tdsIsGood ? '✅ TDS OK' : (fixedGrind ? '🎯 Step 2: ปรับ Yield' : '⏳ รอ') }}
               </span>
             </div>
-            <div class="h-2 bg-dark-800 rounded-full overflow-hidden">
-              <div class="h-full rounded-full transition-all duration-500"
+            <div class="h-2 bg-gray-100 rounded-none overflow-hidden">
+              <div class="h-full rounded-none transition-all duration-500"
                 :class="tdsIsGood && fixedGrind ? 'bg-green-500 w-full' : (fixedGrind ? 'bg-accent w-1/2' : 'bg-accent/50 w-1/4')"
                 :style="{ width: tdsIsGood && fixedGrind ? '100%' : (fixedGrind ? '75%' : '25%') }">
               </div>
@@ -196,7 +210,7 @@
           </div>
 
           <!-- Smart Hint -->
-          <p class="text-dark-400 text-sm mt-3">
+          <p class="text-gray-600 text-sm mt-3">
             {{ shotNumber === 1 ? '📝 ใส่ค่าทั้ง 6 ช่อง แล้วกดวิเคราะห์' :
                (!fixedGrind ? '🔧 กำลังหาเบอร์บดที่ใช่ (EY 18-22%)' : '🎯 เบอร์บดโอเคแล้ว! ปรับ Yield ให้ TDS 8-12%') }}
           </p>
@@ -207,16 +221,16 @@
           <!-- Bean Name (only on first shot) -->
           <div v-if="shotNumber === 1">
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">☕ เมล็ดกาแฟ</label>
-              <span class="text-[10px] text-dark-600">ไม่บังคับ</span>
+              <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">☕ เมล็ดกาแฟ</label>
+              <span class="text-[10px] text-gray-400">ไม่บังคับ</span>
             </div>
             <input type="text" v-model="beanName" placeholder="เช่น Ethiopia Yirgacheffe, Brazil..."
-              class="input-field w-full h-12 text-sm text-center rounded-xl outline-none px-4">
+              class="input-field w-full h-12 text-sm text-center rounded-none outline-none px-4">
           </div>
 
           <!-- Show Bean Name (locked after first shot) -->
           <div v-else-if="beanName" class="text-center">
-            <span class="px-4 py-2 rounded-full text-sm font-medium bg-accent/10 text-accent">
+            <span class="px-4 py-2 rounded-none text-sm font-medium bg-accent/10 text-accent">
               ☕ {{ beanName }}
             </span>
           </div>
@@ -225,20 +239,20 @@
           <div v-if="shotNumber === 1" class="grid grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">เบอร์บด</label>
-                <span class="text-[10px] text-dark-600">1-12</span>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">เบอร์บด</label>
+                <span class="text-[10px] text-gray-400">1-12</span>
               </div>
               <input type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500/50' : ''">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Dose (g)</label>
-                <span class="text-[10px] text-dark-600">10-30</span>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Dose (g)</label>
+                <span class="text-[10px] text-gray-400">10-30</span>
               </div>
               <input type="number" v-model.number="shot.dose" step="0.1" min="10" max="30" placeholder="18"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="shot.dose && (shot.dose < 10 || shot.dose > 30) ? 'border-red-500/50' : ''">
             </div>
           </div>
@@ -252,46 +266,46 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="text-center">
-                  <p class="text-[10px] text-dark-500 uppercase">เบอร์บด</p>
+                  <p class="text-[10px] text-gray-500 uppercase">เบอร์บด</p>
                   <p class="text-2xl font-bold text-green-400">{{ shot.grind }}</p>
                   <p class="text-[10px] text-green-500">🔒</p>
                 </div>
                 <div class="text-center">
-                  <p class="text-[10px] text-dark-500 uppercase">Dose</p>
+                  <p class="text-[10px] text-gray-500 uppercase">Dose</p>
                   <p class="text-2xl font-bold text-green-400">{{ shot.dose }}g</p>
                   <p class="text-[10px] text-green-500">🔒</p>
                 </div>
                 <div class="text-center">
-                  <p class="text-[10px] text-dark-500 uppercase">Yield</p>
+                  <p class="text-[10px] text-gray-500 uppercase">Yield</p>
                   <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
                   <p class="text-[10px] text-green-500">🔒</p>
                 </div>
               </div>
               <div class="text-right">
-                <p class="text-xs text-dark-400">Ratio</p>
+                <p class="text-xs text-gray-600">Ratio</p>
                 <p class="text-lg font-bold text-green-400" v-if="shot.dose && shot.yield">1:{{ (shot.yield / shot.dose).toFixed(1) }}</p>
               </div>
             </div>
           </div>
 
           <!-- Shot 2+: Grind + Dose แสดงค่าที่แนะนำ (Locked) -->
-          <div v-else class="card p-4 bg-dark-800/50">
+          <div v-else class="card p-4 bg-gray-100/50">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="text-center">
-                  <p class="text-[10px] text-dark-500 uppercase">เบอร์บด</p>
+                  <p class="text-[10px] text-gray-500 uppercase">เบอร์บด</p>
                   <p class="text-2xl font-bold" :class="fixedGrind ? 'text-green-400' : 'text-accent'">{{ shot.grind }}</p>
                   <p v-if="!fixedGrind" class="text-[10px] text-accent">🔧 ปรับตรงนี้</p>
                   <p v-else class="text-[10px] text-green-500">✅ OK</p>
                 </div>
                 <div class="text-center">
-                  <p class="text-[10px] text-dark-500 uppercase">Dose</p>
-                  <p class="text-2xl font-bold text-white">{{ shot.dose }}g</p>
+                  <p class="text-[10px] text-gray-500 uppercase">Dose</p>
+                  <p class="text-2xl font-bold text-sbux-brown">{{ shot.dose }}g</p>
                   <p class="text-[10px] text-accent">🔒 Fixed</p>
                 </div>
               </div>
               <div class="text-right">
-                <p class="text-xs text-dark-400">Ratio</p>
+                <p class="text-xs text-gray-600">Ratio</p>
                 <p class="text-lg font-bold text-accent" v-if="shot.dose">1:{{ targetYield ? (targetYield / shot.dose).toFixed(1) : '?' }}</p>
               </div>
             </div>
@@ -302,30 +316,30 @@
             <!-- Yield: Shot 1 = input, Shot 2+ = Locked display -->
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-green-400' : 'text-dark-400'">
+                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-green-400' : 'text-gray-600'">
                   {{ shotNumber > 1 ? '🔒 Yield (g)' : 'Yield (g)' }}
                 </label>
                 <span v-if="shotNumber > 1" class="text-[10px] text-green-500">Locked</span>
                 <span v-else-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
               </div>
               <!-- Shot 2+: Display locked value -->
-              <div v-if="shotNumber > 1" class="input-field w-full h-14 flex items-center justify-center rounded-xl bg-green-500/10 border-green-500/30">
+              <div v-if="shotNumber > 1" class="input-field w-full h-14 flex items-center justify-center rounded-none bg-green-500/10 border-green-500/30">
                 <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
               </div>
               <!-- Shot 1: Editable input -->
               <input v-else type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" placeholder="36"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-dark-400'">
+                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-gray-600'">
                   {{ shotNumber > 1 ? '📖 Time (s)' : 'Time (s)' }}
                 </label>
-                <span class="text-[10px] text-dark-600">อ่านจากจอ</span>
+                <span class="text-[10px] text-gray-400">อ่านจากจอ</span>
               </div>
               <input type="number" v-model.number="shot.time" min="15" max="60" placeholder="28"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="[
                   (shotNumber > 1 && !shot.time) ? 'border-blue-500/50 ring-1 ring-blue-500/30' : '',
                   shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500/50' : ''
@@ -336,7 +350,7 @@
           <!-- Divider -->
           <div class="flex items-center gap-3">
             <div class="flex-1 h-px bg-white/5"></div>
-            <span class="text-xs text-dark-500 font-medium">REFRACTOMETER</span>
+            <span class="text-xs text-gray-500 font-medium">REFRACTOMETER</span>
             <div class="flex-1 h-px bg-white/5"></div>
           </div>
 
@@ -344,66 +358,24 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">TDS %</label>
-                <span class="text-[10px] text-dark-600">8-12 ideal</span>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">TDS %</label>
+                <span class="text-[10px] text-gray-400">8-12 ideal</span>
               </div>
               <input type="number" v-model.number="shot.tds" step="0.1" min="1" max="20" placeholder="10"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="shot.tds && (shot.tds < 1 || shot.tds > 20) ? 'border-red-500/50' : ''">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Brix %</label>
-                <span class="text-[10px] text-dark-600">1-25</span>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Brix %</label>
+                <span class="text-[10px] text-gray-400">1-25</span>
               </div>
               <input type="number" v-model.number="shot.brix" step="0.1" min="1" max="25" placeholder="12"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
                 :class="shot.brix && (shot.brix < 1 || shot.brix > 25) ? 'border-red-500/50' : ''">
             </div>
           </div>
 
-          <!-- Rating Stars -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">⭐ Rating</label>
-              <span class="text-[10px] text-dark-600">ให้คะแนนรสชาติ</span>
-            </div>
-            <div class="flex justify-center gap-2">
-              <button v-for="star in 5" :key="star" @click="shot.rating = star"
-                class="text-3xl transition-all duration-150 hover:scale-110"
-                :class="shot.rating >= star ? 'text-yellow-400' : 'text-dark-700'">
-                {{ shot.rating >= star ? '★' : '☆' }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Flavor Tags -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">🍒 รสชาติ</label>
-              <span class="text-[10px] text-dark-600">เลือกที่ชิมได้</span>
-            </div>
-            <div class="flex flex-wrap justify-center gap-2">
-              <button v-for="flavor in flavorOptions" :key="flavor.id"
-                @click="toggleFlavor(flavor.id)"
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150"
-                :class="shot.flavors.includes(flavor.id)
-                  ? 'bg-accent text-dark-900 ring-2 ring-accent/50'
-                  : 'bg-dark-800 text-dark-400 hover:bg-dark-700'">
-                {{ flavor.icon }} {{ flavor.name }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Notes Field -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">📝 Notes</label>
-              <span class="text-[10px] text-dark-600">ไม่บังคับ</span>
-            </div>
-            <input type="text" v-model="shot.notes" placeholder="รสชาติ, ความรู้สึก..."
-              class="input-field w-full h-12 text-sm text-center rounded-xl outline-none px-4">
-          </div>
         </div>
 
         <!-- Validation Errors -->
@@ -416,7 +388,7 @@
 
         <!-- Submit Button -->
         <button @click="analyze" :disabled="!canAnalyze"
-          class="btn-primary w-full h-14 rounded-xl font-semibold text-lg text-dark-900">
+          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white">
           วิเคราะห์ผล
         </button>
       </div>
@@ -437,7 +409,7 @@
 
         <!-- Extraction Chart -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">แผนที่การสกัด</p>
+          <p class="text-xs text-gray-500 text-center mb-3 font-medium uppercase tracking-wider">แผนที่การสกัด</p>
           <svg viewBox="0 0 200 120" class="w-full h-32">
             <!-- Grid lines -->
             <line x1="10" y1="60" x2="190" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
@@ -472,92 +444,41 @@
         <!-- Stats Grid -->
         <div class="grid grid-cols-4 gap-2">
           <div class="stat-box p-3 text-center">
-            <p class="text-[10px] text-dark-500 font-medium uppercase">Ratio</p>
-            <p class="text-lg font-bold text-white mt-1">1:{{ ratio }}</p>
+            <p class="text-[10px] text-gray-500 font-medium uppercase">Ratio</p>
+            <p class="text-lg font-bold text-sbux-brown mt-1">1:{{ ratio }}</p>
           </div>
           <div class="stat-box p-3 text-center" :class="isPerfect ? 'bg-green-500/10' : 'bg-amber-500/10'">
             <p class="text-[10px] font-medium uppercase" :class="isPerfect ? 'text-green-500/70' : 'text-amber-500/70'">EY%</p>
             <p class="text-lg font-bold mt-1" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">{{ ey }}</p>
           </div>
           <div class="stat-box p-3 text-center">
-            <p class="text-[10px] text-dark-500 font-medium uppercase">Time</p>
-            <p class="text-lg font-bold text-white mt-1">{{ shot.time }}s</p>
+            <p class="text-[10px] text-gray-500 font-medium uppercase">Time</p>
+            <p class="text-lg font-bold text-sbux-brown mt-1">{{ shot.time }}s</p>
           </div>
           <div class="stat-box p-3 text-center">
-            <p class="text-[10px] text-dark-500 font-medium uppercase">TDS</p>
-            <p class="text-lg font-bold text-white mt-1">{{ shot.tds }}%</p>
-          </div>
-        </div>
-
-        <!-- Flavor Profile Bars -->
-        <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">Flavor Profile</p>
-          <div class="space-y-3">
-            <!-- Acid -->
-            <div class="flex items-center gap-3">
-              <span class="w-14 text-xs text-yellow-400">🍋 Acid</span>
-              <div class="flex-1 h-2 bg-dark-800 rounded-full overflow-hidden">
-                <div class="h-full bg-yellow-400 rounded-full transition-all"
-                  :style="{ width: flavorProfile.acid + '%' }"></div>
-              </div>
-              <span class="w-8 text-xs text-dark-500 text-right">{{ flavorProfile.acid }}%</span>
-            </div>
-            <!-- Sweet -->
-            <div class="flex items-center gap-3">
-              <span class="w-14 text-xs text-green-400">🍯 Sweet</span>
-              <div class="flex-1 h-2 bg-dark-800 rounded-full overflow-hidden">
-                <div class="h-full bg-green-400 rounded-full transition-all"
-                  :style="{ width: flavorProfile.sweet + '%' }"></div>
-              </div>
-              <span class="w-8 text-xs text-dark-500 text-right">{{ flavorProfile.sweet }}%</span>
-            </div>
-            <!-- Bitter -->
-            <div class="flex items-center gap-3">
-              <span class="w-14 text-xs text-amber-600">☕ Bitter</span>
-              <div class="flex-1 h-2 bg-dark-800 rounded-full overflow-hidden">
-                <div class="h-full bg-amber-600 rounded-full transition-all"
-                  :style="{ width: flavorProfile.bitter + '%' }"></div>
-              </div>
-              <span class="w-8 text-xs text-dark-500 text-right">{{ flavorProfile.bitter }}%</span>
-            </div>
-          </div>
-          <p class="text-[10px] text-dark-600 text-center mt-3">
-            {{ flavorProfile.description }}
-          </p>
-        </div>
-
-        <!-- Flavor Tags -->
-        <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">รสชาติที่คาดว่าจะได้</p>
-          <div class="flex flex-wrap justify-center gap-2">
-            <span v-for="flavor in expectedFlavors" :key="flavor.name"
-              class="px-3 py-1.5 rounded-full text-sm font-medium"
-              :class="flavor.type === 'good' ? 'bg-green-500/15 text-green-400' :
-                      flavor.type === 'bad' ? 'bg-red-500/15 text-red-400' :
-                      'bg-amber-500/15 text-amber-400'">
-              {{ flavor.icon }} {{ flavor.name }}
-            </span>
+            <p class="text-[10px] text-gray-500 font-medium uppercase">TDS</p>
+            <p class="text-lg font-bold text-sbux-brown mt-1">{{ shot.tds }}%</p>
           </div>
         </div>
 
         <!-- Smart Tuning Progress (Result Page) -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">🎯 Tuning Progress</p>
+          <p class="text-xs text-gray-500 text-center mb-3 font-medium uppercase tracking-wider">🎯 Tuning Progress</p>
           <div class="flex items-center justify-between text-xs font-medium mb-2">
             <span :class="eyIsGood ? 'text-green-500' : 'text-accent'">
               {{ eyIsGood ? '✅ EY OK' : '🔧 EY: ' + ey + '%' }}
             </span>
-            <span :class="tdsIsGood ? 'text-green-500' : (eyIsGood ? 'text-accent' : 'text-dark-600')">
+            <span :class="tdsIsGood ? 'text-green-500' : (eyIsGood ? 'text-accent' : 'text-gray-400')">
               {{ tdsIsGood ? '✅ TDS OK' : '🎯 TDS: ' + shot.tds + '%' }}
             </span>
           </div>
-          <div class="h-3 bg-dark-800 rounded-full overflow-hidden">
-            <div class="h-full rounded-full transition-all duration-500"
+          <div class="h-3 bg-gray-100 rounded-none overflow-hidden">
+            <div class="h-full rounded-none transition-all duration-500"
               :class="isPerfect ? 'bg-green-500' : (eyIsGood ? 'bg-accent' : 'bg-amber-500/70')"
               :style="{ width: isPerfect ? '100%' : (eyIsGood ? '75%' : '35%') }">
             </div>
           </div>
-          <p class="text-xs text-dark-500 text-center mt-2">
+          <p class="text-xs text-gray-500 text-center mt-2">
             {{ isPerfect ? '🎉 สมบูรณ์แบบ!' : (eyIsGood ? 'Step 2: ปรับ Yield ให้ TDS 8-12%' : 'Step 1: ปรับเบอร์บดให้ EY 18-22%') }}
           </p>
         </div>
@@ -577,7 +498,7 @@
           </div>
 
           <!-- What stays SAME vs CHANGE -->
-          <div class="bg-dark-900/50 rounded-xl p-4 space-y-3">
+          <div class="bg-sbux-mint/50 rounded-none p-4 space-y-3">
             <!-- เท่าเดิม -->
             <div class="flex items-center gap-2">
               <span class="text-green-500 text-sm font-medium w-16">เท่าเดิม:</span>
@@ -603,7 +524,7 @@
           </div>
 
           <!-- Quick Tip -->
-          <p class="text-xs text-dark-500 text-center mt-3">💡 {{ action.hint }}</p>
+          <p class="text-xs text-gray-500 text-center mt-3">💡 {{ action.hint }}</p>
         </div>
 
         <!-- Perfect Result -->
@@ -612,11 +533,11 @@
             <span class="text-5xl mb-3 block">🎉</span>
             <p class="text-2xl font-bold text-green-400 mb-2">พบสูตรที่ใช่แล้ว!</p>
             <p v-if="beanName" class="text-sm text-accent mb-2">☕ {{ beanName }}</p>
-            <div class="bg-dark-900/50 rounded-xl p-4 mt-4">
-              <p class="text-lg font-bold text-white">
+            <div class="bg-sbux-mint/50 rounded-none p-4 mt-4">
+              <p class="text-lg font-bold text-sbux-brown">
                 🔧 Grind {{ shot.grind }} · ☕ Dose {{ shot.dose }}g
               </p>
-              <p class="text-lg font-bold text-white mt-1">
+              <p class="text-lg font-bold text-sbux-brown mt-1">
                 🍯 Yield {{ shot.yield }}g · ⏱️ {{ shot.time }}s
               </p>
               <p class="text-sm text-green-400 mt-2">EY {{ ey }}% · TDS {{ shot.tds }}%</p>
@@ -625,10 +546,10 @@
 
             <!-- Action Buttons -->
             <div class="flex gap-2 mt-4 justify-center">
-              <button @click="saveRecipe" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-xl text-sm font-medium text-white transition-all">
+              <button @click="saveRecipe" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-none text-sm font-medium text-sbux-brown transition-all">
                 {{ recipeSaved ? '✅ บันทึกแล้ว!' : '💾 บันทึกสูตร' }}
               </button>
-              <button @click="copyRecipe" class="px-4 py-2 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-medium text-white transition-all">
+              <button @click="copyRecipe" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-none text-sm font-medium text-sbux-brown transition-all">
                 {{ copied ? '✅ คัดลอก!' : '📋 Copy' }}
               </button>
             </div>
@@ -637,38 +558,32 @@
 
         <!-- Next Button -->
         <button @click="nextShot"
-          class="btn-primary w-full h-14 rounded-xl font-semibold text-lg text-dark-900">
+          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white">
           {{ isPerfect ? '🎉 เริ่ม Session ใหม่' : '→ Shot ถัดไป (ปรับตามคำแนะนำ)' }}
         </button>
 
         <!-- Reset Button (when not perfect) -->
         <button v-if="!isPerfect && shotNumber > 2" @click="resetSession"
-          class="w-full text-center text-sm text-dark-500 hover:text-red-400 py-2 mt-2">
+          class="w-full text-center text-sm text-gray-500 hover:text-red-400 py-2 mt-2">
           🔄 เริ่มจูนใหม่ทั้งหมด
         </button>
 
         <!-- History -->
         <button v-if="history.length > 0" @click="showHistory = !showHistory"
-          class="w-full text-center text-sm text-dark-500 hover:text-dark-300 py-2">
+          class="w-full text-center text-sm text-gray-500 hover:text-dark-300 py-2">
           {{ showHistory ? '▲ ซ่อนประวัติ' : '▼ ประวัติ (' + history.length + ')' }}
         </button>
 
         <div v-if="showHistory && history.length > 0" class="card p-4 space-y-2">
           <div v-for="(h, i) in reversedHistory" :key="h.id"
-            class="p-3 bg-white/3 rounded-xl">
+            class="p-3 bg-sbux-mint/30 rounded-none">
             <div class="flex items-center gap-3">
               <span class="text-xl">{{ h.isPerfect ? '🎯' : '🔄' }}</span>
               <div class="flex-1">
                 <p class="font-medium text-sm">#{{ history.length - i }} · Grind {{ h.grind }} · {{ h.time }}s</p>
-                <p class="text-xs text-dark-500">EY {{ h.ey }}% · TDS {{ h.tds }}%
-                  <span v-if="h.rating" class="text-yellow-400 ml-1">{{ '★'.repeat(h.rating) }}{{ '☆'.repeat(5 - h.rating) }}</span>
-                </p>
+                <p class="text-xs text-gray-500">EY {{ h.ey }}% · TDS {{ h.tds }}%</p>
               </div>
             </div>
-            <p v-if="h.flavors && h.flavors.length" class="text-xs text-dark-400 mt-2 pl-9">
-              🍒 {{ h.flavors.map(f => flavorOptions.find(o => o.id === f)?.icon + flavorOptions.find(o => o.id === f)?.name).join(' · ') }}
-            </p>
-            <p v-if="h.notes" class="text-xs text-dark-400 mt-1 pl-9">📝 {{ h.notes }}</p>
           </div>
         </div>
       </div>
@@ -677,13 +592,13 @@
       <div v-if="page === 'recipes'" class="page-slide space-y-5">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold">📚 Recipe Library</h2>
-          <button @click="page = 'input'" class="text-sm text-dark-400 hover:text-white">← กลับ</button>
+          <button @click="page = 'input'" class="text-sm text-gray-600 hover:text-sbux-brown">← กลับ</button>
         </div>
 
         <div v-if="recipes.length === 0" class="card p-8 text-center">
           <span class="text-4xl mb-3 block">📭</span>
-          <p class="text-dark-400">ยังไม่มีสูตรที่บันทึกไว้</p>
-          <p class="text-xs text-dark-600 mt-2">จูนจนถึง Perfect Zone แล้วกด "บันทึกสูตร"</p>
+          <p class="text-gray-600">ยังไม่มีสูตรที่บันทึกไว้</p>
+          <p class="text-xs text-gray-400 mt-2">จูนจนถึง Perfect Zone แล้วกด "บันทึกสูตร"</p>
         </div>
 
         <div v-else class="space-y-3">
@@ -691,18 +606,17 @@
             <div class="flex items-start justify-between">
               <div class="flex-1">
                 <p class="font-bold text-accent">{{ r.bean || 'No Name' }}</p>
-                <p class="text-sm text-white mt-1">
+                <p class="text-sm text-sbux-brown mt-1">
                   🔧 {{ r.grind }} · ☕ {{ r.dose }}g · 🍯 {{ r.yield }}g · ⏱️ {{ r.time }}s
                 </p>
                 <p class="text-xs text-green-400 mt-1">EY {{ r.ey }}% · TDS {{ r.tds }}%</p>
-                <p v-if="r.rating" class="text-xs text-yellow-400 mt-1">{{ '★'.repeat(r.rating) }}{{ '☆'.repeat(5 - r.rating) }}</p>
-                <p class="text-[10px] text-dark-600 mt-2">{{ new Date(r.savedAt).toLocaleDateString('th-TH') }}</p>
+                <p class="text-[10px] text-gray-400 mt-2">{{ new Date(r.savedAt).toLocaleDateString('th-TH') }}</p>
               </div>
               <div class="flex gap-2">
-                <button @click="loadRecipe(r)" class="px-3 py-1.5 rounded-lg text-xs bg-accent/20 text-accent hover:bg-accent/30">
+                <button @click="loadRecipe(r)" class="px-3 py-1.5 rounded-none text-xs bg-accent/20 text-accent hover:bg-accent/30">
                   ใช้สูตรนี้
                 </button>
-                <button @click="deleteRecipe(i)" class="px-2 py-1.5 rounded-lg text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20">
+                <button @click="deleteRecipe(i)" class="px-2 py-1.5 rounded-none text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20">
                   🗑️
                 </button>
               </div>
@@ -717,30 +631,30 @@
 
         <!-- Shot Statistics -->
         <div v-if="history.length > 0" class="card p-4">
-          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">📊 สถิติการจูน</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">📊 สถิติการจูน</p>
           <div class="grid grid-cols-2 gap-4">
-            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+            <div class="text-center p-3 rounded-none bg-gray-100/50">
               <p class="text-2xl font-bold text-accent">{{ stats.totalShots }}</p>
-              <p class="text-[10px] text-dark-500 uppercase">Total Shots</p>
+              <p class="text-[10px] text-gray-500 uppercase">Total Shots</p>
             </div>
-            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+            <div class="text-center p-3 rounded-none bg-gray-100/50">
               <p class="text-2xl font-bold text-green-400">{{ stats.perfectShots }}</p>
-              <p class="text-[10px] text-dark-500 uppercase">Perfect Zone</p>
+              <p class="text-[10px] text-gray-500 uppercase">Perfect Zone</p>
             </div>
-            <div class="text-center p-3 rounded-xl bg-dark-800/50">
-              <p class="text-2xl font-bold text-white">{{ stats.avgEY }}%</p>
-              <p class="text-[10px] text-dark-500 uppercase">Avg EY%</p>
+            <div class="text-center p-3 rounded-none bg-gray-100/50">
+              <p class="text-2xl font-bold text-sbux-brown">{{ stats.avgEY }}%</p>
+              <p class="text-[10px] text-gray-500 uppercase">Avg EY%</p>
             </div>
-            <div class="text-center p-3 rounded-xl bg-dark-800/50">
-              <p class="text-2xl font-bold text-white">{{ stats.avgTDS }}%</p>
-              <p class="text-[10px] text-dark-500 uppercase">Avg TDS%</p>
+            <div class="text-center p-3 rounded-none bg-gray-100/50">
+              <p class="text-2xl font-bold text-sbux-brown">{{ stats.avgTDS }}%</p>
+              <p class="text-[10px] text-gray-500 uppercase">Avg TDS%</p>
             </div>
           </div>
           <!-- Best Shot -->
-          <div v-if="stats.bestShot" class="mt-4 p-3 rounded-xl bg-gradient-to-r from-accent/20 to-transparent border border-accent/30">
+          <div v-if="stats.bestShot" class="mt-4 p-3 rounded-none bg-gradient-to-r from-accent/20 to-transparent border border-accent/30">
             <p class="text-xs text-accent font-medium mb-2">🏆 Best Shot</p>
             <div class="flex justify-between text-sm">
-              <span class="text-dark-400">Grind {{ stats.bestShot.grind }} · {{ stats.bestShot.dose }}g → {{ stats.bestShot.yield }}g</span>
+              <span class="text-gray-600">Grind {{ stats.bestShot.grind }} · {{ stats.bestShot.dose }}g → {{ stats.bestShot.yield }}g</span>
               <span class="text-green-400 font-medium">EY {{ stats.bestShot.ey }}%</span>
             </div>
           </div>
@@ -748,34 +662,34 @@
 
         <!-- Equipment Info -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">อุปกรณ์</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">อุปกรณ์</p>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
-              <span class="text-dark-400">เครื่องชง</span>
-              <span class="text-white">Appia Life XT 2GR</span>
+              <span class="text-gray-600">เครื่องชง</span>
+              <span class="text-sbux-brown">Appia Life XT 2GR</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-dark-400">เครื่องบด</span>
-              <span class="text-white">F64 Evo Pro (1-12)</span>
+              <span class="text-gray-600">เครื่องบด</span>
+              <span class="text-sbux-brown">F64 Evo Pro (1-12)</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-dark-400">แรงดัน</span>
-              <span class="text-white">12 bar (Fixed)</span>
+              <span class="text-gray-600">แรงดัน</span>
+              <span class="text-sbux-brown">12 bar (Fixed)</span>
             </div>
           </div>
         </div>
 
         <!-- Data Management -->
         <div class="card p-4">
-          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">จัดการข้อมูล</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">จัดการข้อมูล</p>
           <div class="space-y-3">
-            <button @click="exportData" class="w-full py-3 rounded-xl bg-dark-800 text-white text-sm font-medium hover:bg-dark-700 touch-feedback">
+            <button @click="exportData" class="w-full py-3 rounded-none bg-gray-100 text-sbux-brown text-sm font-medium hover:bg-gray-200 touch-feedback">
               📤 Export ข้อมูลทั้งหมด
             </button>
-            <button @click="importData" class="w-full py-3 rounded-xl bg-dark-800 text-white text-sm font-medium hover:bg-dark-700 touch-feedback">
+            <button @click="importData" class="w-full py-3 rounded-none bg-gray-100 text-sbux-brown text-sm font-medium hover:bg-gray-200 touch-feedback">
               📥 Import ข้อมูล
             </button>
-            <button @click="clearAllData" class="w-full py-3 rounded-xl bg-red-500/10 text-red-400 text-sm font-medium hover:bg-red-500/20 touch-feedback">
+            <button @click="clearAllData" class="w-full py-3 rounded-none bg-red-500/10 text-red-400 text-sm font-medium hover:bg-red-500/20 touch-feedback">
               🗑️ ล้างข้อมูลทั้งหมด
             </button>
           </div>
@@ -784,8 +698,8 @@
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-dark-500 mt-1">v6.4 · Made with ❤️</p>
-          <p class="text-xs text-dark-600 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
+          <p class="text-xs text-gray-500 mt-1">v6.4 · Made with ❤️</p>
+          <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
     </main>
@@ -800,7 +714,7 @@
         <button @click="page = 'recipes'" class="nav-item touch-feedback" :class="{ active: page === 'recipes' }">
           <span class="nav-icon">📚</span>
           <span class="nav-label">สูตร</span>
-          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full text-[10px] text-dark-900 font-bold flex items-center justify-center">{{ recipes.length }}</span>
+          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-none text-[10px] text-sbux-white font-bold flex items-center justify-center">{{ recipes.length }}</span>
         </button>
         <button @click="page = 'settings'" class="nav-item touch-feedback" :class="{ active: page === 'settings' }">
           <span class="nav-icon">⚙️</span>
@@ -1048,18 +962,36 @@
         const Kp_YIELD = 1.5         // Yield adjustment per 1% TDS error
 
         // Calculate grind correction using proportional control
-        const calculateGrindCorrection = (currentGrind, eyError) => {
+        // Strategy: Aggressive first, then fine-tune (save coffee!)
+        const calculateGrindCorrection = (currentGrind, eyError, shotNum) => {
           // Non-linear sensitivity: finer grind = more sensitive
-          // Sensitivity curve: higher at fine end (1-4), lower at coarse end (8-12)
           const sensitivity = 1.5 - (currentGrind - 1) * 0.1  // 1.5 at grind 1, 0.4 at grind 12
           const clampedSensitivity = Math.max(0.3, Math.min(1.5, sensitivity))
 
           // Proportional correction with sensitivity
           let correction = Kp_GRIND * eyError * clampedSensitivity
 
-          // Clamp correction to reasonable step (0.1 to 0.5)
-          const maxStep = 0.5
-          const minStep = 0.1
+          // AGGRESSIVE TUNING: Bigger steps early, smaller steps later
+          // Shot 1: max 1.0 step (get close fast!)
+          // Shot 2-3: max 0.5 step (approaching target)
+          // Shot 4+: max 0.3 step (fine-tuning)
+          const absError = Math.abs(eyError)
+          let maxStep, minStep
+
+          if (shotNum <= 1 || absError > 6) {
+            // First shot or very far from target → aggressive
+            maxStep = 1.0
+            minStep = 0.5
+          } else if (shotNum <= 3 || absError > 3) {
+            // Getting closer → moderate
+            maxStep = 0.5
+            minStep = 0.2
+          } else {
+            // Close to target → fine-tune
+            maxStep = 0.3
+            minStep = 0.1
+          }
+
           if (Math.abs(correction) > maxStep) correction = Math.sign(correction) * maxStep
           if (Math.abs(correction) < minStep && correction !== 0) correction = Math.sign(correction) * minStep
 
@@ -1106,7 +1038,7 @@
           if (!fixedGrind.value) {
             if (Math.abs(eyError) > EY_TOLERANCE) {
               // Calculate smart correction
-              const correction = calculateGrindCorrection(g, eyError)
+              const correction = calculateGrindCorrection(g, eyError, shotNumber.value)
               const newGrind = Math.max(1.0, Math.min(12.0, g - correction)).toFixed(1)
 
               const direction = eyError > 0 ? 'ละเอียดขึ้น' : 'หยาบขึ้น'
@@ -1118,7 +1050,7 @@
                 step: 1,
                 do: `เบอร์บด ${g} → ${newGrind}`,
                 reason: reason,
-                hint: `บด${direction} (Δ${Math.abs(correction).toFixed(1)}) ${flowDiag}`,
+                hint: `บด${direction} · ⚠️ บดทิ้ง 2-3g ก่อน`,
                 lockGrind: false,
                 correction: correction,
                 newValue: parseFloat(newGrind)
@@ -1318,8 +1250,6 @@
 🍯 Yield: ${shot.value.yield}g
 ⏱️ Time: ${shot.value.time}s
 📊 EY: ${ey.value}% | TDS: ${shot.value.tds}%
-${shot.value.rating ? '⭐ Rating: ' + '★'.repeat(shot.value.rating) + '☆'.repeat(5 - shot.value.rating) : ''}
-${shot.value.notes ? '📝 Notes: ' + shot.value.notes : ''}
 ---
 Made with WANWAN COFFEE TUNER`
 
@@ -1465,7 +1395,24 @@ Made with WANWAN COFFEE TUNER`
           localStorage.setItem('wanwan_session', JSON.stringify(state))
         }
 
+        // Keyboard shortcut handler
+        function handleKeyboard(e) {
+          // Enter key to analyze (when on input page and can analyze)
+          if (e.key === 'Enter' && page.value === 'input' && canAnalyze.value) {
+            e.preventDefault()
+            analyze()
+          }
+          // Escape key to go back to input from result
+          if (e.key === 'Escape' && page.value === 'result') {
+            e.preventDefault()
+            page.value = 'input'
+          }
+        }
+
         onMounted(() => {
+          // Add keyboard listener
+          window.addEventListener('keydown', handleKeyboard)
+
           // Load session history
           const saved = localStorage.getItem('wanwan_history')
           if (saved) {
