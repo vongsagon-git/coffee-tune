@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Dial-In | จูนรสชาติกาแฟ</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coffee: {
+              50: '#fdf8f6',
+              100: '#f2e8e5',
+              200: '#eaddd7',
+              300: '#e0cec7',
+              400: '#d2bab0',
+              500: '#bfa094',
+              600: '#a18072',
+              700: '#977669',
+              800: '#846358',
+              900: '#43302b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [v-cloak] { display: none; }
+    .zone-perfect { fill: rgba(34, 197, 94, 0.3); }
+    .zone-under { fill: rgba(234, 179, 8, 0.3); }
+    .zone-over { fill: rgba(239, 68, 68, 0.3); }
+    .zone-strong { fill: rgba(249, 115, 22, 0.3); }
+    .zone-weak { fill: rgba(156, 163, 175, 0.3); }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="bg-coffee-50 min-h-screen">
+  <div id="app" v-cloak>
+    <!-- Header -->
+    <header class="bg-coffee-900 text-white py-4 px-4 sticky top-0 z-50 shadow-lg">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+          <span>☕</span> Coffee Dial-In
+        </h1>
+        <p class="text-coffee-300 text-sm mt-1">
+          Appia Life XT (12 bar) | F64 Evo Pro (1.1-12.0)
+        </p>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      <!-- Extraction Chart -->
+      <section class="bg-white rounded-2xl shadow-md p-4">
+        <h2 class="text-lg font-bold text-coffee-900 mb-4 flex items-center gap-2">
+          <span>📊</span> Extraction Chart
+        </h2>
+
+        <div class="aspect-square md:aspect-video relative">
+          <svg viewBox="0 0 400 300" class="w-full h-full">
+            <!-- Background zones -->
+            <!-- Weak + Under (bottom left) -->
+            <rect x="50" y="200" width="100" height="50" class="zone-weak" />
+            <!-- Weak + Over (bottom right) -->
+            <rect x="250" y="200" width="100" height="50" class="zone-weak" />
+            <!-- Under (middle left) -->
+            <rect x="50" y="100" width="100" height="100" class="zone-under" />
+            <!-- Perfect Zone (center) -->
+            <rect x="150" y="100" width="100" height="100" class="zone-perfect" />
+            <!-- Over (middle right) -->
+            <rect x="250" y="100" width="100" height="100" class="zone-over" />
+            <!-- Strong + Under (top left) -->
+            <rect x="50" y="50" width="100" height="50" class="zone-strong" />
+            <!-- Strong + Over (top right) -->
+            <rect x="250" y="50" width="100" height="50" class="zone-strong" />
+            <!-- Strong + Perfect (top center) -->
+            <rect x="150" y="50" width="100" height="50" class="zone-strong" />
+            <!-- Weak + Perfect (bottom center) -->
+            <rect x="150" y="200" width="100" height="50" class="zone-weak" />
+
+            <!-- Grid lines -->
+            <line x1="50" y1="50" x2="50" y2="250" stroke="#d1d5db" stroke-width="1" />
+            <line x1="150" y1="50" x2="150" y2="250" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4" />
+            <line x1="250" y1="50" x2="250" y2="250" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4" />
+            <line x1="350" y1="50" x2="350" y2="250" stroke="#d1d5db" stroke-width="1" />
+
+            <line x1="50" y1="50" x2="350" y2="50" stroke="#d1d5db" stroke-width="1" />
+            <line x1="50" y1="100" x2="350" y2="100" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4" />
+            <line x1="50" y1="200" x2="350" y2="200" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4" />
+            <line x1="50" y1="250" x2="350" y2="250" stroke="#d1d5db" stroke-width="1" />
+
+            <!-- Axis labels -->
+            <text x="200" y="280" text-anchor="middle" class="text-xs fill-coffee-700">EY% (Extraction Yield)</text>
+            <text x="20" y="150" text-anchor="middle" transform="rotate(-90, 20, 150)" class="text-xs fill-coffee-700">TDS%</text>
+
+            <!-- X-axis values -->
+            <text x="50" y="265" text-anchor="middle" class="text-xs fill-coffee-500">14%</text>
+            <text x="150" y="265" text-anchor="middle" class="text-xs fill-coffee-500">18%</text>
+            <text x="250" y="265" text-anchor="middle" class="text-xs fill-coffee-500">22%</text>
+            <text x="350" y="265" text-anchor="middle" class="text-xs fill-coffee-500">26%</text>
+
+            <!-- Y-axis values -->
+            <text x="40" y="250" text-anchor="end" class="text-xs fill-coffee-500">6%</text>
+            <text x="40" y="200" text-anchor="end" class="text-xs fill-coffee-500">8%</text>
+            <text x="40" y="100" text-anchor="end" class="text-xs fill-coffee-500">12%</text>
+            <text x="40" y="50" text-anchor="end" class="text-xs fill-coffee-500">14%</text>
+
+            <!-- Perfect Zone label -->
+            <text x="200" y="155" text-anchor="middle" class="text-sm font-bold fill-green-700">🎯 PERFECT</text>
+
+            <!-- Zone labels -->
+            <text x="100" y="155" text-anchor="middle" class="text-xs fill-yellow-700">Under</text>
+            <text x="300" y="155" text-anchor="middle" class="text-xs fill-red-700">Over</text>
+            <text x="200" y="80" text-anchor="middle" class="text-xs fill-orange-700">Strong</text>
+            <text x="200" y="230" text-anchor="middle" class="text-xs fill-gray-500">Weak</text>
+
+            <!-- History points -->
+            <circle
+              v-for="(shot, index) in history"
+              :key="shot.id"
+              :cx="getChartX(shot.extractionYield)"
+              :cy="getChartY(shot.tds)"
+              r="6"
+              :fill="getZoneColor(shot.extractionYield, shot.tds)"
+              stroke="white"
+              stroke-width="2"
+              class="opacity-60"
+            />
+
+            <!-- Current point -->
+            <g v-if="extractionYield > 0 && currentShot.tds > 0">
+              <!-- Arrow to perfect zone -->
+              <line
+                v-if="!isInPerfectZone"
+                :x1="getChartX(extractionYield)"
+                :y1="getChartY(currentShot.tds)"
+                :x2="getArrowEndX"
+                :y2="getArrowEndY"
+                stroke="#059669"
+                stroke-width="2"
+                stroke-dasharray="4"
+                marker-end="url(#arrowhead)"
+              />
+
+              <!-- Current point -->
+              <circle
+                :cx="getChartX(extractionYield)"
+                :cy="getChartY(currentShot.tds)"
+                r="10"
+                :fill="currentZoneColor"
+                stroke="white"
+                stroke-width="3"
+              />
+              <circle
+                :cx="getChartX(extractionYield)"
+                :cy="getChartY(currentShot.tds)"
+                r="4"
+                fill="white"
+              />
+            </g>
+
+            <!-- Arrow marker definition -->
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#059669" />
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap gap-3 mt-4 text-sm justify-center">
+          <span class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full bg-green-500"></span> Perfect
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full bg-yellow-500"></span> Under
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full bg-red-500"></span> Over
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full bg-orange-500"></span> Strong
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full bg-gray-400"></span> Weak
+          </span>
+        </div>
+      </section>
+
+      <!-- Recommendation -->
+      <section class="bg-white rounded-2xl shadow-md p-4" v-if="extractionYield > 0">
+        <h2 class="text-lg font-bold text-coffee-900 mb-4 flex items-center gap-2">
+          <span>💡</span> Action
+        </h2>
+
+        <div v-if="isInPerfectZone" class="text-center py-4">
+          <div class="text-4xl mb-2">🎯</div>
+          <h3 class="text-xl font-bold text-green-600 mb-4">PERFECT ZONE!</h3>
+
+          <div class="bg-green-50 rounded-xl p-4 text-left max-w-sm mx-auto">
+            <h4 class="font-bold text-green-800 mb-2">📝 Recipe</h4>
+            <div class="space-y-1 text-sm text-green-700">
+              <p>เบอร์บด: <strong>{{ currentShot.grindSize }}</strong></p>
+              <p>Dose: <strong>{{ currentShot.dose }}g</strong></p>
+              <p>Yield: <strong>{{ currentShot.yield }}g</strong></p>
+              <p>Time: <strong>{{ currentShot.time }}s</strong></p>
+              <p>Ratio: <strong>1:{{ ratio.toFixed(1) }}</strong></p>
+              <hr class="border-green-200 my-2">
+              <p>TDS: <strong>{{ currentShot.tds }}%</strong></p>
+              <p>EY: <strong>{{ extractionYield.toFixed(1) }}%</strong></p>
+              <p>Brix: <strong>{{ currentShot.brix }}%</strong></p>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-1 text-sm text-green-600">
+            <p>✅ สกัดพอดี (EY 18-22%)</p>
+            <p>✅ เข้มพอดี (TDS 8-12%)</p>
+            <p>✅ หวานดี</p>
+          </div>
+        </div>
+
+        <div v-else class="space-y-4">
+          <div class="bg-amber-50 rounded-xl p-4">
+            <div class="text-2xl font-bold text-amber-800 mb-2">
+              {{ recommendation.icon }} {{ recommendation.action }}
+            </div>
+            <p class="text-amber-700">{{ recommendation.message }}</p>
+            <p class="text-sm text-amber-600 mt-2">{{ recommendation.reason }}</p>
+          </div>
+
+          <div class="text-sm text-coffee-600 space-y-1">
+            <p><strong>ตำแหน่งปัจจุบัน:</strong></p>
+            <p>• EY: {{ extractionYield.toFixed(1) }}%
+              <span :class="extractionYield < 18 ? 'text-yellow-600' : extractionYield > 22 ? 'text-red-600' : 'text-green-600'">
+                ({{ extractionYield < 18 ? 'ต่ำ - สกัดไม่พอ' : extractionYield > 22 ? 'สูง - สกัดเกิน' : 'พอดี' }})
+              </span>
+            </p>
+            <p>• TDS: {{ currentShot.tds }}%
+              <span :class="currentShot.tds < 8 ? 'text-gray-500' : currentShot.tds > 12 ? 'text-orange-600' : 'text-green-600'">
+                ({{ currentShot.tds < 8 ? 'จืด' : currentShot.tds > 12 ? 'เข้มเกิน' : 'พอดี' }})
+              </span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Input Form -->
+      <section class="bg-white rounded-2xl shadow-md p-4">
+        <h2 class="text-lg font-bold text-coffee-900 mb-4 flex items-center gap-2">
+          <span>📝</span> Input
+        </h2>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">เบอร์บด</label>
+            <input
+              type="number"
+              v-model.number="currentShot.grindSize"
+              step="0.1"
+              min="1.1"
+              max="12.0"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="1.1 - 12.0"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">Dose (g)</label>
+            <input
+              type="number"
+              v-model.number="currentShot.dose"
+              step="0.1"
+              min="10"
+              max="25"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="18"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">Yield (g)</label>
+            <input
+              type="number"
+              v-model.number="currentShot.yield"
+              step="0.1"
+              min="20"
+              max="60"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="36"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">Time (s)</label>
+            <input
+              type="number"
+              v-model.number="currentShot.time"
+              min="15"
+              max="45"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="27"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">TDS (%)</label>
+            <input
+              type="number"
+              v-model.number="currentShot.tds"
+              step="0.1"
+              min="4"
+              max="16"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="10.0"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-coffee-700 mb-1">Brix (%)</label>
+            <input
+              type="number"
+              v-model.number="currentShot.brix"
+              step="0.1"
+              min="4"
+              max="20"
+              class="w-full h-12 px-4 text-lg border-2 border-coffee-200 rounded-lg focus:border-coffee-500 focus:outline-none"
+              placeholder="12.0"
+            >
+          </div>
+        </div>
+
+        <!-- Computed Values -->
+        <div class="mt-4 pt-4 border-t border-coffee-100">
+          <div class="flex justify-between text-sm">
+            <span class="text-coffee-600">Ratio:</span>
+            <span class="font-bold text-coffee-900">1:{{ ratio.toFixed(1) }}</span>
+          </div>
+          <div class="flex justify-between text-sm mt-1">
+            <span class="text-coffee-600">EY%:</span>
+            <span class="font-bold" :class="extractionYield >= 18 && extractionYield <= 22 ? 'text-green-600' : 'text-amber-600'">
+              {{ extractionYield.toFixed(1) }}%
+              <span v-if="extractionYield >= 18 && extractionYield <= 22">✅</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <button
+          @click="showConfirmDialog = true"
+          :disabled="!canSave"
+          class="w-full h-14 mt-4 text-lg font-bold rounded-xl transition-colors"
+          :class="canSave
+            ? 'bg-coffee-700 text-white hover:bg-coffee-800 active:bg-coffee-900'
+            : 'bg-coffee-200 text-coffee-400 cursor-not-allowed'"
+        >
+          💾 บันทึก Shot
+        </button>
+      </section>
+
+      <!-- History -->
+      <section class="bg-white rounded-2xl shadow-md p-4">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-coffee-900 flex items-center gap-2">
+            <span>📜</span> History
+          </h2>
+          <div class="flex gap-2">
+            <button
+              @click="exportData"
+              class="px-3 py-2 text-sm bg-coffee-100 text-coffee-700 rounded-lg hover:bg-coffee-200"
+              title="Export JSON"
+            >
+              📤
+            </button>
+            <label class="px-3 py-2 text-sm bg-coffee-100 text-coffee-700 rounded-lg hover:bg-coffee-200 cursor-pointer" title="Import JSON">
+              📥
+              <input type="file" @change="importData" accept=".json" class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <div v-if="history.length === 0" class="text-center py-8 text-coffee-400">
+          ยังไม่มีประวัติ
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="space-y-2 md:hidden">
+          <div
+            v-for="(shot, index) in reversedHistory"
+            :key="shot.id"
+            class="flex items-center gap-3 p-3 bg-coffee-50 rounded-lg"
+          >
+            <span class="text-lg">{{ getZoneEmoji(shot.extractionYield, shot.tds) }}</span>
+            <div class="flex-1 text-sm">
+              <div class="font-medium text-coffee-900">
+                #{{ history.length - index }} | {{ shot.grindSize }} | {{ shot.dose }}g → {{ shot.yield }}g
+              </div>
+              <div class="text-coffee-600">
+                {{ shot.time }}s | TDS {{ shot.tds }}% | EY {{ shot.extractionYield.toFixed(1) }}%
+              </div>
+            </div>
+            <button
+              @click="deleteShot(shot.id)"
+              class="text-red-400 hover:text-red-600 p-1"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-coffee-600 border-b border-coffee-100">
+                <th class="pb-2">#</th>
+                <th class="pb-2">เบอร์บด</th>
+                <th class="pb-2">Dose</th>
+                <th class="pb-2">Yield</th>
+                <th class="pb-2">Time</th>
+                <th class="pb-2">TDS</th>
+                <th class="pb-2">EY%</th>
+                <th class="pb-2">Zone</th>
+                <th class="pb-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(shot, index) in reversedHistory"
+                :key="shot.id"
+                class="border-b border-coffee-50"
+              >
+                <td class="py-2">{{ history.length - index }}</td>
+                <td class="py-2">{{ shot.grindSize }}</td>
+                <td class="py-2">{{ shot.dose }}g</td>
+                <td class="py-2">{{ shot.yield }}g</td>
+                <td class="py-2">{{ shot.time }}s</td>
+                <td class="py-2">{{ shot.tds }}%</td>
+                <td class="py-2">{{ shot.extractionYield.toFixed(1) }}%</td>
+                <td class="py-2">{{ getZoneEmoji(shot.extractionYield, shot.tds) }}</td>
+                <td class="py-2">
+                  <button
+                    @click="deleteShot(shot.id)"
+                    class="text-red-400 hover:text-red-600"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Confirm Dialog -->
+    <div
+      v-if="showConfirmDialog"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      @click.self="showConfirmDialog = false"
+    >
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+        <h3 class="text-lg font-bold text-coffee-900 mb-4">💾 บันทึก Shot?</h3>
+
+        <div class="bg-coffee-50 rounded-xl p-4 mb-4 text-sm space-y-1">
+          <p>เบอร์บด: <strong>{{ currentShot.grindSize }}</strong></p>
+          <p>Dose: <strong>{{ currentShot.dose }}g</strong> → Yield: <strong>{{ currentShot.yield }}g</strong></p>
+          <p>Time: <strong>{{ currentShot.time }}s</strong> | Ratio: <strong>1:{{ ratio.toFixed(1) }}</strong></p>
+          <hr class="border-coffee-200 my-2">
+          <p>TDS: <strong>{{ currentShot.tds }}%</strong> | Brix: <strong>{{ currentShot.brix }}%</strong></p>
+          <p>EY: <strong>{{ extractionYield.toFixed(1) }}%</strong> {{ getZoneEmoji(extractionYield, currentShot.tds) }}</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            @click="showConfirmDialog = false"
+            class="flex-1 h-12 border-2 border-coffee-200 text-coffee-700 rounded-xl font-medium hover:bg-coffee-50"
+          >
+            ยกเลิก
+          </button>
+          <button
+            @click="saveShot"
+            class="flex-1 h-12 bg-coffee-700 text-white rounded-xl font-bold hover:bg-coffee-800"
+          >
+            บันทึก
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-sm text-coffee-400">
+      Coffee Dial-In v1.0 | Made with ☕
+    </footer>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, watch, onMounted } = Vue
+
+    createApp({
+      setup() {
+        // State
+        const currentShot = ref({
+          grindSize: null,
+          dose: null,
+          yield: null,
+          time: null,
+          tds: null,
+          brix: null
+        })
+
+        const history = ref([])
+        const showConfirmDialog = ref(false)
+
+        // Computed
+        const ratio = computed(() => {
+          if (!currentShot.value.dose || !currentShot.value.yield) return 0
+          return currentShot.value.yield / currentShot.value.dose
+        })
+
+        const extractionYield = computed(() => {
+          if (!currentShot.value.dose || !currentShot.value.yield || !currentShot.value.tds) return 0
+          return (currentShot.value.yield * currentShot.value.tds) / currentShot.value.dose
+        })
+
+        const isInPerfectZone = computed(() => {
+          const ey = extractionYield.value
+          const tds = currentShot.value.tds
+          return ey >= 18 && ey <= 22 && tds >= 8 && tds <= 12
+        })
+
+        const canSave = computed(() => {
+          return currentShot.value.grindSize &&
+                 currentShot.value.dose &&
+                 currentShot.value.yield &&
+                 currentShot.value.time &&
+                 currentShot.value.tds
+        })
+
+        const currentZoneColor = computed(() => {
+          return getZoneColor(extractionYield.value, currentShot.value.tds)
+        })
+
+        const recommendation = computed(() => {
+          const ey = extractionYield.value
+          const tds = currentShot.value.tds
+          const grindSize = currentShot.value.grindSize
+          const time = currentShot.value.time
+          const yieldAmount = currentShot.value.yield
+          const dose = currentShot.value.dose
+
+          if (ey <= 0 || !tds) {
+            return { icon: '📝', action: 'กรอกข้อมูล', message: 'ใส่ค่าพารามิเตอร์เพื่อดูคำแนะนำ', reason: '' }
+          }
+
+          // Priority 1: EY adjustment via Grind Size
+          if (ey < 18) {
+            const grindChange = Math.min(0.5, (18 - ey) * 0.25)
+            const newGrind = Math.max(1.1, grindSize - grindChange).toFixed(1)
+            return {
+              icon: '⬇️',
+              action: 'บดละเอียดขึ้น',
+              message: `${grindSize} → ${newGrind}`,
+              reason: `EY ${ey.toFixed(1)}% ต่ำกว่าเป้า (18-22%) → สกัดไม่พอ`
+            }
+          }
+
+          if (ey > 22) {
+            const grindChange = Math.min(0.5, (ey - 22) * 0.25)
+            const newGrind = Math.min(12.0, grindSize + grindChange).toFixed(1)
+            return {
+              icon: '⬆️',
+              action: 'บดหยาบขึ้น',
+              message: `${grindSize} → ${newGrind}`,
+              reason: `EY ${ey.toFixed(1)}% สูงกว่าเป้า (18-22%) → สกัดเกิน`
+            }
+          }
+
+          // Priority 2: Time adjustment
+          if (time < 20 && ey < 18) {
+            return {
+              icon: '⏱️',
+              action: 'เพิ่มเวลา',
+              message: `${time}s → ${time + 3}s (หรือบดละเอียดกว่านี้)`,
+              reason: `เวลา ${time}s สั้นเกินไป`
+            }
+          }
+
+          if (time > 35 && ey > 22) {
+            return {
+              icon: '⏱️',
+              action: 'ลดเวลา',
+              message: `${time}s → ${time - 3}s (หรือบดหยาบกว่านี้)`,
+              reason: `เวลา ${time}s นานเกินไป`
+            }
+          }
+
+          // Priority 3: TDS adjustment via Yield
+          if (tds > 12) {
+            const yieldChange = Math.round((tds - 12) * 2)
+            return {
+              icon: '📈',
+              action: 'เพิ่ม Yield',
+              message: `${yieldAmount}g → ${yieldAmount + yieldChange}g`,
+              reason: `TDS ${tds}% เข้มเกินไป`
+            }
+          }
+
+          if (tds < 8) {
+            const yieldChange = Math.round((8 - tds) * 2)
+            const newYield = Math.max(yieldAmount - yieldChange, dose * 1.5)
+            return {
+              icon: '📉',
+              action: 'ลด Yield',
+              message: `${yieldAmount}g → ${newYield.toFixed(0)}g`,
+              reason: `TDS ${tds}% จืดเกินไป`
+            }
+          }
+
+          return { icon: '🎯', action: 'Perfect!', message: 'ค่าอยู่ใน Perfect Zone', reason: '' }
+        })
+
+        const reversedHistory = computed(() => {
+          return [...history.value].reverse()
+        })
+
+        const getArrowEndX = computed(() => {
+          const ey = extractionYield.value
+          const targetEY = ey < 18 ? 18 : ey > 22 ? 22 : 20
+          return getChartX(targetEY)
+        })
+
+        const getArrowEndY = computed(() => {
+          const tds = currentShot.value.tds
+          const targetTDS = tds < 8 ? 8 : tds > 12 ? 12 : 10
+          return getChartY(targetTDS)
+        })
+
+        // Methods
+        function getChartX(ey) {
+          // Map EY 14-26% to X 50-350
+          const minEY = 14, maxEY = 26
+          const minX = 50, maxX = 350
+          const clampedEY = Math.max(minEY, Math.min(maxEY, ey))
+          return minX + ((clampedEY - minEY) / (maxEY - minEY)) * (maxX - minX)
+        }
+
+        function getChartY(tds) {
+          // Map TDS 6-14% to Y 250-50 (inverted)
+          const minTDS = 6, maxTDS = 14
+          const minY = 50, maxY = 250
+          const clampedTDS = Math.max(minTDS, Math.min(maxTDS, tds))
+          return maxY - ((clampedTDS - minTDS) / (maxTDS - minTDS)) * (maxY - minY)
+        }
+
+        function getZoneColor(ey, tds) {
+          const inEYRange = ey >= 18 && ey <= 22
+          const inTDSRange = tds >= 8 && tds <= 12
+
+          if (inEYRange && inTDSRange) return '#22c55e' // green - perfect
+          if (ey < 18) return '#eab308' // yellow - under
+          if (ey > 22) return '#ef4444' // red - over
+          if (tds > 12) return '#f97316' // orange - strong
+          if (tds < 8) return '#9ca3af' // gray - weak
+          return '#22c55e'
+        }
+
+        function getZoneEmoji(ey, tds) {
+          const inEYRange = ey >= 18 && ey <= 22
+          const inTDSRange = tds >= 8 && tds <= 12
+
+          if (inEYRange && inTDSRange) return '🟢'
+          if (ey < 18) return '🟡'
+          if (ey > 22) return '🔴'
+          if (tds > 12) return '🟠'
+          if (tds < 8) return '⚪'
+          return '🟢'
+        }
+
+        function saveShot() {
+          const shot = {
+            id: Date.now().toString(),
+            timestamp: new Date().toISOString(),
+            grindSize: currentShot.value.grindSize,
+            dose: currentShot.value.dose,
+            yield: currentShot.value.yield,
+            time: currentShot.value.time,
+            tds: currentShot.value.tds,
+            brix: currentShot.value.brix || 0,
+            ratio: ratio.value,
+            extractionYield: extractionYield.value
+          }
+
+          history.value.push(shot)
+          saveToLocalStorage()
+          showConfirmDialog.value = false
+        }
+
+        function deleteShot(id) {
+          if (confirm('ลบ shot นี้?')) {
+            history.value = history.value.filter(s => s.id !== id)
+            saveToLocalStorage()
+          }
+        }
+
+        function saveToLocalStorage() {
+          localStorage.setItem('coffeeDialIn', JSON.stringify({
+            history: history.value,
+            lastShot: currentShot.value
+          }))
+        }
+
+        function loadFromLocalStorage() {
+          const data = localStorage.getItem('coffeeDialIn')
+          if (data) {
+            const parsed = JSON.parse(data)
+            history.value = parsed.history || []
+            if (parsed.lastShot) {
+              Object.assign(currentShot.value, parsed.lastShot)
+            }
+          }
+        }
+
+        function exportData() {
+          const data = {
+            version: '1.0',
+            exportedAt: new Date().toISOString(),
+            history: history.value
+          }
+
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `coffee-dial-in-${new Date().toISOString().slice(0, 10)}.json`
+          a.click()
+          URL.revokeObjectURL(url)
+        }
+
+        function importData(event) {
+          const file = event.target.files[0]
+          if (!file) return
+
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            try {
+              const data = JSON.parse(e.target.result)
+              if (data.history && Array.isArray(data.history)) {
+                if (confirm(`Import ${data.history.length} shots? (จะเพิ่มเข้าไปใน history ที่มีอยู่)`)) {
+                  history.value = [...history.value, ...data.history]
+                  saveToLocalStorage()
+                }
+              }
+            } catch (err) {
+              alert('Invalid JSON file')
+            }
+          }
+          reader.readAsText(file)
+          event.target.value = ''
+        }
+
+        // Watch for auto-save
+        watch(currentShot, () => {
+          saveToLocalStorage()
+        }, { deep: true })
+
+        // Load on mount
+        onMounted(() => {
+          loadFromLocalStorage()
+        })
+
+        return {
+          currentShot,
+          history,
+          showConfirmDialog,
+          ratio,
+          extractionYield,
+          isInPerfectZone,
+          canSave,
+          currentZoneColor,
+          recommendation,
+          reversedHistory,
+          getArrowEndX,
+          getArrowEndY,
+          getChartX,
+          getChartY,
+          getZoneColor,
+          getZoneEmoji,
+          saveShot,
+          deleteShot,
+          exportData,
+          importData
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
