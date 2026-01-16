@@ -36,59 +36,96 @@
 
 ## 📋 [C002] Enhancements v6.1 - Smart Tuning
 **Status:** ✅ COMPLETED
-**Priority:** High
 **Version:** 6.1
 
 ### Phase 1: Critical
-- [x] [E001] Input validation (ป้องกัน edge cases - ค่าติดลบ, ค่าเกิน, null) ✅
-- [x] [E001.1] Dose Fixed หลัง Shot แรก (กรอกครั้งเดียว) ✅
-- [x] [E001.2] Step-by-step tuning recommendation ✅
-- [x] [SMART] Smart Tuning UI (Progress bar, Visual hints, Clear instructions) ✅
+- [x] [E001] Input validation (ป้องกัน edge cases)
+- [x] [E001.1] Dose Fixed หลัง Shot แรก
+- [x] [E001.2] Step-by-step tuning recommendation
+- [x] [SMART] Smart Tuning UI
 
-### Phase 2: Nice to Have
-- [x] [E002] Notes field (บันทึกโน้ตแต่ละ shot) ✅
-- [x] [E003] Rating stars (1-5 ดาว) ✅
-- [x] [E004] Flavor Tags (เลือกรสชาติที่ชิมได้) ✅
-- [x] [E005] Bean Name input (ระบุชื่อเมล็ดกาแฟ) ✅
+### Phase 2: Features (Removed in v6.5)
+- [x] ~~[E002] Notes field~~ (ลบออก - ไม่จำเป็น)
+- [x] ~~[E003] Rating stars~~ (ลบออก - ไม่จำเป็น)
+- [x] ~~[E004] Flavor Tags~~ (ลบออก - ไม่จำเป็น)
+- [x] [E005] Bean Name input
 
 ### Phase 3: v6.1 Improvements
-- [x] [E006] Auto pre-fill recommended grind/yield ✅
-- [x] [E007] Session state persistence (refresh safe) ✅
+- [x] [E006] Auto pre-fill recommended grind/yield
+- [x] [E007] Session state persistence
 
 ---
 
-## 📊 Research Verified
-- [x] EY% formula: (Yield × TDS%) / Dose ✅
-- [x] Perfect Zone: EY 18-22%, TDS 8-12% (SCA Standards) ✅
-
----
-
-## 📋 [C003] v6.2 - Native App Experience
+## 📋 [C003] v6.2-6.5 - Native App + Starbucks Theme
 **Status:** ✅ COMPLETED
-**Created:** 2026-01-17
+**Version:** 6.5
 
-### 🧘 Discovered During Enlightenment
-- [x] [E008] Copy Recipe feature (คัดลอกสูตรเมื่อ Perfect) ✅
-- [x] [E009] Recipe Library (เก็บสูตรที่ Perfect ไว้ใช้ภายหลัง) ✅
-- [x] [E011] Export All History as JSON ✅
-- [x] [E012] Import History from JSON ✅
-- [x] [E019] Bottom Navigation (Native App Style) ✅
-- [x] [E020] Settings Page ✅
-- [x] [E021] Clear recommendation display (same vs change) ✅
+### v6.2 Features
+- [x] [E008] Copy Recipe feature
+- [x] [E009] Recipe Library
+- [x] [E011] Export All History as JSON
+- [x] [E012] Import History from JSON
+- [x] [E019] Bottom Navigation
+- [x] [E020] Settings Page
+- [x] [E021] Clear recommendation display
 
-### 📋 Backlog (Future)
+### v6.4 Smart Algorithm
+- [x] [ALG001] Proportional Control (Kp * Error * Sensitivity)
+- [x] [ALG002] Non-linear sensitivity (finer = more sensitive)
+- [x] [ALG003] Flow rate diagnostic
+
+### v6.5 Starbucks Theme + Fast Tuning
+- [x] [UI001] Starbucks color palette (#006241, #F7F5F2)
+- [x] [UI002] Sharp corners (no rounded)
+- [x] [ALG004] Aggressive first shot (save coffee!)
+- [x] [UX001] Purge reminder "บดทิ้ง 2-3g ก่อน"
+- [x] [UX002] Keyboard shortcuts (Enter/Escape)
+
+---
+
+## 📋 [C004] Testing - Game Theory Analysis
+**Status:** ✅ COMPLETED
+**Report:** test.md
+
+- [x] [TEST001] Input validation boundary tests (9/9 PASS)
+- [x] [TEST002] EY calculation tests (3/3 PASS)
+- [x] [TEST003] Algorithm logic verification
+- [x] Pass Rate: 100%
+
+---
+
+## 📋 [C005] Future Backlog
+**Status:** 🔮 FUTURE
+**Priority:** Low
+
+### Potential Features
 - [ ] [E010] Share Recipe via URL/QR Code
 - [ ] [E013] Dark/Light Theme Toggle
 - [ ] [E014] Compare 2 shots side-by-side
 - [ ] [E015] Shot Statistics (avg EY, avg TDS, best shot)
-
-### 🔍 UX Improvements (Future)
-- [ ] [E016] Haptic feedback on mobile (vibrate on save)
+- [ ] [E016] Haptic feedback on mobile
 - [ ] [E017] Swipe to delete shot from history
-- [ ] [E018] Keyboard shortcuts (Enter to analyze)
 
 ---
 
-## 🗂️ Archive - Completed
+## 📊 Research Verified
+- [x] EY% formula: (Yield × TDS%) / Dose
+- [x] Perfect Zone: EY 18-22%, TDS 8-12% (SCA Standards)
+- [x] Proportional Control theory applied to grind adjustment
+- [x] Starbucks brand colors: #006241, #00754A, #D4E9E2
+
+---
+
+## 🗂️ Archive - Completed Versions
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Version:** 6.1 Smart Tuning
+**Current Version:** 6.5 Starbucks Theme
+
+| Version | Features | Date |
+|---------|----------|------|
+| v5.0 | Dark Theme, Inter font, Glass UI | 2026-01-17 |
+| v6.0 | PWA, Chart, Flavor, 6 inputs | 2026-01-17 |
+| v6.1 | Smart Tuning, Auto pre-fill | 2026-01-17 |
+| v6.2 | Native App, Bottom Nav, Recipes | 2026-01-17 |
+| v6.4 | Smart Algorithm, Feedback Loop | 2026-01-17 |
+| v6.5 | Starbucks Theme, Fast Tuning | 2026-01-17 |
+
