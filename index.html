@@ -6,10 +6,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TUNER">
-  <meta name="theme-color" content="#43302b">
+  <meta name="theme-color" content="#1a1a1a">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%2343302b'/><text x='96' y='130' text-anchor='middle' font-size='100'>☕</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <title>WANWAN COFFEE TUNER</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,18 +19,27 @@
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
           colors: {
-            coffee: {
-              50: '#fdf8f6',
-              100: '#f2e8e5',
-              200: '#eaddd7',
-              300: '#e0cec7',
-              400: '#d2bab0',
-              500: '#bfa094',
-              600: '#a18072',
-              700: '#977669',
-              800: '#846358',
-              900: '#43302b',
+            dark: {
+              50: '#f7f7f7',
+              100: '#e3e3e3',
+              200: '#c8c8c8',
+              300: '#a4a4a4',
+              400: '#818181',
+              500: '#666666',
+              600: '#515151',
+              700: '#434343',
+              800: '#383838',
+              900: '#1a1a1a',
+              950: '#0d0d0d',
+            },
+            accent: {
+              DEFAULT: '#c9a227',
+              light: '#dbb84a',
+              dark: '#a6851f',
             }
           }
         }
@@ -37,96 +48,122 @@
   </script>
   <style>
     [v-cloak] { display: none; }
-
-    /* Native app feel */
     * {
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
     }
-    input, textarea {
-      -webkit-user-select: text;
-      user-select: text;
-    }
-
-    /* Safe area for notch devices */
+    input, textarea { -webkit-user-select: text; user-select: text; }
     body {
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
+      font-family: 'Inter', system-ui, sans-serif;
     }
-
-    /* Hide scrollbar but allow scroll */
     ::-webkit-scrollbar { display: none; }
     html { scrollbar-width: none; }
-
-    /* Input styling */
     input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
 
-    /* Animations */
-    .page-enter { animation: slideIn 0.25s ease-out; }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
+    .page-slide { animation: pageSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes pageSlide {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Active states for buttons */
-    button:active { transform: scale(0.97); }
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
 
-    /* Smooth transitions */
-    * { transition: background-color 0.15s, transform 0.15s; }
+    .input-field {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+    .input-field:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #c9a227;
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #c9a227 0%, #a6851f 100%);
+      box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3);
+      transition: all 0.2s ease;
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: none;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+    }
+
+    .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+    .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
   </style>
 </head>
-<body class="bg-coffee-50 min-h-screen">
+<body class="bg-dark-950 text-white min-h-screen">
   <div id="app" v-cloak>
     <!-- Header -->
-    <header class="bg-gradient-to-r from-coffee-900 via-coffee-800 to-coffee-900 text-white py-3 px-4 sticky top-0 z-50 shadow-lg">
+    <header class="glass border-b border-white/5 py-4 px-5 sticky top-0 z-50">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div>
-          <h1 class="text-lg font-bold">🐕 WANWAN COFFEE</h1>
-          <p class="text-coffee-400 text-xs">Coffee Tuner</p>
+          <h1 class="text-lg font-bold tracking-tight">WANWAN COFFEE</h1>
+          <p class="text-dark-400 text-xs font-medium tracking-wide">TUNER</p>
         </div>
-        <div class="text-right text-xs text-coffee-400">
-          <p>Appia Life XT 2GR</p>
-          <p>F64 Evo Pro GBW</p>
+        <div class="text-right">
+          <p class="text-xs text-dark-500">Appia Life XT</p>
+          <p class="text-xs text-dark-500">F64 Evo Pro</p>
         </div>
       </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 py-6">
+    <main class="max-w-md mx-auto px-5 py-6 pb-24">
       <!-- ==================== PAGE 1: INPUT ==================== -->
-      <div v-if="page === 'input'" class="page-enter space-y-6">
-        <div class="text-center">
-          <span class="text-4xl">☕</span>
-          <h2 class="text-xl font-bold text-coffee-800 mt-2">Shot #{{ shotNumber }}</h2>
-          <p class="text-sm text-coffee-500">กรอกค่าที่วัดได้</p>
+      <div v-if="page === 'input'" class="page-slide space-y-6">
+        <!-- Title -->
+        <div class="text-center pt-2">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4">
+            <span class="text-3xl">☕</span>
+          </div>
+          <h2 class="text-2xl font-bold">Shot #{{ shotNumber }}</h2>
+          <p class="text-dark-400 text-sm mt-1">กรอกค่าที่วัดได้</p>
         </div>
 
-        <!-- Input Grid -->
-        <div class="bg-white rounded-2xl shadow-lg p-5 space-y-4">
+        <!-- Input Card -->
+        <div class="card p-5 space-y-5">
           <!-- Row 1: Grind + Dose -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-coffee-700 mb-2">เบอร์บด</label>
+              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">เบอร์บด</label>
               <input type="number" v-model.number="shot.grind" step="0.1" min="1" max="12"
-                class="w-full h-14 text-2xl font-bold text-center border-2 border-coffee-200 rounded-xl focus:border-coffee-600 focus:outline-none">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-sm font-medium text-coffee-700">Dose (g)</label>
-                <label class="flex items-center gap-1 text-xs text-coffee-500 cursor-pointer">
-                  <input type="checkbox" v-model="fixedDose" class="w-3 h-3 accent-coffee-600">
-                  Fixed
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Dose</label>
+                <label class="flex items-center gap-1.5 text-xs text-dark-500 cursor-pointer">
+                  <input type="checkbox" v-model="fixedDose" class="w-3 h-3 accent-accent rounded">
+                  <span>Fixed</span>
                 </label>
               </div>
               <input type="number" v-model.number="shot.dose" step="0.1"
-                class="w-full h-14 text-2xl font-bold text-center border-2 rounded-xl focus:outline-none"
-                :class="fixedDose ? 'border-coffee-400 bg-coffee-50' : 'border-coffee-200'">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
+                :class="fixedDose ? 'border-accent/30 bg-accent/5' : ''">
             </div>
           </div>
 
@@ -134,166 +171,163 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-sm font-medium text-coffee-700">Yield (g)</label>
-                <span v-if="shot.dose && shot.yield" class="text-xs text-coffee-500">= 1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
+                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Yield</label>
+                <span v-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
               </div>
               <input type="number" v-model.number="shot.yield" step="0.1"
-                class="w-full h-14 text-2xl font-bold text-center border-2 border-coffee-200 rounded-xl focus:border-coffee-600 focus:outline-none">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
             </div>
             <div>
-              <label class="block text-sm font-medium text-coffee-700 mb-2">Time (s)</label>
+              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">Time</label>
               <input type="number" v-model.number="shot.time"
-                class="w-full h-14 text-2xl font-bold text-center border-2 border-coffee-200 rounded-xl focus:border-coffee-600 focus:outline-none">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
             </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="flex items-center gap-3">
+            <div class="flex-1 h-px bg-white/5"></div>
+            <span class="text-xs text-dark-500 font-medium">REFRACTOMETER</span>
+            <div class="flex-1 h-px bg-white/5"></div>
           </div>
 
           <!-- Row 3: TDS + Brix -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-coffee-700 mb-2">TDS %</label>
+              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">TDS %</label>
               <input type="number" v-model.number="shot.tds" step="0.1"
-                class="w-full h-14 text-2xl font-bold text-center border-2 border-coffee-200 rounded-xl focus:border-coffee-600 focus:outline-none">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
             </div>
             <div>
-              <label class="block text-sm font-medium text-coffee-700 mb-2">Brix %</label>
+              <label class="block text-xs font-medium text-dark-400 mb-2 uppercase tracking-wider">Brix %</label>
               <input type="number" v-model.number="shot.brix" step="0.1"
-                class="w-full h-14 text-2xl font-bold text-center border-2 border-coffee-200 rounded-xl focus:border-coffee-600 focus:outline-none">
+                class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none">
             </div>
           </div>
         </div>
 
         <!-- Submit Button -->
-        <button
-          @click="analyze"
-          :disabled="!canAnalyze"
-          class="w-full h-16 rounded-2xl font-bold text-xl transition-all"
-          :class="canAnalyze
-            ? 'bg-coffee-700 text-white hover:bg-coffee-800 active:scale-98'
-            : 'bg-coffee-200 text-coffee-400'"
-        >
-          ดูผล →
+        <button @click="analyze" :disabled="!canAnalyze"
+          class="btn-primary w-full h-14 rounded-xl font-semibold text-lg text-dark-900">
+          วิเคราะห์ผล
         </button>
       </div>
 
       <!-- ==================== PAGE 2: RESULT ==================== -->
-      <div v-if="page === 'result'" class="page-enter space-y-5">
+      <div v-if="page === 'result'" class="page-slide space-y-5">
+
+        <!-- Status Badge -->
+        <div class="text-center pt-2">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4"
+            :class="isPerfect ? 'bg-green-500/10 glow-green' : 'bg-amber-500/10 glow-amber'">
+            <span class="text-4xl">{{ isPerfect ? '🎯' : (direction === 'under' ? '🔵' : '🔴') }}</span>
+          </div>
+          <h2 class="text-2xl font-bold" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">
+            {{ isPerfect ? 'Perfect Shot!' : (direction === 'under' ? 'Under Extracted' : 'Over Extracted') }}
+          </h2>
+        </div>
 
         <!-- Extraction Chart -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
-          <p class="text-xs text-coffee-500 text-center mb-2">Extraction Chart</p>
-          <svg viewBox="0 0 200 150" class="w-full h-40">
-            <!-- Background zones -->
-            <!-- Under (left) -->
-            <rect x="10" y="10" width="60" height="130" fill="#fef3c7" rx="4"/>
-            <!-- Over (right) -->
-            <rect x="130" y="10" width="60" height="130" fill="#fee2e2" rx="4"/>
-            <!-- Perfect zone (center) -->
-            <rect x="70" y="40" width="60" height="70" fill="#dcfce7" rx="4" stroke="#22c55e" stroke-width="2"/>
+        <div class="card p-4">
+          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">Extraction Map</p>
+          <svg viewBox="0 0 200 120" class="w-full h-32">
+            <!-- Grid lines -->
+            <line x1="10" y1="60" x2="190" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="100" y1="10" x2="100" y2="110" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
 
-            <!-- Zone labels -->
-            <text x="40" y="80" text-anchor="middle" class="text-[8px] fill-amber-600">Under</text>
-            <text x="40" y="92" text-anchor="middle" class="text-[7px] fill-amber-500">สกัดน้อย</text>
-            <text x="100" y="78" text-anchor="middle" class="text-[8px] fill-green-600">Perfect</text>
-            <text x="100" y="90" text-anchor="middle" class="text-[7px] fill-green-500">18-22%</text>
-            <text x="160" y="80" text-anchor="middle" class="text-[8px] fill-red-600">Over</text>
-            <text x="160" y="92" text-anchor="middle" class="text-[7px] fill-red-500">สกัดมาก</text>
+            <!-- Zones -->
+            <rect x="10" y="10" width="55" height="100" fill="rgba(245,158,11,0.1)" rx="4"/>
+            <rect x="135" y="10" width="55" height="100" fill="rgba(239,68,68,0.1)" rx="4"/>
+            <rect x="65" y="30" width="70" height="60" fill="rgba(34,197,94,0.15)" rx="6" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
 
-            <!-- Axis labels -->
-            <text x="100" y="148" text-anchor="middle" class="text-[8px] fill-coffee-500">EY% →</text>
-            <text x="5" y="75" text-anchor="middle" class="text-[8px] fill-coffee-500" transform="rotate(-90, 5, 75)">TDS% →</text>
+            <!-- Labels -->
+            <text x="37" y="65" text-anchor="middle" class="text-[9px] fill-amber-500/70 font-medium">UNDER</text>
+            <text x="100" y="58" text-anchor="middle" class="text-[9px] fill-green-500/70 font-medium">PERFECT</text>
+            <text x="100" y="70" text-anchor="middle" class="text-[7px] fill-green-500/50">18-22%</text>
+            <text x="163" y="65" text-anchor="middle" class="text-[9px] fill-red-500/70 font-medium">OVER</text>
 
-            <!-- Current position dot -->
-            <circle :cx="chartX" :cy="chartY" r="8" :fill="isPerfect ? '#22c55e' : '#f59e0b'" stroke="white" stroke-width="2"/>
-            <text :x="chartX" :y="chartY + 3" text-anchor="middle" class="text-[6px] fill-white font-bold">●</text>
+            <!-- Axis -->
+            <text x="100" y="118" text-anchor="middle" class="text-[8px] fill-dark-500">EY%</text>
 
-            <!-- Arrow to perfect zone (if not perfect) -->
-            <line v-if="!isPerfect && shot.tds"
-              :x1="chartX" :y1="chartY"
-              :x2="100" :y2="75"
-              stroke="#22c55e" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)"/>
+            <!-- Current position -->
+            <circle :cx="chartX" :cy="chartY" r="10"
+              :fill="isPerfect ? 'rgba(34,197,94,0.9)' : 'rgba(245,158,11,0.9)'"
+              :stroke="isPerfect ? '#22c55e' : '#f59e0b'" stroke-width="2"/>
+            <text :x="chartX" :y="chartY + 4" text-anchor="middle" class="text-[10px] fill-white font-bold">{{ ey }}</text>
 
-            <defs>
-              <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/>
-              </marker>
-            </defs>
+            <!-- Arrow -->
+            <line v-if="!isPerfect" :x1="chartX" :y1="chartY" x2="100" y2="60"
+              stroke="rgba(34,197,94,0.5)" stroke-width="2" stroke-dasharray="4,4"/>
           </svg>
         </div>
 
-        <!-- Flavor Profile -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
-          <p class="text-xs text-coffee-500 text-center mb-3">รสชาติที่คาดว่าจะได้</p>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-4 gap-2">
+          <div class="stat-box p-3 text-center">
+            <p class="text-[10px] text-dark-500 font-medium uppercase">Ratio</p>
+            <p class="text-lg font-bold text-white mt-1">1:{{ ratio }}</p>
+          </div>
+          <div class="stat-box p-3 text-center" :class="isPerfect ? 'bg-green-500/10' : 'bg-amber-500/10'">
+            <p class="text-[10px] font-medium uppercase" :class="isPerfect ? 'text-green-500/70' : 'text-amber-500/70'">EY%</p>
+            <p class="text-lg font-bold mt-1" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">{{ ey }}</p>
+          </div>
+          <div class="stat-box p-3 text-center">
+            <p class="text-[10px] text-dark-500 font-medium uppercase">Time</p>
+            <p class="text-lg font-bold text-white mt-1">{{ shot.time }}s</p>
+          </div>
+          <div class="stat-box p-3 text-center">
+            <p class="text-[10px] text-dark-500 font-medium uppercase">TDS</p>
+            <p class="text-lg font-bold text-white mt-1">{{ shot.tds }}%</p>
+          </div>
+        </div>
+
+        <!-- Flavor Tags -->
+        <div class="card p-4">
+          <p class="text-xs text-dark-500 text-center mb-3 font-medium uppercase tracking-wider">Expected Flavor</p>
           <div class="flex flex-wrap justify-center gap-2">
             <span v-for="flavor in expectedFlavors" :key="flavor.name"
-              class="px-3 py-1 rounded-full text-sm font-medium"
-              :class="flavor.type === 'good' ? 'bg-green-100 text-green-700' :
-                      flavor.type === 'bad' ? 'bg-red-100 text-red-700' :
-                      'bg-amber-100 text-amber-700'">
+              class="px-3 py-1.5 rounded-full text-sm font-medium"
+              :class="flavor.type === 'good' ? 'bg-green-500/15 text-green-400' :
+                      flavor.type === 'bad' ? 'bg-red-500/15 text-red-400' :
+                      'bg-amber-500/15 text-amber-400'">
               {{ flavor.icon }} {{ flavor.name }}
             </span>
           </div>
         </div>
 
-        <!-- Stats Card (compact) -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
-          <div class="grid grid-cols-4 gap-2 text-center">
-            <div class="p-2 bg-coffee-50 rounded-lg">
-              <p class="text-[10px] text-coffee-500">Ratio</p>
-              <p class="text-lg font-bold text-coffee-800">1:{{ ratio }}</p>
-            </div>
-            <div class="p-2 rounded-lg" :class="eyColor">
-              <p class="text-[10px] opacity-80">EY%</p>
-              <p class="text-lg font-bold">{{ ey || '-' }}</p>
-            </div>
-            <div class="p-2 bg-coffee-50 rounded-lg">
-              <p class="text-[10px] text-coffee-500">Time</p>
-              <p class="text-lg font-bold text-coffee-800">{{ shot.time }}s</p>
-            </div>
-            <div class="p-2 bg-coffee-50 rounded-lg">
-              <p class="text-[10px] text-coffee-500">TDS</p>
-              <p class="text-lg font-bold text-coffee-800">{{ shot.tds || '-' }}%</p>
-            </div>
-          </div>
+        <!-- Action Card -->
+        <div v-if="!isPerfect" class="card p-5 border-amber-500/20 bg-amber-500/5">
+          <p class="text-xs text-amber-500/70 text-center mb-2 font-medium uppercase tracking-wider">Next Shot Adjustment</p>
+          <p class="text-2xl font-bold text-center text-amber-400">{{ action.do }}</p>
+          <p class="text-sm text-amber-500/70 text-center mt-2">{{ action.reason }}</p>
         </div>
 
-        <!-- Action Card (if not perfect) -->
-        <div v-if="!isPerfect" class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 text-center">
-          <p class="text-xs text-amber-600 mb-1">Shot ถัดไป ให้ปรับ:</p>
-          <p class="text-2xl font-bold text-amber-800">{{ action.do }}</p>
-          <p class="text-xs text-amber-600 mt-1">{{ action.reason }}</p>
-        </div>
-
-        <!-- Perfect Action -->
-        <div v-else class="bg-green-50 border-2 border-green-200 rounded-2xl p-4 text-center">
-          <p class="text-lg font-bold text-green-700">🎯 จด Recipe นี้ไว้!</p>
-          <p class="text-sm text-green-600 mt-1">เบอร์บด {{ shot.grind }} | Dose {{ shot.dose }}g | Yield {{ shot.yield }}g</p>
+        <div v-else class="card p-5 border-green-500/20 bg-green-500/5">
+          <p class="text-xl font-bold text-center text-green-400">Recipe Found!</p>
+          <p class="text-sm text-green-500/70 text-center mt-2">
+            Grind {{ shot.grind }} · Dose {{ shot.dose }}g · Yield {{ shot.yield }}g · {{ shot.time }}s
+          </p>
         </div>
 
         <!-- Next Button -->
-        <button
-          @click="nextShot"
-          class="w-full h-16 rounded-2xl font-bold text-xl bg-coffee-700 text-white hover:bg-coffee-800 active:scale-98 transition-all"
-        >
-          {{ isPerfect ? '🎯 Shot ใหม่' : '🔄 ปรับแล้ว → Shot ต่อไป' }}
+        <button @click="nextShot"
+          class="btn-primary w-full h-14 rounded-xl font-semibold text-lg text-dark-900">
+          {{ isPerfect ? 'New Shot' : 'Next Shot →' }}
         </button>
 
-        <!-- History Toggle -->
-        <button
-          v-if="history.length > 0"
-          @click="showHistory = !showHistory"
-          class="w-full text-center text-sm text-coffee-500 hover:text-coffee-700"
-        >
-          {{ showHistory ? '▲ ซ่อน History' : '▼ ดู History (' + history.length + ')' }}
+        <!-- History -->
+        <button v-if="history.length > 0" @click="showHistory = !showHistory"
+          class="w-full text-center text-sm text-dark-500 hover:text-dark-300 py-2">
+          {{ showHistory ? '▲ Hide History' : '▼ History (' + history.length + ')' }}
         </button>
 
-        <!-- History List -->
-        <div v-if="showHistory && history.length > 0" class="bg-white rounded-2xl shadow p-4 space-y-2">
+        <div v-if="showHistory && history.length > 0" class="card p-4 space-y-2">
           <div v-for="(h, i) in reversedHistory" :key="h.id"
-            class="flex items-center gap-3 p-2 bg-coffee-50 rounded-lg text-sm">
+            class="flex items-center gap-3 p-3 bg-white/3 rounded-xl">
             <span class="text-xl">{{ h.isPerfect ? '🎯' : '🔄' }}</span>
             <div class="flex-1">
-              <p class="font-medium text-coffee-800">#{{ history.length - i }} | {{ h.grind }} | {{ h.time }}s</p>
-              <p class="text-xs text-coffee-500">EY {{ h.ey || '-' }}% | TDS {{ h.tds || '-' }}%</p>
+              <p class="font-medium text-sm">#{{ history.length - i }} · Grind {{ h.grind }} · {{ h.time }}s</p>
+              <p class="text-xs text-dark-500">EY {{ h.ey }}% · TDS {{ h.tds }}%</p>
             </div>
           </div>
         </div>
@@ -301,8 +335,8 @@
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-coffee-400">
-      🐕 WANWAN COFFEE TUNER v4.0
+    <footer class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 py-3 text-center">
+      <p class="text-xs text-dark-600">WANWAN COFFEE TUNER v5.0</p>
     </footer>
   </div>
 
@@ -311,27 +345,22 @@
 
     createApp({
       setup() {
-        // State
         const page = ref('input')
         const shotNumber = ref(1)
         const showHistory = ref(false)
-        const fixedDose = ref(true) // Fixed dose by default
+        const fixedDose = ref(true)
 
         const shot = ref({
-          grind: null,
-          dose: null,
-          yield: null,
-          time: null,
-          tds: null,
-          brix: null
+          grind: null, dose: null, yield: null,
+          time: null, tds: null, brix: null
         })
 
         const history = ref([])
 
-        // Computed
-        const canAnalyze = computed(() => {
-          return shot.value.grind && shot.value.dose && shot.value.yield && shot.value.time && shot.value.tds && shot.value.brix
-        })
+        const canAnalyze = computed(() =>
+          shot.value.grind && shot.value.dose && shot.value.yield &&
+          shot.value.time && shot.value.tds && shot.value.brix
+        )
 
         const ratio = computed(() => {
           if (!shot.value.dose || !shot.value.yield) return '-'
@@ -346,89 +375,46 @@
         const eyVal = computed(() => ey.value ? parseFloat(ey.value) : null)
 
         const isPerfect = computed(() => {
-          if (!shot.value.tds) {
-            // No TDS: use time (20-35s is OK)
-            return shot.value.time >= 20 && shot.value.time <= 35
-          }
-          // With TDS: check EY 18-22% and TDS 8-12%
+          if (!eyVal.value) return false
           return eyVal.value >= 18 && eyVal.value <= 22 && shot.value.tds >= 8 && shot.value.tds <= 12
         })
 
-        const direction = computed(() => {
-          if (shot.value.tds && eyVal.value) {
-            return eyVal.value < 18 ? 'under' : 'over'
-          }
-          return shot.value.time < 25 ? 'under' : 'over'
-        })
+        const direction = computed(() => eyVal.value < 18 ? 'under' : 'over')
 
-        const eyColor = computed(() => {
-          if (!eyVal.value) return 'bg-coffee-50 text-coffee-800'
-          if (eyVal.value >= 18 && eyVal.value <= 22) return 'bg-green-100 text-green-700'
-          return 'bg-amber-100 text-amber-700'
-        })
-
-        // Chart position (EY on X, TDS on Y)
         const chartX = computed(() => {
-          if (!eyVal.value) {
-            // No TDS: use time to estimate position
-            const t = shot.value.time || 25
-            if (t < 20) return 40 // Under zone
-            if (t > 35) return 160 // Over zone
-            return 100 // Perfect zone
-          }
-          // Map EY 14-26% to X 10-190
+          if (!eyVal.value) return 100
           const ey = Math.max(14, Math.min(26, eyVal.value))
           return 10 + ((ey - 14) / 12) * 180
         })
 
         const chartY = computed(() => {
-          if (!shot.value.tds) return 75 // Center Y if no TDS
-          // Map TDS 6-14% to Y 130-10
+          if (!shot.value.tds) return 60
           const tds = Math.max(6, Math.min(14, shot.value.tds))
-          return 130 - ((tds - 6) / 8) * 120
+          return 100 - ((tds - 6) / 8) * 80
         })
 
-        // Expected flavors based on extraction
         const expectedFlavors = computed(() => {
           const flavors = []
           const eyv = eyVal.value
           const tds = shot.value.tds
-          const t = shot.value.time
 
-          if (eyv) {
-            if (eyv < 18) {
-              flavors.push({ icon: '🍋', name: 'เปรี้ยว', type: 'bad' })
-              flavors.push({ icon: '💧', name: 'จืด', type: 'bad' })
-              flavors.push({ icon: '🌿', name: 'เฝื่อน', type: 'bad' })
-            } else if (eyv > 22) {
-              flavors.push({ icon: '☕', name: 'ขม', type: 'bad' })
-              flavors.push({ icon: '🔥', name: 'ไหม้', type: 'bad' })
-              flavors.push({ icon: '😖', name: 'ฝาด', type: 'bad' })
-            } else {
-              flavors.push({ icon: '🍯', name: 'หวาน', type: 'good' })
-              flavors.push({ icon: '⚖️', name: 'สมดุล', type: 'good' })
-            }
+          if (eyv < 18) {
+            flavors.push({ icon: '🍋', name: 'Sour', type: 'bad' })
+            flavors.push({ icon: '💧', name: 'Watery', type: 'bad' })
+          } else if (eyv > 22) {
+            flavors.push({ icon: '☕', name: 'Bitter', type: 'bad' })
+            flavors.push({ icon: '🔥', name: 'Harsh', type: 'bad' })
           } else {
-            // No TDS - use time
-            if (t < 20) {
-              flavors.push({ icon: '🍋', name: 'เปรี้ยว', type: 'bad' })
-              flavors.push({ icon: '💧', name: 'บาง', type: 'bad' })
-            } else if (t > 35) {
-              flavors.push({ icon: '☕', name: 'ขม', type: 'bad' })
-              flavors.push({ icon: '🔥', name: 'เผ็ด', type: 'bad' })
-            } else {
-              flavors.push({ icon: '✨', name: 'น่าจะดี', type: 'good' })
-            }
+            flavors.push({ icon: '🍯', name: 'Sweet', type: 'good' })
+            flavors.push({ icon: '⚖️', name: 'Balanced', type: 'good' })
           }
 
-          if (tds) {
-            if (tds > 12) {
-              flavors.push({ icon: '💪', name: 'เข้มมาก', type: 'warn' })
-            } else if (tds < 8) {
-              flavors.push({ icon: '💧', name: 'เบาบาง', type: 'warn' })
-            } else {
-              flavors.push({ icon: '👌', name: 'ความเข้มดี', type: 'good' })
-            }
+          if (tds > 12) {
+            flavors.push({ icon: '💪', name: 'Strong', type: 'warn' })
+          } else if (tds < 8) {
+            flavors.push({ icon: '💧', name: 'Weak', type: 'warn' })
+          } else {
+            flavors.push({ icon: '👌', name: 'Body OK', type: 'good' })
           }
 
           return flavors
@@ -436,79 +422,48 @@
 
         const action = computed(() => {
           const g = shot.value.grind
-          const t = shot.value.time
-          const tds = shot.value.tds
           const eyv = eyVal.value
+          const tds = shot.value.tds
 
-          // Priority 1: EY via Grind (if have TDS)
-          if (tds && eyv) {
-            if (eyv < 18) {
-              const newGrind = Math.max(1.0, g - 0.3).toFixed(1)
-              return { do: `เบอร์บด ${g} → ${newGrind}`, reason: `EY ${eyv}% ต่ำ` }
-            }
-            if (eyv > 22) {
-              const newGrind = Math.min(12.0, parseFloat(g) + 0.3).toFixed(1)
-              return { do: `เบอร์บด ${g} → ${newGrind}`, reason: `EY ${eyv}% สูง` }
-            }
-            // EY OK, check TDS
-            if (tds > 12) {
-              const newYield = Math.round(shot.value.yield + 4)
-              return { do: `Yield ${shot.value.yield}g → ${newYield}g`, reason: `TDS ${tds}% เข้มเกิน` }
-            }
-            if (tds < 8) {
-              const newYield = Math.round(shot.value.yield - 4)
-              return { do: `Yield ${shot.value.yield}g → ${newYield}g`, reason: `TDS ${tds}% จืด` }
-            }
-          }
-
-          // No TDS - use Time
-          if (t < 20) {
+          if (eyv < 18) {
             const newGrind = Math.max(1.0, g - 0.3).toFixed(1)
-            return { do: `เบอร์บด ${g} → ${newGrind}`, reason: `Time ${t}s เร็วไป` }
+            return { do: `Grind ${g} → ${newGrind}`, reason: `EY ${eyv}% too low` }
           }
-          if (t > 35) {
+          if (eyv > 22) {
             const newGrind = Math.min(12.0, parseFloat(g) + 0.3).toFixed(1)
-            return { do: `เบอร์บด ${g} → ${newGrind}`, reason: `Time ${t}s ช้าไป` }
+            return { do: `Grind ${g} → ${newGrind}`, reason: `EY ${eyv}% too high` }
           }
-
-          return { do: 'ลองชิมดู', reason: 'Time พอดีแล้ว' }
+          if (tds > 12) {
+            const newYield = Math.round(shot.value.yield + 4)
+            return { do: `Yield → ${newYield}g`, reason: `TDS ${tds}% too strong` }
+          }
+          if (tds < 8) {
+            const newYield = Math.round(shot.value.yield - 4)
+            return { do: `Yield → ${newYield}g`, reason: `TDS ${tds}% too weak` }
+          }
+          return { do: 'Perfect!', reason: '' }
         })
 
         const reversedHistory = computed(() => [...history.value].reverse())
 
-        // Methods
-        function analyze() {
-          page.value = 'result'
-        }
+        function analyze() { page.value = 'result' }
 
         function nextShot() {
-          // Save to history
           history.value.push({
             id: Date.now().toString(),
-            grind: shot.value.grind,
-            dose: shot.value.dose,
-            yield: shot.value.yield,
-            time: shot.value.time,
-            tds: shot.value.tds,
-            brix: shot.value.brix,
-            ratio: ratio.value,
-            ey: ey.value,
-            isPerfect: isPerfect.value
+            grind: shot.value.grind, dose: shot.value.dose,
+            yield: shot.value.yield, time: shot.value.time,
+            tds: shot.value.tds, brix: shot.value.brix,
+            ratio: ratio.value, ey: ey.value, isPerfect: isPerfect.value
           })
           localStorage.setItem('wanwan_history', JSON.stringify(history.value))
 
-          // Keep grind & dose for next shot
           const lastGrind = shot.value.grind
           const lastDose = shot.value.dose
 
-          // Reset
           shot.value = {
-            grind: lastGrind,
-            dose: lastDose,
-            yield: null,
-            time: null,
-            tds: null,
-            brix: null
+            grind: lastGrind, dose: lastDose,
+            yield: null, time: null, tds: null, brix: null
           }
 
           shotNumber.value++
@@ -516,7 +471,6 @@
           page.value = 'input'
         }
 
-        // Load history
         onMounted(() => {
           const saved = localStorage.getItem('wanwan_history')
           if (saved) {
@@ -526,36 +480,16 @@
         })
 
         return {
-          page,
-          shotNumber,
-          showHistory,
-          fixedDose,
-          shot,
-          history,
-          canAnalyze,
-          ratio,
-          ey,
-          isPerfect,
-          direction,
-          eyColor,
-          chartX,
-          chartY,
-          expectedFlavors,
-          action,
-          reversedHistory,
-          analyze,
-          nextShot
+          page, shotNumber, showHistory, fixedDose, shot, history,
+          canAnalyze, ratio, ey, isPerfect, direction,
+          chartX, chartY, expectedFlavors, action, reversedHistory,
+          analyze, nextShot
         }
       }
     }).mount('#app')
 
-    // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW registration failed:', err));
-      });
+      navigator.serviceWorker.register('sw.js').catch(() => {})
     }
   </script>
 </body>
