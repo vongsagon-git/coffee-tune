@@ -1249,12 +1249,42 @@
             if (Math.abs(eyError) > EY_TOLERANCE) {
               // Calculate smart correction
               const correction = calculateGrindCorrection(g, eyError, shotNumber.value)
-              const newGrind = Math.max(1.0, Math.min(12.0, g - correction)).toFixed(1)
+              const newGrindVal = Math.max(1.0, Math.min(12.0, g - correction))
+              const newGrind = newGrindVal.toFixed(1)
+
+              // ตรวจสอบว่าติดขอบเขตหรือไม่
+              const atMinBoundary = newGrindVal <= 1.0 && eyError > 0
+              const atMaxBoundary = newGrindVal >= 12.0 && eyError < 0
+              const noChange = parseFloat(newGrind) === parseFloat(g)
 
               const direction = eyError > 0 ? 'ละเอียดขึ้น' : 'หยาบขึ้น'
               const reason = eyError > 0
                 ? `EY ${eyv}% ต่ำไป (เป้า ${TARGET_EY}±${EY_TOLERANCE}%)`
                 : `EY ${eyv}% สูงไป (เป้า ${TARGET_EY}±${EY_TOLERANCE}%)`
+
+              // ถ้าติดขอบเขตหรือค่าไม่เปลี่ยน แนะนำทางอื่น
+              if (atMinBoundary || (noChange && eyError > 0)) {
+                return {
+                  step: 1,
+                  do: `⚠️ เบอร์บดต่ำสุดแล้ว (1.0)`,
+                  reason: reason,
+                  hint: `ลองเพิ่ม Dose หรือลด Yield แทน`,
+                  lockGrind: false,
+                  correction: 0,
+                  newValue: g
+                }
+              }
+              if (atMaxBoundary || (noChange && eyError < 0)) {
+                return {
+                  step: 1,
+                  do: `⚠️ เบอร์บดสูงสุดแล้ว (12.0)`,
+                  reason: reason,
+                  hint: `ลองลด Dose หรือเพิ่ม Yield แทน`,
+                  lockGrind: false,
+                  correction: 0,
+                  newValue: g
+                }
+              }
 
               return {
                 step: 1,
@@ -1285,10 +1315,39 @@
             const correction = calculateYieldCorrection(yld, tdsError)
             const newYield = Math.max(20, Math.min(80, yld + correction))
 
+            // ตรวจสอบว่าติดขอบเขตหรือไม่
+            const atMinBoundary = newYield <= 20 && tdsError < 0
+            const atMaxBoundary = newYield >= 80 && tdsError > 0
+            const noChange = newYield === yld
+
             const direction = tdsError > 0 ? 'เพิ่ม' : 'ลด'
             const reason = tdsError > 0
               ? `TDS ${tds}% เข้มไป (เป้า ${TARGET_TDS}±${TDS_TOLERANCE}%)`
               : `TDS ${tds}% จืดไป (เป้า ${TARGET_TDS}±${TDS_TOLERANCE}%)`
+
+            // ถ้าติดขอบเขตหรือค่าไม่เปลี่ยน แนะนำทางอื่น
+            if (atMinBoundary || (noChange && tdsError < 0)) {
+              return {
+                step: 2,
+                do: `⚠️ Yield ต่ำสุดแล้ว (20g)`,
+                reason: reason,
+                hint: `ลองเพิ่ม Dose หรือบดละเอียดขึ้นแทน`,
+                lockGrind: false,
+                correction: 0,
+                newValue: yld
+              }
+            }
+            if (atMaxBoundary || (noChange && tdsError > 0)) {
+              return {
+                step: 2,
+                do: `⚠️ Yield สูงสุดแล้ว (80g)`,
+                reason: reason,
+                hint: `ลองลด Dose หรือบดหยาบขึ้นแทน`,
+                lockGrind: false,
+                correction: 0,
+                newValue: yld
+              }
+            }
 
             return {
               step: 2,
