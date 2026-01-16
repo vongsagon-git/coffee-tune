@@ -36,6 +36,23 @@
       margin: 0;
     }
     input[type="number"] { -moz-appearance: textfield; }
+
+    @keyframes saveFlash {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.95); background-color: #22c55e; }
+      100% { transform: scale(1); }
+    }
+    .save-flash {
+      animation: saveFlash 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
   </style>
 </head>
 <body class="bg-coffee-50 min-h-screen">
@@ -141,10 +158,14 @@
 
         <!-- Computed -->
         <div class="mt-3 pt-3 border-t border-coffee-100 flex justify-between text-sm">
-          <span class="text-coffee-500">Ratio: <strong class="text-coffee-800">1:{{ ratio }}</strong></span>
+          <span class="text-coffee-500">
+            Ratio:
+            <strong v-if="shot.dose && shot.yield" class="text-coffee-800">1:{{ ratio }}</strong>
+            <span v-else class="text-coffee-400">-</span>
+          </span>
           <span class="text-coffee-500">
             EY:
-            <strong v-if="shot.tds" :class="eyClass">{{ ey }}%</strong>
+            <strong v-if="shot.tds && shot.dose && shot.yield" :class="eyClass">{{ ey }}%</strong>
             <span v-else class="text-coffee-400">-</span>
           </span>
         </div>
@@ -186,12 +207,16 @@
       <!-- Action Buttons -->
       <div class="flex gap-3">
         <button
+          ref="saveBtn"
           @click="saveAndNext"
           :disabled="!canSave"
           class="flex-1 h-14 rounded-xl font-bold text-lg transition-all"
-          :class="canSave
-            ? 'bg-coffee-700 text-white hover:bg-coffee-800 active:scale-95'
-            : 'bg-coffee-200 text-coffee-400'"
+          :class="[
+            canSave
+              ? 'bg-coffee-700 text-white hover:bg-coffee-800 active:scale-95'
+              : 'bg-coffee-200 text-coffee-400',
+            saveFlash ? 'save-flash' : ''
+          ]"
         >
           {{ isPerfect ? '💾 บันทึก Recipe' : '🔄 ปรับแล้ว → Shot ต่อไป' }}
         </button>
@@ -246,6 +271,7 @@
         })
 
         const history = ref([])
+        const saveFlash = ref(false)
 
         // Computed
         const ratio = computed(() => {
@@ -396,6 +422,10 @@
           history.value.push(record)
           localStorage.setItem('wanwan_history', JSON.stringify(history.value))
 
+          // Flash animation
+          saveFlash.value = true
+          setTimeout(() => { saveFlash.value = false }, 300)
+
           // Keep grind for next shot
           const lastGrind = shot.value.grind
           const lastDose = shot.value.dose
@@ -429,6 +459,7 @@
         return {
           shot,
           history,
+          saveFlash,
           ratio,
           ey,
           hasInput,
