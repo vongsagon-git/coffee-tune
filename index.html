@@ -243,6 +243,37 @@
             </div>
           </div>
 
+          <!-- CONFIRMATION MODE: Lock Grind + Dose + Yield -->
+          <div v-else-if="confirmationMode" class="card p-4 bg-green-500/10 border border-green-500/30">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs text-green-400 font-medium">🔐 CONFIRMATION MODE ({{ confirmationCount }}/2)</p>
+              <p class="text-[10px] text-green-500">ยืนยันสูตรอีก {{ 2 - confirmationCount }} ครั้ง</p>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="text-center">
+                  <p class="text-[10px] text-dark-500 uppercase">เบอร์บด</p>
+                  <p class="text-2xl font-bold text-green-400">{{ shot.grind }}</p>
+                  <p class="text-[10px] text-green-500">🔒</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] text-dark-500 uppercase">Dose</p>
+                  <p class="text-2xl font-bold text-green-400">{{ shot.dose }}g</p>
+                  <p class="text-[10px] text-green-500">🔒</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] text-dark-500 uppercase">Yield</p>
+                  <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
+                  <p class="text-[10px] text-green-500">🔒</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-xs text-dark-400">Ratio</p>
+                <p class="text-lg font-bold text-green-400" v-if="shot.dose && shot.yield">1:{{ (shot.yield / shot.dose).toFixed(1) }}</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Shot 2+: Grind + Dose แสดงค่าที่แนะนำ (Locked) -->
           <div v-else class="card p-4 bg-dark-800/50">
             <div class="flex items-center justify-between">
@@ -266,24 +297,25 @@
             </div>
           </div>
 
-          <!-- Row 2: Yield + Time (ค่าที่ต้องอ่าน) -->
+          <!-- Row 2: Yield + Time -->
           <div class="grid grid-cols-2 gap-4">
+            <!-- Yield: Shot 1 = input, Shot 2+ = Locked display -->
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-dark-400'">
-                  {{ shotNumber > 1 ? '📖 Yield (g)' : 'Yield (g)' }}
+                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-green-400' : 'text-dark-400'">
+                  {{ shotNumber > 1 ? '🔒 Yield (g)' : 'Yield (g)' }}
                 </label>
-                <span v-if="fixedGrind && !tdsIsGood && shotNumber > 1" class="text-[10px] text-accent font-medium animate-pulse">🎯 ปรับตรงนี้!</span>
-                <span v-else-if="targetYield && shot.dose" class="text-[10px] text-dark-500 font-medium">เป้า {{ targetYield }}g (1:{{ (targetYield / shot.dose).toFixed(1) }})</span>
+                <span v-if="shotNumber > 1" class="text-[10px] text-green-500">Locked</span>
                 <span v-else-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
               </div>
-              <input type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" :placeholder="targetYield || 36"
+              <!-- Shot 2+: Display locked value -->
+              <div v-if="shotNumber > 1" class="input-field w-full h-14 flex items-center justify-center rounded-xl bg-green-500/10 border-green-500/30">
+                <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
+              </div>
+              <!-- Shot 1: Editable input -->
+              <input v-else type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" placeholder="36"
                 class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
-                :class="[
-                  (fixedGrind && !tdsIsGood && shotNumber > 1) ? 'border-accent ring-2 ring-accent/30' : '',
-                  (shotNumber > 1 && !shot.yield) ? 'border-blue-500/50 ring-1 ring-blue-500/30' : '',
-                  shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''
-                ]">
+                :class="shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
@@ -683,6 +715,37 @@
       <div v-if="page === 'settings'" class="page-slide space-y-5">
         <h2 class="text-xl font-bold">⚙️ ตั้งค่า</h2>
 
+        <!-- Shot Statistics -->
+        <div v-if="history.length > 0" class="card p-4">
+          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">📊 สถิติการจูน</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+              <p class="text-2xl font-bold text-accent">{{ stats.totalShots }}</p>
+              <p class="text-[10px] text-dark-500 uppercase">Total Shots</p>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+              <p class="text-2xl font-bold text-green-400">{{ stats.perfectShots }}</p>
+              <p class="text-[10px] text-dark-500 uppercase">Perfect Zone</p>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+              <p class="text-2xl font-bold text-white">{{ stats.avgEY }}%</p>
+              <p class="text-[10px] text-dark-500 uppercase">Avg EY%</p>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-dark-800/50">
+              <p class="text-2xl font-bold text-white">{{ stats.avgTDS }}%</p>
+              <p class="text-[10px] text-dark-500 uppercase">Avg TDS%</p>
+            </div>
+          </div>
+          <!-- Best Shot -->
+          <div v-if="stats.bestShot" class="mt-4 p-3 rounded-xl bg-gradient-to-r from-accent/20 to-transparent border border-accent/30">
+            <p class="text-xs text-accent font-medium mb-2">🏆 Best Shot</p>
+            <div class="flex justify-between text-sm">
+              <span class="text-dark-400">Grind {{ stats.bestShot.grind }} · {{ stats.bestShot.dose }}g → {{ stats.bestShot.yield }}g</span>
+              <span class="text-green-400 font-medium">EY {{ stats.bestShot.ey }}%</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Equipment Info -->
         <div class="card p-4">
           <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">อุปกรณ์</p>
@@ -721,7 +784,7 @@
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-dark-500 mt-1">v6.2 · Made with ❤️</p>
+          <p class="text-xs text-dark-500 mt-1">v6.4 · Made with ❤️</p>
           <p class="text-xs text-dark-600 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
@@ -777,12 +840,18 @@
         const targetYield = ref(null)  // Target Yield (can vary slightly)
         const fixedGrind = ref(false)  // Lock Grind when EY is good
 
+        // Confirmation mode: verify Perfect with 2 more shots
+        const confirmationMode = ref(false)
+        const confirmationCount = ref(0)  // Need 2 confirmations
+        const confirmedRecipe = ref(null) // Store recipe being confirmed
+
         const shot = ref({
           grind: null, dose: null, yield: null,
           time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
         })
 
-        const history = ref([])
+        const history = ref([])           // Current session history
+        const allTimeHistory = ref([])    // All-time history for stats (never cleared)
 
         // Input validation rules
         const validRanges = {
@@ -848,6 +917,27 @@
           if (!shot.value.tds) return 60
           const tds = Math.max(6, Math.min(14, shot.value.tds))
           return 100 - ((tds - 6) / 8) * 80
+        })
+
+        // Shot Statistics for Settings page (uses allTimeHistory)
+        const stats = computed(() => {
+          if (allTimeHistory.value.length === 0) {
+            return { totalShots: 0, perfectShots: 0, avgEY: '-', avgTDS: '-', bestShot: null }
+          }
+
+          const total = allTimeHistory.value.length
+          const perfect = allTimeHistory.value.filter(s => s.ey >= 18 && s.ey <= 22 && s.tds >= 8 && s.tds <= 12).length
+          const avgEY = (allTimeHistory.value.reduce((sum, s) => sum + parseFloat(s.ey), 0) / total).toFixed(1)
+          const avgTDS = (allTimeHistory.value.reduce((sum, s) => sum + parseFloat(s.tds), 0) / total).toFixed(1)
+
+          // Find best shot (closest to EY 20%)
+          const best = allTimeHistory.value.reduce((best, s) => {
+            const diff = Math.abs(parseFloat(s.ey) - 20)
+            const bestDiff = best ? Math.abs(parseFloat(best.ey) - 20) : 999
+            return diff < bestDiff ? s : best
+          }, null)
+
+          return { totalShots: total, perfectShots: perfect, avgEY, avgTDS, bestShot: best }
         })
 
         const expectedFlavors = computed(() => {
@@ -930,33 +1020,108 @@
           return 2  // EY ดีแล้ว หรือ Grind locked → ปรับ Yield
         })
 
+        // ═══════════════════════════════════════════════════════════════
+        // 🧠 SMART TUNING ALGORITHM (Feedback Loop + Mathematical Model)
+        // ═══════════════════════════════════════════════════════════════
+        //
+        // Core Formulas:
+        // 1. EY% = (Yield × TDS%) / Dose
+        // 2. Flow Rate = Yield / Time (g/s) - indicator of grind fineness
+        // 3. Grind Correction = Kp × Error × Sensitivity
+        //    where: Error = Target_EY - Actual_EY
+        //           Sensitivity = f(current_grind) - non-linear
+        //
+        // Scientific Basis:
+        // - Finer grind → Higher extraction (but non-linear, has peak)
+        // - Flow rate indicates grind appropriateness
+        // - Proportional control with adaptive gain
+        // ═══════════════════════════════════════════════════════════════
+
+        // Constants for smart algorithm
+        const TARGET_EY = 20.0       // Optimal EY% (center of 18-22%)
+        const TARGET_TDS = 10.0      // Optimal TDS% (center of 8-12%)
+        const EY_TOLERANCE = 2.0     // ±2% from target = acceptable
+        const TDS_TOLERANCE = 2.0    // ±2% from target = acceptable
+
+        // Proportional gain constants (tuned for F64 Evo Pro grinder)
+        const Kp_GRIND = 0.08        // Grind adjustment per 1% EY error
+        const Kp_YIELD = 1.5         // Yield adjustment per 1% TDS error
+
+        // Calculate grind correction using proportional control
+        const calculateGrindCorrection = (currentGrind, eyError) => {
+          // Non-linear sensitivity: finer grind = more sensitive
+          // Sensitivity curve: higher at fine end (1-4), lower at coarse end (8-12)
+          const sensitivity = 1.5 - (currentGrind - 1) * 0.1  // 1.5 at grind 1, 0.4 at grind 12
+          const clampedSensitivity = Math.max(0.3, Math.min(1.5, sensitivity))
+
+          // Proportional correction with sensitivity
+          let correction = Kp_GRIND * eyError * clampedSensitivity
+
+          // Clamp correction to reasonable step (0.1 to 0.5)
+          const maxStep = 0.5
+          const minStep = 0.1
+          if (Math.abs(correction) > maxStep) correction = Math.sign(correction) * maxStep
+          if (Math.abs(correction) < minStep && correction !== 0) correction = Math.sign(correction) * minStep
+
+          return correction
+        }
+
+        // Calculate yield correction using proportional control
+        const calculateYieldCorrection = (currentYield, tdsError) => {
+          // TDS too high → need more yield (dilute)
+          // TDS too low → need less yield (concentrate)
+          let correction = Kp_YIELD * tdsError
+
+          // Clamp to reasonable step (2g to 6g)
+          const maxStep = 6
+          const minStep = 2
+          if (Math.abs(correction) > maxStep) correction = Math.sign(correction) * maxStep
+          if (Math.abs(correction) < minStep && correction !== 0) correction = Math.sign(correction) * minStep
+
+          return Math.round(correction)
+        }
+
+        // Flow rate analysis (diagnostic info)
+        const flowRate = computed(() => {
+          if (!shot.value.yield || !shot.value.time) return null
+          return (shot.value.yield / shot.value.time).toFixed(2)
+        })
+
         const action = computed(() => {
           const g = shot.value.grind
           const eyv = eyVal.value
           const tds = shot.value.tds
+          const yld = shot.value.yield
+          const time = shot.value.time
+
+          // Calculate errors from target
+          const eyError = TARGET_EY - eyv      // Positive = under-extracted, need finer
+          const tdsError = tds - TARGET_TDS    // Positive = too strong, need more yield
+
+          // Flow rate diagnostic
+          const fr = flowRate.value
+          const flowDiag = fr ? `Flow: ${fr} g/s` : ''
 
           // Step 1: ปรับเบอร์บดก่อน (จน EY 18-22%) - ถ้ายังไม่ lock
           if (!fixedGrind.value) {
-            if (eyv < 18) {
-              const newGrind = Math.max(1.0, g - 0.3).toFixed(1)
-              const timeHint = shot.value.time < 20 ? ' (เวลาจะเพิ่มขึ้น)' : ''
+            if (Math.abs(eyError) > EY_TOLERANCE) {
+              // Calculate smart correction
+              const correction = calculateGrindCorrection(g, eyError)
+              const newGrind = Math.max(1.0, Math.min(12.0, g - correction)).toFixed(1)
+
+              const direction = eyError > 0 ? 'ละเอียดขึ้น' : 'หยาบขึ้น'
+              const reason = eyError > 0
+                ? `EY ${eyv}% ต่ำไป (เป้า ${TARGET_EY}±${EY_TOLERANCE}%)`
+                : `EY ${eyv}% สูงไป (เป้า ${TARGET_EY}±${EY_TOLERANCE}%)`
+
               return {
                 step: 1,
                 do: `เบอร์บด ${g} → ${newGrind}`,
-                reason: `EY ${eyv}% ต่ำไป (เป้า 18-22%)`,
-                hint: `บดละเอียดขึ้น → สกัดมากขึ้น${timeHint}`,
-                lockGrind: false
-              }
-            }
-            if (eyv > 22) {
-              const newGrind = Math.min(12.0, parseFloat(g) + 0.3).toFixed(1)
-              const timeHint = shot.value.time > 35 ? ' (เวลาจะลดลง)' : ''
-              return {
-                step: 1,
-                do: `เบอร์บด ${g} → ${newGrind}`,
-                reason: `EY ${eyv}% สูงไป (เป้า 18-22%)`,
-                hint: `บดหยาบขึ้น → สกัดน้อยลง${timeHint}`,
-                lockGrind: false
+                reason: reason,
+                hint: `บด${direction} (Δ${Math.abs(correction).toFixed(1)}) ${flowDiag}`,
+                lockGrind: false,
+                correction: correction,
+                newValue: parseFloat(newGrind)
               }
             }
             // EY ดีแล้ว → Lock Grind!
@@ -964,35 +1129,46 @@
               return {
                 step: 1,
                 do: `🔒 Lock เบอร์บด ${g}`,
-                reason: `EY ${eyv}% ดีแล้ว!`,
+                reason: `EY ${eyv}% ดีแล้ว! (ใน ${TARGET_EY}±${EY_TOLERANCE}%)`,
                 hint: 'กด "Shot ถัดไป" เพื่อไปปรับ Yield',
-                lockGrind: true
+                lockGrind: true,
+                correction: 0,
+                newValue: g
               }
             }
           }
 
           // Step 2: Grind locked แล้ว → ปรับ TDS ผ่าน Yield
-          if (tds > 12) {
-            const newYield = Math.round(shot.value.yield + 4)
+          if (Math.abs(tdsError) > TDS_TOLERANCE) {
+            const correction = calculateYieldCorrection(yld, tdsError)
+            const newYield = Math.max(20, Math.min(80, yld + correction))
+
+            const direction = tdsError > 0 ? 'เพิ่ม' : 'ลด'
+            const reason = tdsError > 0
+              ? `TDS ${tds}% เข้มไป (เป้า ${TARGET_TDS}±${TDS_TOLERANCE}%)`
+              : `TDS ${tds}% จืดไป (เป้า ${TARGET_TDS}±${TDS_TOLERANCE}%)`
+
             return {
               step: 2,
-              do: `Yield ${shot.value.yield}g → ${newYield}g`,
-              reason: `TDS ${tds}% เข้มไป (เป้า 8-12%)`,
-              hint: 'กดหยุดที่ yield ' + newYield + 'g (อ่านเวลาจากจอ)',
-              lockGrind: false
+              do: `Yield ${yld}g → ${newYield}g`,
+              reason: reason,
+              hint: `${direction} yield ${Math.abs(correction)}g ${flowDiag}`,
+              lockGrind: false,
+              correction: correction,
+              newValue: newYield
             }
           }
-          if (tds < 8) {
-            const newYield = Math.max(20, Math.round(shot.value.yield - 4))
-            return {
-              step: 2,
-              do: `Yield ${shot.value.yield}g → ${newYield}g`,
-              reason: `TDS ${tds}% จืดไป (เป้า 8-12%)`,
-              hint: 'กดหยุดที่ yield ' + newYield + 'g (อ่านเวลาจากจอ)',
-              lockGrind: false
-            }
+
+          // Perfect! No adjustment needed
+          return {
+            step: 0,
+            do: 'สมบูรณ์แบบ!',
+            reason: `EY ${eyv}% และ TDS ${tds}% อยู่ในโซนที่ดี`,
+            hint: flowDiag,
+            lockGrind: false,
+            correction: 0,
+            newValue: null
           }
-          return { step: 0, do: 'สมบูรณ์แบบ!', reason: '', hint: '', lockGrind: false }
         })
 
         const reversedHistory = computed(() => [...history.value].reverse())
@@ -1009,8 +1185,8 @@
         function analyze() { page.value = 'result' }
 
         function nextShot() {
-          // Save to history
-          history.value.push({
+          // Create shot record
+          const shotRecord = {
             id: Date.now().toString(),
             bean: beanName.value || '',
             grind: shot.value.grind, dose: shot.value.dose,
@@ -1019,24 +1195,69 @@
             notes: shot.value.notes || '', rating: shot.value.rating || 0,
             flavors: [...shot.value.flavors],
             ratio: ratio.value, ey: ey.value, isPerfect: isPerfect.value
-          })
+          }
+
+          // Save to session history
+          history.value.push(shotRecord)
           localStorage.setItem('wanwan_history', JSON.stringify(history.value))
 
-          // If perfect, reset for new session
-          if (isPerfect.value) {
-            history.value = []
-            localStorage.removeItem('wanwan_history')
-            localStorage.removeItem('wanwan_session')
-            shotNumber.value = 1
-            fixedDose.value = false
-            fixedGrind.value = false
-            targetYield.value = null
-            beanName.value = ''
-            shot.value = {
-              grind: null, dose: null, yield: null,
-              time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
+          // Save to all-time history (for stats - never cleared)
+          allTimeHistory.value.push(shotRecord)
+          localStorage.setItem('wanwan_alltime', JSON.stringify(allTimeHistory.value))
+
+          // CONFIRMATION MODE: Need 2 perfect shots to confirm recipe
+          if (confirmationMode.value) {
+            if (isPerfect.value) {
+              confirmationCount.value++
+              if (confirmationCount.value >= 2) {
+                // Recipe confirmed! Save and reset
+                alert('🎉 สูตรยืนยันแล้ว! สกัดได้ Perfect 2 ครั้งติด')
+                confirmationMode.value = false
+                confirmationCount.value = 0
+                confirmedRecipe.value = null
+                // Reset session
+                history.value = []
+                localStorage.removeItem('wanwan_history')
+                localStorage.removeItem('wanwan_session')
+                shotNumber.value = 1
+                fixedDose.value = false
+                fixedGrind.value = false
+                targetYield.value = null
+                beanName.value = ''
+                shot.value = {
+                  grind: null, dose: null, yield: null,
+                  time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
+                }
+                showHistory.value = false
+                page.value = 'input'
+                return
+              }
+            } else {
+              // Failed confirmation - back to tuning
+              confirmationMode.value = false
+              confirmationCount.value = 0
+              confirmedRecipe.value = null
             }
-            showHistory.value = false
+          }
+
+          // If perfect (first time), enter confirmation mode
+          if (isPerfect.value && !confirmationMode.value) {
+            confirmationMode.value = true
+            confirmationCount.value = 0
+            confirmedRecipe.value = {
+              grind: shot.value.grind,
+              dose: shot.value.dose,
+              yield: shot.value.yield
+            }
+            // Set up for confirmation shot (Lock Grind + Dose + Yield, only input Time/TDS/Brix)
+            shotNumber.value++
+            shot.value = {
+              grind: confirmedRecipe.value.grind,
+              dose: confirmedRecipe.value.dose,
+              yield: confirmedRecipe.value.yield,  // Also locked!
+              time: null, tds: null, brix: null,   // Only these need input
+              notes: '', rating: 0, flavors: []
+            }
             page.value = 'input'
             return
           }
@@ -1059,32 +1280,26 @@
             fixedGrind.value = true
           }
 
-          // Calculate recommended values for next shot
+          // ═══════════════════════════════════════════════════════════════
+          // 🧠 SMART TUNING: Use calculated values from action computed
+          // ═══════════════════════════════════════════════════════════════
           let nextGrind = lastGrind
           let nextYield = targetYield.value || lastYield
 
-          // Step 1: Adjust grind if EY not in range
-          if (!fixedGrind.value) {
-            if (currentEy < 18) {
-              nextGrind = Math.max(1.0, lastGrind - 0.3)
-            } else if (currentEy > 22) {
-              nextGrind = Math.min(12.0, lastGrind + 0.3)
-            }
-          }
-
-          // Step 2: Adjust yield if TDS not in range (and grind is locked)
-          if (fixedGrind.value || action.value.lockGrind) {
-            if (lastTds > 12) {
-              nextYield = Math.round(lastYield + 4)
-            } else if (lastTds < 8) {
-              nextYield = Math.max(20, Math.round(lastYield - 4))
-            }
+          // Use smart algorithm values from action
+          if (action.value.step === 1 && action.value.newValue !== null) {
+            // Step 1: Grind adjustment (from smart algorithm)
+            nextGrind = action.value.newValue
+          } else if (action.value.step === 2 && action.value.newValue !== null) {
+            // Step 2: Yield adjustment (from smart algorithm)
+            nextYield = action.value.newValue
             targetYield.value = nextYield
           }
 
           shot.value = {
-            grind: parseFloat(nextGrind.toFixed(1)), dose: lastDose,
-            yield: null,  // User will input actual yield
+            grind: parseFloat(nextGrind.toFixed ? nextGrind.toFixed(1) : nextGrind),
+            dose: lastDose,
+            yield: nextYield,  // Locked - use smart-calculated yield
             time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
           }
 
@@ -1251,10 +1466,16 @@ Made with WANWAN COFFEE TUNER`
         }
 
         onMounted(() => {
-          // Load history
+          // Load session history
           const saved = localStorage.getItem('wanwan_history')
           if (saved) {
             history.value = JSON.parse(saved)
+          }
+
+          // Load all-time history (for stats)
+          const allTime = localStorage.getItem('wanwan_alltime')
+          if (allTime) {
+            allTimeHistory.value = JSON.parse(allTime)
           }
 
           // Load recipes
@@ -1272,6 +1493,9 @@ Made with WANWAN COFFEE TUNER`
             fixedGrind.value = state.fixedGrind || false
             targetYield.value = state.targetYield || null
             beanName.value = state.beanName || ''
+            confirmationMode.value = state.confirmationMode || false
+            confirmationCount.value = state.confirmationCount || 0
+            confirmedRecipe.value = state.confirmedRecipe || null
             if (state.lastGrind) shot.value.grind = state.lastGrind
             if (state.lastDose) shot.value.dose = state.lastDose
           } else {
@@ -1282,8 +1506,9 @@ Made with WANWAN COFFEE TUNER`
         return {
           page, shotNumber, showHistory, fixedDose, fixedGrind, targetYield, shot, history,
           canAnalyze, ratio, ey, isPerfect, direction, tuningStep, eyIsGood, tdsIsGood,
-          chartX, chartY, expectedFlavors, action, reversedHistory, flavorProfile,
-          validationErrors, validRanges, copied, recipeSaved, recipes,
+          chartX, chartY, expectedFlavors, action, reversedHistory, flavorProfile, stats,
+          validationErrors, validRanges, copied, recipeSaved, recipes, allTimeHistory,
+          confirmationMode, confirmationCount, confirmedRecipe,
           analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
           copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
           exportData, importData, clearAllData
