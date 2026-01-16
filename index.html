@@ -168,15 +168,98 @@
   </style>
 </head>
 <body class="bg-sbux-cream text-sbux-brown min-h-screen">
-  <div id="app" v-cloak>
+  <div id="app" v-cloak role="application" aria-label="WANWAN Coffee Tuner Application">
+    <!-- Onboarding Modal (First-time users) -->
+    <div v-if="showOnboarding" class="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
+      <div class="bg-white max-w-sm w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+        <div v-if="onboardingStep === 1" class="text-center">
+          <span class="text-5xl mb-4 block">☕</span>
+          <h2 class="text-xl font-bold text-sbux-green mb-3">ยินดีต้อนรับสู่ WANWAN COFFEE TUNER</h2>
+          <p class="text-sm text-gray-600 mb-4">แอปช่วยจูนกาแฟ Espresso ให้ได้รสชาติที่สมบูรณ์แบบ</p>
+          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
+            <p><b>🎯 เป้าหมาย:</b> EY 18-22% และ TDS 8-12%</p>
+            <p><b>📊 หลักการ:</b> ใช้มาตรฐาน SCA (Specialty Coffee Association)</p>
+          </div>
+        </div>
+        <div v-if="onboardingStep === 2" class="text-center">
+          <span class="text-5xl mb-4 block">🔧</span>
+          <h2 class="text-xl font-bold text-sbux-green mb-3">Step 1: ปรับเบอร์บด</h2>
+          <p class="text-sm text-gray-600 mb-4">ปรับเบอร์บดจน EY อยู่ในช่วง 18-22%</p>
+          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
+            <p>• <b>EY ต่ำไป (< 18%)</b> → บดละเอียดขึ้น</p>
+            <p>• <b>EY สูงไป (> 22%)</b> → บดหยาบขึ้น</p>
+            <p>• ⚠️ <b>บดทิ้ง 2-3g ก่อนทุกครั้ง</b>ที่ปรับเบอร์บด</p>
+          </div>
+        </div>
+        <div v-if="onboardingStep === 3" class="text-center">
+          <span class="text-5xl mb-4 block">🎯</span>
+          <h2 class="text-xl font-bold text-sbux-green mb-3">Step 2: ปรับ Yield</h2>
+          <p class="text-sm text-gray-600 mb-4">เมื่อ EY ดีแล้ว ปรับ Yield ให้ TDS อยู่ในช่วง 8-12%</p>
+          <div class="bg-sbux-mint p-4 text-left space-y-2 text-sm">
+            <p>• <b>TDS สูงไป (> 12%)</b> → เพิ่ม Yield (กดหยุดช้าลง)</p>
+            <p>• <b>TDS ต่ำไป (< 8%)</b> → ลด Yield (กดหยุดเร็วขึ้น)</p>
+            <p>• 💡 <b>Dose คงที่</b>หลังจาก Shot แรก</p>
+          </div>
+        </div>
+        <div v-if="onboardingStep === 4" class="text-center">
+          <span class="text-5xl mb-4 block">📊</span>
+          <h2 class="text-xl font-bold text-sbux-green mb-3">ค่าที่ต้องกรอก (6 ค่า)</h2>
+          <div class="bg-sbux-mint p-4 text-left space-y-1 text-sm">
+            <p>1️⃣ <b>เบอร์บด</b> - ตั้งที่เครื่องบด</p>
+            <p>2️⃣ <b>Dose</b> - น้ำหนักกาแฟบด (g)</p>
+            <p>3️⃣ <b>Yield</b> - น้ำหนักกาแฟที่ชงได้ (g)</p>
+            <p>4️⃣ <b>Time</b> - เวลาที่ชง (วินาที)</p>
+            <p>5️⃣ <b>TDS%</b> - จาก Refractometer</p>
+            <p>6️⃣ <b>Brix%</b> - จาก Refractometer</p>
+          </div>
+        </div>
+        <div v-if="onboardingStep === 5" class="text-center">
+          <span class="text-5xl mb-4 block">🎉</span>
+          <h2 class="text-xl font-bold text-sbux-green mb-3">พร้อมแล้ว!</h2>
+          <p class="text-sm text-gray-600 mb-4">เริ่มจูนกาแฟช็อตแรกได้เลย</p>
+          <div class="bg-green-100 p-4 text-left space-y-2 text-sm text-green-800">
+            <p>✅ ใส่ค่าทั้ง 6 ช่อง</p>
+            <p>✅ กด "วิเคราะห์ผล"</p>
+            <p>✅ ทำตามคำแนะนำ</p>
+            <p>✅ ทำซ้ำจนถึง Perfect Zone!</p>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-6">
+          <button v-if="onboardingStep > 1" @click="onboardingStep--" class="text-sm text-gray-500 hover:text-sbux-green">
+            ← ย้อนกลับ
+          </button>
+          <span v-else></span>
+
+          <div class="flex items-center gap-1">
+            <span v-for="s in 5" :key="s" class="w-2 h-2 rounded-full" :class="s === onboardingStep ? 'bg-sbux-green' : 'bg-gray-200'"></span>
+          </div>
+
+          <button v-if="onboardingStep < 5" @click="onboardingStep++" class="btn-primary px-4 py-2 text-sm rounded-none">
+            ถัดไป →
+          </button>
+          <button v-else @click="finishOnboarding" class="btn-primary px-4 py-2 text-sm rounded-none">
+            เริ่มใช้งาน 🚀
+          </button>
+        </div>
+
+        <button @click="skipOnboarding" class="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-4">
+          ข้ามการแนะนำ
+        </button>
+      </div>
+    </div>
+
     <!-- Header (Starbucks Style - Green Bar) -->
-    <header class="bg-sbux-green py-3 px-5 sticky top-0 z-50">
+    <header class="bg-sbux-green py-3 px-5 sticky top-0 z-50" role="banner">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div>
           <h1 class="text-base font-bold tracking-tight text-white">WANWAN COFFEE</h1>
         </div>
-        <div class="text-right">
-          <p class="text-[10px] text-white/70">Appia Life XT · F64 Evo Pro</p>
+        <div class="flex items-center gap-3">
+          <button @click="showTutorial" class="text-white/70 hover:text-white text-lg" title="ดูคู่มือ" aria-label="เปิดคู่มือการใช้งาน">❓</button>
+          <div class="text-right">
+            <p class="text-[10px] text-white/70">Appia Life XT · F64 Evo Pro</p>
+          </div>
         </div>
       </div>
     </header>
@@ -386,9 +469,31 @@
           </ul>
         </div>
 
+        <!-- Quick Stats (show after first shot) -->
+        <div v-if="history.length > 0" class="card p-4">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">📊 สถิติ Session นี้</p>
+            <span class="text-[10px] text-gray-400">{{ history.length }} shots</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 p-2 rounded-none">
+              <p class="text-lg font-bold text-sbux-green">{{ history.filter(h => h.ey >= 18 && h.ey <= 22).length }}</p>
+              <p class="text-[9px] text-gray-500">EY OK</p>
+            </div>
+            <div class="bg-gray-50 p-2 rounded-none">
+              <p class="text-lg font-bold text-sbux-green">{{ history.filter(h => h.tds >= 8 && h.tds <= 12).length }}</p>
+              <p class="text-[9px] text-gray-500">TDS OK</p>
+            </div>
+            <div class="bg-gray-50 p-2 rounded-none">
+              <p class="text-lg font-bold" :class="history.some(h => h.isPerfect) ? 'text-green-500' : 'text-gray-400'">{{ history.filter(h => h.isPerfect).length }}</p>
+              <p class="text-[9px] text-gray-500">Perfect</p>
+            </div>
+          </div>
+        </div>
+
         <!-- Submit Button -->
         <button @click="analyze" :disabled="!canAnalyze"
-          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white">
+          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white" aria-label="วิเคราะห์ผลการชง">
           วิเคราะห์ผล
         </button>
       </div>
@@ -695,29 +800,37 @@
           </div>
         </div>
 
+        <!-- Help & Tutorial -->
+        <div class="card p-4">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">วิธีใช้งาน</p>
+          <button @click="showTutorial" class="w-full py-3 rounded-none bg-sbux-green/10 text-sbux-green text-sm font-medium hover:bg-sbux-green/20 touch-feedback">
+            📖 ดูคู่มือการใช้งาน
+          </button>
+        </div>
+
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-gray-500 mt-1">v6.4 · Made with ❤️</p>
+          <p class="text-xs text-gray-500 mt-1">v6.6 · Made with ❤️</p>
           <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
     </main>
 
     <!-- Bottom Navigation (Native App Style) -->
-    <nav class="bottom-nav">
+    <nav class="bottom-nav" role="navigation" aria-label="เมนูหลัก">
       <div class="max-w-md mx-auto flex justify-around py-2">
-        <button @click="page = 'input'; showHistory = false" class="nav-item touch-feedback" :class="{ active: page === 'input' }">
-          <span class="nav-icon">☕</span>
+        <button @click="page = 'input'; showHistory = false" class="nav-item touch-feedback" :class="{ active: page === 'input' }" aria-label="หน้าจูนกาแฟ" :aria-current="page === 'input' ? 'page' : null">
+          <span class="nav-icon" aria-hidden="true">☕</span>
           <span class="nav-label">จูน</span>
         </button>
-        <button @click="page = 'recipes'" class="nav-item touch-feedback" :class="{ active: page === 'recipes' }">
-          <span class="nav-icon">📚</span>
+        <button @click="page = 'recipes'" class="nav-item touch-feedback" :class="{ active: page === 'recipes' }" aria-label="คลังสูตรกาแฟ" :aria-current="page === 'recipes' ? 'page' : null">
+          <span class="nav-icon" aria-hidden="true">📚</span>
           <span class="nav-label">สูตร</span>
-          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-none text-[10px] text-sbux-white font-bold flex items-center justify-center">{{ recipes.length }}</span>
+          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-none text-[10px] text-sbux-white font-bold flex items-center justify-center" aria-label="จำนวนสูตร">{{ recipes.length }}</span>
         </button>
-        <button @click="page = 'settings'" class="nav-item touch-feedback" :class="{ active: page === 'settings' }">
-          <span class="nav-icon">⚙️</span>
+        <button @click="page = 'settings'" class="nav-item touch-feedback" :class="{ active: page === 'settings' }" aria-label="หน้าตั้งค่า" :aria-current="page === 'settings' ? 'page' : null">
+          <span class="nav-icon" aria-hidden="true">⚙️</span>
           <span class="nav-label">ตั้งค่า</span>
         </button>
       </div>
@@ -735,6 +848,10 @@
         const copied = ref(false)
         const recipeSaved = ref(false)
         const recipes = ref([])  // Recipe Library
+
+        // Onboarding state
+        const showOnboarding = ref(false)
+        const onboardingStep = ref(1)
 
         // Bean name (set on first shot)
         const beanName = ref('')
@@ -1300,7 +1417,7 @@ Made with WANWAN COFFEE TUNER`
 
         function exportData() {
           const data = {
-            version: '6.2',
+            version: '6.6',
             exportedAt: new Date().toISOString(),
             recipes: recipes.value,
             history: history.value
@@ -1381,6 +1498,22 @@ Made with WANWAN COFFEE TUNER`
           }
         }
 
+        // Onboarding functions
+        function finishOnboarding() {
+          showOnboarding.value = false
+          localStorage.setItem('wanwan_onboarded', 'true')
+        }
+
+        function skipOnboarding() {
+          showOnboarding.value = false
+          localStorage.setItem('wanwan_onboarded', 'true')
+        }
+
+        function showTutorial() {
+          onboardingStep.value = 1
+          showOnboarding.value = true
+        }
+
         // Save session state (for page refresh)
         function saveSessionState() {
           const state = {
@@ -1412,6 +1545,12 @@ Made with WANWAN COFFEE TUNER`
         onMounted(() => {
           // Add keyboard listener
           window.addEventListener('keydown', handleKeyboard)
+
+          // Check if first-time user (show onboarding)
+          const onboarded = localStorage.getItem('wanwan_onboarded')
+          if (!onboarded) {
+            showOnboarding.value = true
+          }
 
           // Load session history
           const saved = localStorage.getItem('wanwan_history')
@@ -1458,7 +1597,8 @@ Made with WANWAN COFFEE TUNER`
           confirmationMode, confirmationCount, confirmedRecipe,
           analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
           copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
-          exportData, importData, clearAllData
+          exportData, importData, clearAllData,
+          showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial
         }
       }
     }).mount('#app')
