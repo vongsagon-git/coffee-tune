@@ -114,25 +114,60 @@
 
     .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
     .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+
+    /* Native App Feel */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 16px;
+      transition: all 0.2s ease;
+    }
+    .nav-item.active { color: #c9a227; }
+    .nav-item:not(.active) { color: #666; }
+    .nav-icon { font-size: 24px; margin-bottom: 2px; }
+    .nav-label { font-size: 10px; font-weight: 500; }
+
+    /* Haptic feedback simulation */
+    .touch-feedback:active {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+
+    /* Smooth page transitions */
+    .page-enter { animation: slideIn 0.25s ease-out; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
   </style>
 </head>
 <body class="bg-dark-950 text-white min-h-screen">
   <div id="app" v-cloak>
-    <!-- Header -->
-    <header class="glass border-b border-white/5 py-4 px-5 sticky top-0 z-50">
+    <!-- Header (Minimal - Native App Style) -->
+    <header class="glass border-b border-white/5 py-3 px-5 sticky top-0 z-50">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div>
-          <h1 class="text-lg font-bold tracking-tight">WANWAN COFFEE</h1>
-          <p class="text-dark-400 text-xs font-medium tracking-wide">TUNER</p>
+          <h1 class="text-base font-bold tracking-tight text-accent">WANWAN COFFEE</h1>
         </div>
         <div class="text-right">
-          <p class="text-xs text-dark-500">Appia Life XT</p>
-          <p class="text-xs text-dark-500">F64 Evo Pro</p>
+          <p class="text-[10px] text-dark-600">Appia Life XT · F64 Evo Pro</p>
         </div>
       </div>
     </header>
 
-    <main class="max-w-md mx-auto px-5 py-6 pb-24">
+    <main class="max-w-md mx-auto px-5 py-6 pb-28">
       <!-- ==================== PAGE 1: INPUT ==================== -->
       <div v-if="page === 'input'" class="page-slide space-y-6">
         <!-- Smart Tuning Header -->
@@ -216,11 +251,13 @@
             </div>
           </div>
 
-          <!-- Row 2: Yield + Time -->
+          <!-- Row 2: Yield + Time (ค่าที่ต้องอ่าน) -->
           <div class="grid grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Yield (g)</label>
+                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-dark-400'">
+                  {{ shotNumber > 1 ? '📖 Yield (g)' : 'Yield (g)' }}
+                </label>
                 <span v-if="fixedGrind && !tdsIsGood && shotNumber > 1" class="text-[10px] text-accent font-medium animate-pulse">🎯 ปรับตรงนี้!</span>
                 <span v-else-if="targetYield && shot.dose" class="text-[10px] text-dark-500 font-medium">เป้า {{ targetYield }}g (1:{{ (targetYield / shot.dose).toFixed(1) }})</span>
                 <span v-else-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
@@ -229,17 +266,23 @@
                 class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
                 :class="[
                   (fixedGrind && !tdsIsGood && shotNumber > 1) ? 'border-accent ring-2 ring-accent/30' : '',
+                  (shotNumber > 1 && !shot.yield) ? 'border-blue-500/50 ring-1 ring-blue-500/30' : '',
                   shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''
                 ]">
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-dark-400 uppercase tracking-wider">Time (s)</label>
-                <span class="text-[10px] text-dark-600">15-60</span>
+                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-dark-400'">
+                  {{ shotNumber > 1 ? '📖 Time (s)' : 'Time (s)' }}
+                </label>
+                <span class="text-[10px] text-dark-600">อ่านจากจอ</span>
               </div>
               <input type="number" v-model.number="shot.time" min="15" max="60" placeholder="28"
                 class="input-field w-full h-14 text-2xl font-bold text-center rounded-xl outline-none"
-                :class="shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500/50' : ''">
+                :class="[
+                  (shotNumber > 1 && !shot.time) ? 'border-blue-500/50 ring-1 ring-blue-500/30' : '',
+                  shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500/50' : ''
+                ]">
             </div>
           </div>
 
@@ -449,31 +492,29 @@
             </p>
           </div>
 
-          <!-- Visual Explanation -->
-          <div class="bg-dark-900/50 rounded-xl p-4 text-center">
-            <div v-if="action.step === 1" class="space-y-2">
-              <p class="text-xs text-dark-400">เป้าหมาย: EY 18-22%</p>
-              <div class="flex items-center justify-center gap-3">
-                <span class="text-2xl">{{ ey < 18 ? '⬇️' : '⬆️' }}</span>
-                <span class="text-lg font-bold" :class="ey < 18 ? 'text-blue-400' : 'text-red-400'">
-                  EY {{ ey }}% → 18-22%
-                </span>
+          <!-- What stays SAME vs CHANGE -->
+          <div class="bg-dark-900/50 rounded-xl p-4 space-y-3">
+            <!-- เท่าเดิม -->
+            <div class="flex items-center gap-2">
+              <span class="text-green-500 text-sm font-medium w-16">เท่าเดิม:</span>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">☕ Dose {{ shot.dose }}g</span>
+                <span v-if="action.step === 2" class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">🔧 Grind {{ shot.grind }}</span>
               </div>
-              <p class="text-sm text-dark-300 mt-2">
-                {{ ey < 18 ? '🔵 สกัดน้อยไป → บดละเอียดขึ้น' : '🔴 สกัดมากไป → บดหยาบขึ้น' }}
-              </p>
             </div>
-            <div v-else class="space-y-2">
-              <p class="text-xs text-dark-400">เป้าหมาย: TDS 8-12%</p>
-              <div class="flex items-center justify-center gap-3">
-                <span class="text-2xl">{{ shot.tds > 12 ? '💧' : '☕' }}</span>
-                <span class="text-lg font-bold" :class="shot.tds > 12 ? 'text-orange-400' : 'text-cyan-400'">
-                  TDS {{ shot.tds }}% → 8-12%
-                </span>
+            <!-- ปรับ -->
+            <div class="flex items-center gap-2">
+              <span class="text-amber-500 text-sm font-medium w-16">🔧 ปรับ:</span>
+              <span class="px-3 py-1.5 rounded bg-amber-500/20 text-amber-400 text-sm font-bold">{{ action.do }}</span>
+            </div>
+            <!-- ต้องอ่าน -->
+            <div class="flex items-center gap-2">
+              <span class="text-blue-400 text-sm font-medium w-16">📖 อ่าน:</span>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">⏱️ Time (จากจอ)</span>
+                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">🍯 Yield (จากตาชั่ง)</span>
+                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">📊 TDS/Brix (Refract.)</span>
               </div>
-              <p class="text-sm text-dark-300 mt-2">
-                {{ shot.tds > 12 ? '🍊 เข้มไป → เพิ่ม yield (เจือจาง)' : '💧 จืดไป → ลด yield (เข้มขึ้น)' }}
-              </p>
             </div>
           </div>
 
@@ -498,10 +539,15 @@
             </div>
             <p class="text-sm text-green-500/70 mt-3">บันทึกสูตรนี้ไว้ใช้ครั้งหน้า!</p>
 
-            <!-- Copy Recipe Button -->
-            <button @click="copyRecipe" class="mt-4 px-6 py-2 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-medium text-white transition-all">
-              {{ copied ? '✅ คัดลอกแล้ว!' : '📋 Copy สูตร' }}
-            </button>
+            <!-- Action Buttons -->
+            <div class="flex gap-2 mt-4 justify-center">
+              <button @click="saveRecipe" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-xl text-sm font-medium text-white transition-all">
+                {{ recipeSaved ? '✅ บันทึกแล้ว!' : '💾 บันทึกสูตร' }}
+              </button>
+              <button @click="copyRecipe" class="px-4 py-2 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-medium text-white transition-all">
+                {{ copied ? '✅ คัดลอก!' : '📋 Copy' }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -542,12 +588,111 @@
           </div>
         </div>
       </div>
+
+      <!-- ==================== PAGE 3: RECIPES ==================== -->
+      <div v-if="page === 'recipes'" class="page-slide space-y-5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold">📚 Recipe Library</h2>
+          <button @click="page = 'input'" class="text-sm text-dark-400 hover:text-white">← กลับ</button>
+        </div>
+
+        <div v-if="recipes.length === 0" class="card p-8 text-center">
+          <span class="text-4xl mb-3 block">📭</span>
+          <p class="text-dark-400">ยังไม่มีสูตรที่บันทึกไว้</p>
+          <p class="text-xs text-dark-600 mt-2">จูนจนถึง Perfect Zone แล้วกด "บันทึกสูตร"</p>
+        </div>
+
+        <div v-else class="space-y-3">
+          <div v-for="(r, i) in recipes" :key="r.id" class="card p-4">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <p class="font-bold text-accent">{{ r.bean || 'No Name' }}</p>
+                <p class="text-sm text-white mt-1">
+                  🔧 {{ r.grind }} · ☕ {{ r.dose }}g · 🍯 {{ r.yield }}g · ⏱️ {{ r.time }}s
+                </p>
+                <p class="text-xs text-green-400 mt-1">EY {{ r.ey }}% · TDS {{ r.tds }}%</p>
+                <p v-if="r.rating" class="text-xs text-yellow-400 mt-1">{{ '★'.repeat(r.rating) }}{{ '☆'.repeat(5 - r.rating) }}</p>
+                <p class="text-[10px] text-dark-600 mt-2">{{ new Date(r.savedAt).toLocaleDateString('th-TH') }}</p>
+              </div>
+              <div class="flex gap-2">
+                <button @click="loadRecipe(r)" class="px-3 py-1.5 rounded-lg text-xs bg-accent/20 text-accent hover:bg-accent/30">
+                  ใช้สูตรนี้
+                </button>
+                <button @click="deleteRecipe(i)" class="px-2 py-1.5 rounded-lg text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 4: SETTINGS ==================== -->
+      <div v-if="page === 'settings'" class="page-slide space-y-5">
+        <h2 class="text-xl font-bold">⚙️ ตั้งค่า</h2>
+
+        <!-- Equipment Info -->
+        <div class="card p-4">
+          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">อุปกรณ์</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-dark-400">เครื่องชง</span>
+              <span class="text-white">Appia Life XT 2GR</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-dark-400">เครื่องบด</span>
+              <span class="text-white">F64 Evo Pro (1-12)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-dark-400">แรงดัน</span>
+              <span class="text-white">12 bar (Fixed)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="card p-4">
+          <p class="text-xs text-dark-500 font-medium uppercase tracking-wider mb-3">จัดการข้อมูล</p>
+          <div class="space-y-3">
+            <button @click="exportData" class="w-full py-3 rounded-xl bg-dark-800 text-white text-sm font-medium hover:bg-dark-700 touch-feedback">
+              📤 Export ข้อมูลทั้งหมด
+            </button>
+            <button @click="importData" class="w-full py-3 rounded-xl bg-dark-800 text-white text-sm font-medium hover:bg-dark-700 touch-feedback">
+              📥 Import ข้อมูล
+            </button>
+            <button @click="clearAllData" class="w-full py-3 rounded-xl bg-red-500/10 text-red-400 text-sm font-medium hover:bg-red-500/20 touch-feedback">
+              🗑️ ล้างข้อมูลทั้งหมด
+            </button>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="card p-4 text-center">
+          <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
+          <p class="text-xs text-dark-500 mt-1">v6.2 · Made with ❤️</p>
+          <p class="text-xs text-dark-600 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
+        </div>
+      </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 py-3 text-center">
-      <p class="text-xs text-dark-600">WANWAN COFFEE TUNER v6.1 · Smart Tuning</p>
-    </footer>
+    <!-- Bottom Navigation (Native App Style) -->
+    <nav class="bottom-nav">
+      <div class="max-w-md mx-auto flex justify-around py-2">
+        <button @click="page = 'input'; showHistory = false" class="nav-item touch-feedback" :class="{ active: page === 'input' }">
+          <span class="nav-icon">☕</span>
+          <span class="nav-label">จูน</span>
+        </button>
+        <button @click="page = 'recipes'" class="nav-item touch-feedback" :class="{ active: page === 'recipes' }">
+          <span class="nav-icon">📚</span>
+          <span class="nav-label">สูตร</span>
+          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full text-[10px] text-dark-900 font-bold flex items-center justify-center">{{ recipes.length }}</span>
+        </button>
+        <button @click="page = 'settings'" class="nav-item touch-feedback" :class="{ active: page === 'settings' }">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">ตั้งค่า</span>
+        </button>
+      </div>
+    </nav>
   </div>
 
   <script>
@@ -559,6 +704,8 @@
         const shotNumber = ref(1)
         const showHistory = ref(false)
         const copied = ref(false)
+        const recipeSaved = ref(false)
+        const recipes = ref([])  // Recipe Library
 
         // Bean name (set on first shot)
         const beanName = ref('')
@@ -880,6 +1027,109 @@ Made with WANWAN COFFEE TUNER`
           })
         }
 
+        function saveRecipe() {
+          const newRecipe = {
+            id: Date.now().toString(),
+            bean: beanName.value || 'No Name',
+            grind: shot.value.grind,
+            dose: shot.value.dose,
+            yield: shot.value.yield,
+            time: shot.value.time,
+            tds: shot.value.tds,
+            brix: shot.value.brix,
+            ey: ey.value,
+            rating: shot.value.rating,
+            notes: shot.value.notes,
+            flavors: [...shot.value.flavors],
+            savedAt: new Date().toISOString()
+          }
+          recipes.value.push(newRecipe)
+          localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
+          recipeSaved.value = true
+          setTimeout(() => { recipeSaved.value = false }, 2000)
+        }
+
+        function loadRecipe(r) {
+          beanName.value = r.bean || ''
+          shot.value.grind = r.grind
+          shot.value.dose = r.dose
+          targetYield.value = r.yield
+          fixedDose.value = true
+          fixedGrind.value = true
+          page.value = 'input'
+        }
+
+        function deleteRecipe(index) {
+          if (confirm('🗑️ ลบสูตรนี้?')) {
+            recipes.value.splice(index, 1)
+            localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
+          }
+        }
+
+        function exportData() {
+          const data = {
+            version: '6.2',
+            exportedAt: new Date().toISOString(),
+            recipes: recipes.value,
+            history: history.value
+          }
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `wanwan-coffee-${new Date().toISOString().slice(0,10)}.json`
+          a.click()
+          URL.revokeObjectURL(url)
+        }
+
+        function importData() {
+          const input = document.createElement('input')
+          input.type = 'file'
+          input.accept = '.json'
+          input.onchange = (e) => {
+            const file = e.target.files[0]
+            if (!file) return
+            const reader = new FileReader()
+            reader.onload = (ev) => {
+              try {
+                const data = JSON.parse(ev.target.result)
+                if (data.recipes) {
+                  recipes.value = data.recipes
+                  localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
+                }
+                if (data.history) {
+                  history.value = data.history
+                  localStorage.setItem('wanwan_history', JSON.stringify(history.value))
+                }
+                alert('✅ Import สำเร็จ!')
+              } catch (err) {
+                alert('❌ ไฟล์ไม่ถูกต้อง')
+              }
+            }
+            reader.readAsText(file)
+          }
+          input.click()
+        }
+
+        function clearAllData() {
+          if (confirm('🗑️ ล้างข้อมูลทั้งหมด?\n\n⚠️ สูตร และประวัติทั้งหมดจะถูกลบ')) {
+            localStorage.clear()
+            recipes.value = []
+            history.value = []
+            shotNumber.value = 1
+            fixedDose.value = false
+            fixedGrind.value = false
+            targetYield.value = null
+            beanName.value = ''
+            shot.value = {
+              grind: null, dose: null, yield: null,
+              time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
+            }
+            page.value = 'input'
+            alert('✅ ล้างข้อมูลเรียบร้อย')
+          }
+        }
+
         function resetSession() {
           if (confirm('🔄 เริ่มจูนใหม่ทั้งหมด?\n\n⚠️ ประวัติ shot จะถูกลบ')) {
             history.value = []
@@ -920,6 +1170,12 @@ Made with WANWAN COFFEE TUNER`
             history.value = JSON.parse(saved)
           }
 
+          // Load recipes
+          const savedRecipes = localStorage.getItem('wanwan_recipes')
+          if (savedRecipes) {
+            recipes.value = JSON.parse(savedRecipes)
+          }
+
           // Load session state
           const session = localStorage.getItem('wanwan_session')
           if (session && history.value.length > 0) {
@@ -940,8 +1196,10 @@ Made with WANWAN COFFEE TUNER`
           page, shotNumber, showHistory, fixedDose, fixedGrind, targetYield, shot, history,
           canAnalyze, ratio, ey, isPerfect, direction, tuningStep, eyIsGood, tdsIsGood,
           chartX, chartY, expectedFlavors, action, reversedHistory,
-          validationErrors, validRanges, copied,
-          analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName, copyRecipe
+          validationErrors, validRanges, copied, recipeSaved, recipes,
+          analyze, nextShot, resetSession, toggleFlavor, flavorOptions, beanName,
+          copyRecipe, saveRecipe, loadRecipe, deleteRecipe,
+          exportData, importData, clearAllData
         }
       }
     }).mount('#app')

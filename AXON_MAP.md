@@ -63,6 +63,32 @@
 
 ---
 
-## ✅ ALL COMPLETED
+## 📋 [C003] v6.2 - Native App Experience
+**Status:** ✅ COMPLETED
+**Created:** 2026-01-17
+
+### 🧘 Discovered During Enlightenment
+- [x] [E008] Copy Recipe feature (คัดลอกสูตรเมื่อ Perfect) ✅
+- [x] [E009] Recipe Library (เก็บสูตรที่ Perfect ไว้ใช้ภายหลัง) ✅
+- [x] [E011] Export All History as JSON ✅
+- [x] [E012] Import History from JSON ✅
+- [x] [E019] Bottom Navigation (Native App Style) ✅
+- [x] [E020] Settings Page ✅
+- [x] [E021] Clear recommendation display (same vs change) ✅
+
+### 📋 Backlog (Future)
+- [ ] [E010] Share Recipe via URL/QR Code
+- [ ] [E013] Dark/Light Theme Toggle
+- [ ] [E014] Compare 2 shots side-by-side
+- [ ] [E015] Shot Statistics (avg EY, avg TDS, best shot)
+
+### 🔍 UX Improvements (Future)
+- [ ] [E016] Haptic feedback on mobile (vibrate on save)
+- [ ] [E017] Swipe to delete shot from history
+- [ ] [E018] Keyboard shortcuts (Enter to analyze)
+
+---
+
+## 🗂️ Archive - Completed
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
 **Version:** 6.1 Smart Tuning
