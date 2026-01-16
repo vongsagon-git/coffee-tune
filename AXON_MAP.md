@@ -150,7 +150,17 @@
 
 ---
 
-## 📋 [C008] Future Backlog
+## 📋 [C008] v6.9 - UI Polish
+
+**Status:** ✅ COMPLETED
+**Version:** 6.9
+
+### Bug Fixes
+- [x] [C008.1] Fixed divider line visibility in Light/Dark mode
+
+---
+
+## 📋 [C009] Future Backlog
 
 **Status:** 🔮 FUTURE
 **Priority:** Low
@@ -169,7 +179,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 6.8 Settings Enhancements
+**Current Version:** 6.9 UI Polish
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -182,3 +192,4 @@
 | v6.6    | Onboarding, Accessibility, Stats | 2026-01-17 |
 | v6.7    | Dark Mode, PWA Install, Offline  | 2026-01-17 |
 | v6.8    | Settings Enhancements            | 2026-01-17 |
+| v6.9    | UI Polish                        | 2026-01-17 |
