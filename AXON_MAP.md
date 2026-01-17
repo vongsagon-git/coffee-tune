@@ -235,9 +235,9 @@
 - [x] [e] Auto-focus first input on page load - DONE
 - [x] [e] Reduce motion preference support - DONE (prefers-reduced-motion)
 - [x] [e] Keyboard navigation between inputs - DONE (Enter to next field, auto-analyze on last)
+- [x] [e] Button loading states - DONE (Analyze button spinner)
 - [ ] [e] Skeleton loading states
 - [ ] [e] High contrast mode support
-- [ ] [e] Button loading states
 
 ---
 
@@ -260,7 +260,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 8.2 Advanced Accessibility
+**Current Version:** 8.3 Button Loading States
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -279,3 +279,4 @@
 | v8.0    | Universal App Design, No Emoji   | 2026-01-17 |
 | v8.1    | Haptic, ARIA, Micro-Interactions | 2026-01-17 |
 | v8.2    | Focus Trap, Auto-focus, Reduced Motion | 2026-01-17 |
+| v8.3    | Button Loading States (Analyze spinner) | 2026-01-17 |

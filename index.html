@@ -689,9 +689,15 @@
         </div>
 
         <!-- Submit Button -->
-        <button @click="analyze" :disabled="!canAnalyze"
-          class="btn-primary w-full h-14 font-semibold text-base" aria-label="วิเคราะห์ผลการชง">
-          วิเคราะห์ผล
+        <button @click="analyze" :disabled="!canAnalyze || isAnalyzing"
+          class="btn-primary w-full h-14 font-semibold text-base flex items-center justify-center gap-2"
+          aria-label="วิเคราะห์ผลการชง"
+          :aria-busy="isAnalyzing">
+          <svg v-if="isAnalyzing" class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>{{ isAnalyzing ? 'กำลังวิเคราะห์...' : 'วิเคราะห์ผล' }}</span>
         </button>
       </div>
 
@@ -1070,6 +1076,7 @@
         const showHistory = ref(false)
         const copied = ref(false)
         const recipeSaved = ref(false)
+        const isAnalyzing = ref(false)  // Loading state for Analyze button
         const recipes = ref([])  // Recipe Library
 
         // Onboarding state
@@ -1527,8 +1534,14 @@
         }
 
         function analyze() {
+          if (isAnalyzing.value) return
+          isAnalyzing.value = true
           haptic('medium')
-          page.value = 'result'
+          // Brief delay for loading feedback (150ms feels snappy)
+          setTimeout(() => {
+            isAnalyzing.value = false
+            page.value = 'result'
+          }, 150)
         }
 
         function nextShot() {
@@ -2087,7 +2100,7 @@ https://vongsagon-git.github.io/coffee-tune/`
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
           isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt,
-          haptic, navigateTo
+          haptic, navigateTo, isAnalyzing
         }
       }
     }).mount('#app')
