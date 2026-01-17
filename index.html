@@ -791,11 +791,19 @@
           <div v-if="shotNumber === 1" class="grid grid-cols-2 gap-3">
             <div>
               <label for="input-grind" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Grind</label>
-              <input id="input-grind" type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
-                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
-                :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500' : ''"
-                aria-describedby="grind-hint"
-                @keydown.enter.prevent="document.getElementById('input-dose')?.focus()">
+              <div class="flex items-center gap-1">
+                <button type="button" @click="adjustGrind(-0.1)" class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Decrease grind by 0.1">
+                  <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                </button>
+                <input id="input-grind" type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
+                  class="input-field flex-1 h-14 text-xl font-semibold text-center outline-none"
+                  :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500' : ''"
+                  aria-describedby="grind-hint"
+                  @keydown.enter.prevent="document.getElementById('input-dose')?.focus()">
+                <button type="button" @click="adjustGrind(0.1)" class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Increase grind by 0.1">
+                  <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+              </div>
               <span id="grind-hint" class="sr-only">Enter grind size between 1 and 12</span>
             </div>
             <div>
@@ -1777,6 +1785,14 @@
           }
         }
 
+        // Stepper function for grind adjustment
+        function adjustGrind(delta) {
+          haptic('light')
+          const current = shot.value.grind || 5.0
+          const newValue = Math.round((current + delta) * 10) / 10 // Round to 1 decimal
+          shot.value.grind = Math.max(1, Math.min(12, newValue))
+        }
+
         function analyze() {
           if (isAnalyzing.value) return
           isAnalyzing.value = true
@@ -2400,7 +2416,7 @@ https://vongsagon-git.github.io/coffee-tune/`
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
           isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt,
-          haptic, navigateTo, isAnalyzing
+          haptic, navigateTo, isAnalyzing, adjustGrind
         }
       }
     }).mount('#app')
