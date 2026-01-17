@@ -937,7 +937,10 @@
 
         <!-- Quick Stats (show after first shot) -->
         <div v-if="history.length > 0" class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">Session Stats</p>
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Session Stats</p>
+            <p v-if="sessionDuration" class="text-xs font-mono text-gray-400">{{ sessionDuration }}</p>
+          </div>
           <div class="grid grid-cols-3 gap-3 text-center">
             <div class="bg-gray-50 rounded-lg p-3">
               <p class="text-lg font-bold text-green-600">{{ history.filter(h => h.ey >= 18 && h.ey <= 22).length }}</p>
@@ -1357,6 +1360,10 @@
         const deferredPrompt = ref(null)
         const showInstallPrompt = ref(false)
 
+        // Session timer
+        const sessionStartTime = ref(null)
+        const currentTime = ref(Date.now())
+
         // Bean name (set on first shot)
         const beanName = ref('')
 
@@ -1473,6 +1480,15 @@
           }, null)
 
           return { totalShots: total, perfectShots: perfect, avgEY, avgTDS, bestShot: best }
+        })
+
+        // Session timer display (MM:SS format)
+        const sessionDuration = computed(() => {
+          if (!sessionStartTime.value) return null
+          const elapsed = Math.floor((currentTime.value - sessionStartTime.value) / 1000)
+          const minutes = Math.floor(elapsed / 60)
+          const seconds = elapsed % 60
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`
         })
 
         const expectedFlavors = computed(() => {
@@ -2150,6 +2166,9 @@ https://vongsagon-git.github.io/coffee-tune/`
             }
             showHistory.value = false
             page.value = 'input'
+            // Reset session timer
+            sessionStartTime.value = Date.now()
+            localStorage.setItem('wanwan_session_start', sessionStartTime.value.toString())
           }
         }
 
@@ -2390,6 +2409,18 @@ https://vongsagon-git.github.io/coffee-tune/`
             applyDarkMode()
           }
 
+          // Start session timer (updates every second)
+          const savedStartTime = localStorage.getItem('wanwan_session_start')
+          if (savedStartTime) {
+            sessionStartTime.value = parseInt(savedStartTime)
+          } else {
+            sessionStartTime.value = Date.now()
+            localStorage.setItem('wanwan_session_start', sessionStartTime.value.toString())
+          }
+          setInterval(() => {
+            currentTime.value = Date.now()
+          }, 1000)
+
           // Load session history
           const saved = localStorage.getItem('wanwan_history')
           if (saved) {
@@ -2459,7 +2490,8 @@ https://vongsagon-git.github.io/coffee-tune/`
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
           isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt,
-          haptic, navigateTo, isAnalyzing, adjustGrind, startGrindLongPress, stopGrindLongPress
+          haptic, navigateTo, isAnalyzing, adjustGrind, startGrindLongPress, stopGrindLongPress,
+          sessionDuration
         }
       }
     }).mount('#app')
