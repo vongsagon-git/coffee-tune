@@ -341,6 +341,92 @@
         background: #2C2C2E;
       }
     }
+
+    /* ═══════════════════════════════════════════════════════════
+       HIGH CONTRAST MODE (Accessibility)
+    ═══════════════════════════════════════════════════════════ */
+    @media (prefers-contrast: more) {
+      .card {
+        border: 2px solid #000000;
+        box-shadow: none;
+      }
+      .input-field {
+        border: 2px solid #000000;
+        background: #FFFFFF;
+      }
+      .input-field:focus {
+        border-color: #0000FF;
+        outline: 3px solid #0000FF;
+        outline-offset: 2px;
+      }
+      .btn-primary {
+        background: #000000;
+        color: #FFFFFF;
+        border: 2px solid #000000;
+      }
+      .btn-primary:disabled {
+        background: #767676;
+        border-color: #767676;
+        color: #FFFFFF;
+      }
+      .stat-box {
+        border: 2px solid #000000;
+      }
+      .bottom-nav {
+        border-top: 3px solid #000000;
+        background: #FFFFFF;
+      }
+      .nav-item.active {
+        color: #0000FF;
+        font-weight: 700;
+      }
+      .progress-bar {
+        border: 2px solid #000000;
+      }
+      .badge {
+        border: 2px solid currentColor;
+      }
+      .text-success { color: #006400; }
+      .text-warning { color: #8B4000; }
+      .text-danger { color: #8B0000; }
+      a:focus, button:focus, input:focus, select:focus {
+        outline: 3px solid #0000FF;
+        outline-offset: 2px;
+      }
+    }
+    @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+      .card {
+        border-color: #FFFFFF;
+        background: #000000;
+      }
+      .input-field {
+        border-color: #FFFFFF;
+        background: #000000;
+        color: #FFFFFF;
+      }
+      .input-field:focus {
+        border-color: #00BFFF;
+        outline-color: #00BFFF;
+      }
+      .btn-primary {
+        background: #FFFFFF;
+        color: #000000;
+        border-color: #FFFFFF;
+      }
+      .stat-box {
+        border-color: #FFFFFF;
+      }
+      .bottom-nav {
+        border-top-color: #FFFFFF;
+        background: #000000;
+      }
+      .progress-bar {
+        border-color: #FFFFFF;
+      }
+      a:focus, button:focus, input:focus, select:focus {
+        outline-color: #00BFFF;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen">
