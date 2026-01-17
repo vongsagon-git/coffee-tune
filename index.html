@@ -23,15 +23,38 @@
             sans: ['Inter', 'system-ui', 'sans-serif'],
           },
           colors: {
-            // Starbucks-inspired palette
-            sbux: {
-              green: '#006241',      // Primary Starbucks Green
-              greenLight: '#00754A', // Lighter green
-              mint: '#D4E9E2',       // Soft mint accent
-              cream: '#F7F5F2',      // Warm cream background
-              white: '#FFFFFF',
-              brown: '#1E3932',      // Dark green-brown
+            // Premium Coffee Palette
+            coffee: {
+              900: '#1C1412',      // Rich espresso (darkest)
+              800: '#2D241F',      // Dark roast
+              700: '#3D322B',      // Medium-dark
+              600: '#5C4A3D',      // Medium roast
+              500: '#8B7355',      // Light roast
+              400: '#B89B7A',      // Crema
+              300: '#D4C4B0',      // Latte
+              200: '#E8DFD3',      // Milk foam
+              100: '#F5F1EC',      // Off-white
+              50: '#FDFCFB',       // Pure cream
             },
+            // Accent colors
+            accent: {
+              DEFAULT: '#B87333',  // Copper (premium feel)
+              light: '#D4956A',    // Light copper
+              dark: '#8B5A2B',     // Dark copper
+              gold: '#C9A227',     // Gold accent
+            },
+            // Success/Warning states
+            success: {
+              DEFAULT: '#2D7D46',
+              light: '#4CAF50',
+              dark: '#1B5E20',
+            },
+            warning: {
+              DEFAULT: '#E07B39',
+              light: '#FF9800',
+              dark: '#E65100',
+            },
+            // Dark mode palette
             dark: {
               50: '#f7f7f7',
               100: '#e3e3e3',
@@ -41,15 +64,10 @@
               500: '#666666',
               600: '#515151',
               700: '#434343',
-              800: '#383838',
-              900: '#1a1a1a',
-              950: '#0d0d0d',
+              800: '#2a2622',
+              900: '#1a1714',
+              950: '#0d0b0a',
             },
-            accent: {
-              DEFAULT: '#006241',    // Starbucks Green
-              light: '#00754A',
-              dark: '#1E3932',
-            }
           }
         }
       }
@@ -75,285 +93,434 @@
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
 
-    .page-slide { animation: pageSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    /* ═══════════════════════════════════════════════════════════
+       UNIVERSAL APP DESIGN v8.0
+       Style: Clean, Solid, Minimal - Apple/Google Level
+    ═══════════════════════════════════════════════════════════ */
+
+    /* Smooth Animations */
+    .page-slide { animation: pageSlide 0.3s ease-out; }
     @keyframes pageSlide {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Starbucks Light Theme */
-    .glass {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    /* Shake Animation for Validation Error */
+    .shake { animation: shake 0.4s ease-out; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
     }
 
-    .input-field {
+    /* Pop Animation for Success */
+    .pop { animation: pop 0.3s ease-out; }
+    @keyframes pop {
+      0% { transform: scale(0.95); opacity: 0; }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Pulse Animation for Highlights */
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Respect user's motion preferences (accessibility) */
+    @media (prefers-reduced-motion: reduce) {
+      .page-slide, .shake, .pop, .pulse {
+        animation: none;
+      }
+      .touch-feedback:active {
+        transform: none;
+      }
+      * {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Clean Card */
+    .card {
       background: #FFFFFF;
-      border: 1px solid #E0E0E0;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Clean Input */
+    .input-field {
+      background: #F5F5F5;
+      border: 2px solid transparent;
+      border-radius: 12px;
       transition: all 0.2s ease;
-      color: #1E3932;
+      color: #1A1A1A;
+      font-weight: 500;
     }
     .input-field:focus {
       background: #FFFFFF;
-      border-color: #006241;
-      box-shadow: 0 0 0 3px rgba(0, 98, 65, 0.15);
+      border-color: #007AFF;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    }
+    .input-field::placeholder {
+      color: #999999;
+      font-weight: 400;
     }
 
+    /* Solid Button */
     .btn-primary {
-      background: linear-gradient(135deg, #006241 0%, #00754A 100%);
-      box-shadow: 0 4px 14px rgba(0, 98, 65, 0.3);
+      background: #007AFF;
+      border-radius: 12px;
       transition: all 0.2s ease;
       color: #FFFFFF;
+      font-weight: 600;
     }
-    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:active {
+      transform: scale(0.98);
+      background: #0066DD;
+    }
     .btn-primary:disabled {
-      background: #E0E0E0;
-      box-shadow: none;
+      background: #E5E5E5;
       color: #999999;
     }
 
-    .card {
-      background: #FFFFFF;
-      border: 1px solid #E8E8E8;
-      border-radius: 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-
+    /* Stat Box */
     .stat-box {
-      background: #F7F5F2;
-      border-radius: 0;
+      background: #F5F5F5;
+      border-radius: 12px;
     }
 
-    .glow-green { box-shadow: 0 0 20px rgba(0, 98, 65, 0.2); }
-    .glow-amber { box-shadow: 0 0 20px rgba(212, 133, 62, 0.2); }
-
-    /* Native App Feel */
+    /* Bottom Navigation - iOS Style */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(20px);
-      border-top: 1px solid #E8E8E8;
       -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
       padding-bottom: env(safe-area-inset-bottom);
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 8px 16px;
-      transition: all 0.2s ease;
+      padding: 8px 20px;
+      transition: color 0.2s ease;
     }
-    .nav-item.active { color: #c9a227; }
-    .nav-item:not(.active) { color: #666; }
+    .nav-item.active { color: #007AFF; }
+    .nav-item:not(.active) { color: #8E8E93; }
     .nav-icon { font-size: 24px; margin-bottom: 2px; }
     .nav-label { font-size: 10px; font-weight: 500; }
 
-    /* Haptic feedback simulation */
+    /* Touch Feedback */
     .touch-feedback:active {
-      transform: scale(0.95);
-      opacity: 0.8;
+      transform: scale(0.97);
+      opacity: 0.7;
     }
 
-    /* Smooth page transitions */
-    .page-enter { animation: slideIn 0.25s ease-out; }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
+    /* Progress Bar */
+    .progress-bar {
+      background: #E5E5E5;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #34C759;
+      transition: width 0.4s ease;
     }
 
-    /* Dark Mode Styles */
+    /* Clean Header */
+    .header-clean {
+      background: #FFFFFF;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Status Colors */
+    .text-success { color: #34C759; }
+    .text-warning { color: #FF9500; }
+    .text-danger { color: #FF3B30; }
+    .text-info { color: #007AFF; }
+    .bg-success { background: #34C759; }
+    .bg-warning { background: #FF9500; }
+    .bg-success-light { background: rgba(52, 199, 89, 0.12); }
+    .bg-warning-light { background: rgba(255, 149, 0, 0.12); }
+    .bg-info-light { background: rgba(0, 122, 255, 0.12); }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    /* Badge */
+    .badge {
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       DARK MODE
+    ═══════════════════════════════════════════════════════════ */
+    .dark body, .dark { background: #000000; color: #FFFFFF; }
     .dark .card {
-      background: #1a1a1a;
-      border-color: #333;
+      background: #1C1C1E;
+      box-shadow: none;
     }
     .dark .input-field {
-      background: #252525;
-      border-color: #444;
-      color: #f0f0f0;
+      background: #2C2C2E;
+      color: #FFFFFF;
     }
     .dark .input-field:focus {
-      background: #2a2a2a;
-      border-color: #006241;
+      background: #3A3A3C;
+      border-color: #0A84FF;
     }
-    .dark .stat-box {
-      background: #252525;
-    }
+    .dark .input-field::placeholder { color: #636366; }
+    .dark .stat-box { background: #2C2C2E; }
     .dark .bottom-nav {
-      background: rgba(26, 26, 26, 0.95);
-      border-top-color: #333;
+      background: rgba(28, 28, 30, 0.9);
+      border-top-color: rgba(255, 255, 255, 0.1);
     }
-    .dark .nav-item:not(.active) {
-      color: #888;
+    .dark .nav-item.active { color: #0A84FF; }
+    .dark .nav-item:not(.active) { color: #636366; }
+    .dark .header-clean {
+      background: #1C1C1E;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
     }
-    .dark .text-gray-500 { color: #888; }
-    .dark .text-gray-600 { color: #999; }
-    .dark .text-gray-400 { color: #777; }
-    .dark .text-sbux-brown { color: #e0e0e0; }
-    .dark .bg-gray-100 { background: #2a2a2a; }
-    .dark .bg-gray-50 { background: #252525; }
-    .dark .bg-sbux-mint { background: rgba(0, 98, 65, 0.2); }
-    .dark .bg-sbux-mint\/50 { background: rgba(0, 98, 65, 0.15); }
-    .dark .bg-sbux-mint\/30 { background: rgba(0, 98, 65, 0.1); }
+    .dark .progress-bar { background: #3A3A3C; }
+    .dark .divider { background: rgba(255, 255, 255, 0.1); }
+    .dark .text-gray-500 { color: #8E8E93; }
+    .dark .text-gray-600 { color: #AEAEB2; }
+    .dark .bg-gray-100 { background: #2C2C2E; }
+    .dark .bg-gray-50 { background: #1C1C1E; }
+
+    /* Screen Reader Only (Accessibility) */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
-<body class="bg-sbux-cream text-sbux-brown min-h-screen">
+<body class="bg-gray-50 text-gray-900 min-h-screen">
   <div id="app" v-cloak role="application" aria-label="WANWAN Coffee Tuner Application">
     <!-- Onboarding Modal (First-time users) -->
     <div v-if="showOnboarding" class="fixed inset-0 bg-black/70 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label="คู่มือการใช้งาน">
-      <div class="w-full sm:max-w-sm sm:rounded-none p-5 sm:p-6 shadow-xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-none" :class="darkMode ? 'bg-dark-800 text-dark-100' : 'bg-white text-sbux-brown'">
+      <div class="w-full sm:max-w-sm p-5 sm:p-6 shadow-xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl" :class="darkMode ? 'bg-dark-800 text-dark-100' : 'bg-white text-gray-800'">
+        <!-- Step 1: Welcome -->
         <div v-if="onboardingStep === 1" class="text-center">
-          <span class="text-5xl mb-4 block">☕</span>
-          <h2 class="text-xl font-bold text-sbux-green mb-3">ยินดีต้อนรับสู่ WANWAN COFFEE TUNER</h2>
-          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">แอปช่วยจูนกาแฟ Espresso ให้ได้รสชาติที่สมบูรณ์แบบ</p>
-          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
-            <p><b>🎯 เป้าหมาย:</b> EY 18-22% และ TDS 8-12%</p>
-            <p><b>📊 หลักการ:</b> ใช้มาตรฐาน SCA (Specialty Coffee Association)</p>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold mb-2" :class="darkMode ? 'text-white' : 'text-gray-900'">Welcome to Coffee Tuner</h2>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-500'">Professional espresso tuning tool</p>
+          <div class="p-4 rounded-xl text-left space-y-3 text-sm" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <div><b class="text-accent">Target:</b> <span :class="darkMode ? 'text-gray-300' : 'text-gray-600'">EY 18-22% and TDS 8-12%</span></div>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+              <div><b class="text-accent">Standard:</b> <span :class="darkMode ? 'text-gray-300' : 'text-gray-600'">SCA (Specialty Coffee Association)</span></div>
+            </div>
           </div>
         </div>
+        <!-- Step 2: Grind -->
         <div v-if="onboardingStep === 2" class="text-center">
-          <span class="text-5xl mb-4 block">🔧</span>
-          <h2 class="text-xl font-bold text-sbux-green mb-3">Step 1: ปรับเบอร์บด</h2>
-          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">ปรับเบอร์บดจน EY อยู่ในช่วง 18-22%</p>
-          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
-            <p>• <b>EY ต่ำไป (&lt; 18%)</b> → บดละเอียดขึ้น</p>
-            <p>• <b>EY สูงไป (&gt; 22%)</b> → บดหยาบขึ้น</p>
-            <p>• ⚠️ <b>บดทิ้ง 2-3g ก่อนทุกครั้ง</b>ที่ปรับเบอร์บด</p>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold mb-2" :class="darkMode ? 'text-white' : 'text-gray-900'">Step 1: Adjust Grind</h2>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-500'">Adjust grind size until EY is 18-22%</p>
+          <div class="p-4 rounded-xl text-left space-y-2 text-sm" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+            <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">• <b>EY too low (&lt;18%)</b> → Grind finer</p>
+            <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">• <b>EY too high (&gt;22%)</b> → Grind coarser</p>
+            <p class="text-orange-500 font-medium pt-2 border-t" :class="darkMode ? 'border-dark-600' : 'border-gray-200'">Note: Purge 2-3g after each grind change</p>
           </div>
         </div>
+        <!-- Step 3: Yield -->
         <div v-if="onboardingStep === 3" class="text-center">
-          <span class="text-5xl mb-4 block">🎯</span>
-          <h2 class="text-xl font-bold text-sbux-green mb-3">Step 2: ปรับ Yield</h2>
-          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">เมื่อ EY ดีแล้ว ปรับ Yield ให้ TDS อยู่ในช่วง 8-12%</p>
-          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
-            <p>• <b>TDS สูงไป (&gt; 12%)</b> → เพิ่ม Yield (กดหยุดช้าลง)</p>
-            <p>• <b>TDS ต่ำไป (&lt; 8%)</b> → ลด Yield (กดหยุดเร็วขึ้น)</p>
-            <p>• 💡 <b>Dose คงที่</b>หลังจาก Shot แรก</p>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold mb-2" :class="darkMode ? 'text-white' : 'text-gray-900'">Step 2: Adjust Yield</h2>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-500'">Once EY is good, adjust Yield for TDS 8-12%</p>
+          <div class="p-4 rounded-xl text-left space-y-2 text-sm" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+            <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">• <b>TDS too high (&gt;12%)</b> → Increase Yield</p>
+            <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">• <b>TDS too low (&lt;8%)</b> → Decrease Yield</p>
+            <p class="text-accent font-medium pt-2 border-t" :class="darkMode ? 'border-dark-600' : 'border-gray-200'">Tip: Keep Dose fixed after first shot</p>
           </div>
         </div>
+        <!-- Step 4: Input Fields -->
         <div v-if="onboardingStep === 4" class="text-center">
-          <span class="text-5xl mb-4 block">📊</span>
-          <h2 class="text-xl font-bold text-sbux-green mb-3">ค่าที่ต้องกรอก (6 ค่า)</h2>
-          <div class="p-4 text-left space-y-1 text-sm" :class="darkMode ? 'bg-sbux-green/20' : 'bg-sbux-mint'">
-            <p>1️⃣ <b>เบอร์บด</b> - ตั้งที่เครื่องบด</p>
-            <p>2️⃣ <b>Dose</b> - น้ำหนักกาแฟบด (g)</p>
-            <p>3️⃣ <b>Yield</b> - น้ำหนักกาแฟที่ชงได้ (g)</p>
-            <p>4️⃣ <b>Time</b> - เวลาที่ชง (วินาที)</p>
-            <p>5️⃣ <b>TDS%</b> - จาก Refractometer</p>
-            <p>6️⃣ <b>Brix%</b> - จาก Refractometer</p>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold mb-2" :class="darkMode ? 'text-white' : 'text-gray-900'">Required Inputs (6 values)</h2>
+          <div class="p-4 rounded-xl text-left space-y-2 text-sm" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+            <div class="grid grid-cols-2 gap-2">
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">1.</span> Grind Size</p>
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">2.</span> Dose (g)</p>
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">3.</span> Yield (g)</p>
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">4.</span> Time (s)</p>
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">5.</span> TDS %</p>
+              <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'"><span class="text-accent font-bold">6.</span> Brix %</p>
+            </div>
           </div>
         </div>
+        <!-- Step 5: Ready -->
         <div v-if="onboardingStep === 5" class="text-center">
-          <span class="text-5xl mb-4 block">🎉</span>
-          <h2 class="text-xl font-bold text-sbux-green mb-3">พร้อมแล้ว!</h2>
-          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-600'">เริ่มจูนกาแฟช็อตแรกได้เลย</p>
-          <div class="p-4 text-left space-y-2 text-sm" :class="darkMode ? 'bg-green-500/20 text-green-300' : 'bg-green-100 text-green-800'">
-            <p>✅ ใส่ค่าทั้ง 6 ช่อง</p>
-            <p>✅ กด "วิเคราะห์ผล"</p>
-            <p>✅ ทำตามคำแนะนำ</p>
-            <p>✅ ทำซ้ำจนถึง Perfect Zone!</p>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-500/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold mb-2" :class="darkMode ? 'text-white' : 'text-gray-900'">You're Ready!</h2>
+          <p class="text-sm mb-4" :class="darkMode ? 'text-dark-300' : 'text-gray-500'">Start tuning your first shot</p>
+          <div class="p-4 rounded-xl text-left space-y-2 text-sm" :class="darkMode ? 'bg-green-500/10' : 'bg-green-50'">
+            <p class="flex items-center gap-2" :class="darkMode ? 'text-green-400' : 'text-green-700'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Enter all 6 values
+            </p>
+            <p class="flex items-center gap-2" :class="darkMode ? 'text-green-400' : 'text-green-700'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Tap "Analyze"
+            </p>
+            <p class="flex items-center gap-2" :class="darkMode ? 'text-green-400' : 'text-green-700'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Follow recommendations
+            </p>
+            <p class="flex items-center gap-2" :class="darkMode ? 'text-green-400' : 'text-green-700'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Repeat until Perfect Zone!
+            </p>
           </div>
         </div>
 
         <div class="flex justify-between items-center mt-6">
-          <button v-if="onboardingStep > 1" @click="onboardingStep--" class="text-sm" :class="darkMode ? 'text-dark-400 hover:text-sbux-greenLight' : 'text-gray-500 hover:text-sbux-green'">
-            ← ย้อนกลับ
+          <button v-if="onboardingStep > 1" @click="onboardingStep--" class="text-sm font-medium" :class="darkMode ? 'text-dark-400 hover:text-white' : 'text-gray-400 hover:text-gray-700'">
+            ← Back
           </button>
           <span v-else></span>
 
-          <div class="flex items-center gap-1">
-            <span v-for="s in 5" :key="s" class="w-2 h-2 rounded-full" :class="s === onboardingStep ? 'bg-sbux-green' : (darkMode ? 'bg-dark-600' : 'bg-gray-200')"></span>
+          <div class="flex items-center gap-1.5">
+            <span v-for="s in 5" :key="s" class="w-2 h-2 rounded-full transition-colors" :class="s === onboardingStep ? 'bg-accent' : (darkMode ? 'bg-dark-600' : 'bg-gray-200')"></span>
           </div>
 
-          <button v-if="onboardingStep < 5" @click="onboardingStep++" class="btn-primary px-4 py-2 text-sm rounded-none">
-            ถัดไป →
+          <button v-if="onboardingStep < 5" @click="onboardingStep++" class="btn-primary px-4 py-2 text-sm">
+            Next →
           </button>
-          <button v-else @click="finishOnboarding" class="btn-primary px-4 py-2 text-sm rounded-none">
-            เริ่มใช้งาน 🚀
+          <button v-else @click="finishOnboarding" class="btn-primary px-4 py-2 text-sm">
+            Get Started
           </button>
         </div>
 
         <button @click="skipOnboarding" class="w-full text-center text-xs mt-4" :class="darkMode ? 'text-dark-500 hover:text-dark-300' : 'text-gray-400 hover:text-gray-600'">
-          ข้ามการแนะนำ
+          Skip tutorial
         </button>
       </div>
     </div>
 
     <!-- Offline Indicator -->
-    <div v-if="!isOnline" class="fixed top-0 left-0 right-0 bg-amber-500 text-white text-center text-xs py-1 z-[110]">
-      📡 ออฟไลน์ - ข้อมูลจะบันทึกในเครื่อง
+    <div v-if="!isOnline" class="fixed top-0 left-0 right-0 bg-amber-500 text-white text-center text-xs py-1 z-[110] flex items-center justify-center gap-1">
+      <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.58 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+      Offline - Data saved locally
     </div>
 
     <!-- PWA Install Prompt -->
-    <div v-if="showInstallPrompt" class="fixed bottom-20 left-4 right-4 bg-sbux-green text-white p-4 shadow-lg z-[90] sm:left-auto sm:right-4 sm:w-80">
+    <div v-if="showInstallPrompt" class="fixed bottom-20 left-4 right-4 bg-accent text-white p-4 rounded-2xl shadow-lg z-[90] sm:left-auto sm:right-4 sm:w-80">
       <div class="flex items-start gap-3">
-        <span class="text-2xl">📱</span>
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+        </div>
         <div class="flex-1">
-          <p class="font-medium text-sm">ติดตั้งแอป</p>
-          <p class="text-xs text-white/80 mt-1">เพิ่มลงหน้า Home เพื่อใช้งานได้เร็วขึ้น</p>
+          <p class="font-semibold text-sm">Install App</p>
+          <p class="text-xs text-white/70 mt-1">Add to home screen for faster access</p>
         </div>
       </div>
       <div class="flex gap-2 mt-3">
-        <button @click="installPWA" class="flex-1 py-2 bg-white text-sbux-green text-sm font-medium rounded-none">
-          ติดตั้ง
+        <button @click="installPWA" class="flex-1 py-2.5 bg-white text-accent text-sm font-semibold rounded-xl">
+          Install
         </button>
-        <button @click="dismissInstallPrompt" class="px-4 py-2 text-white/70 text-sm hover:text-white">
-          ไม่ใช่ตอนนี้
+        <button @click="dismissInstallPrompt" class="px-4 py-2.5 text-white/60 text-sm hover:text-white">
+          Not now
         </button>
       </div>
     </div>
 
-    <!-- Header (Starbucks Style - Green Bar) -->
-    <header class="bg-sbux-green py-3 px-5 sticky z-50" :class="!isOnline ? 'top-6' : 'top-0'" role="banner">
+    <!-- Header (Clean iOS Style) -->
+    <header class="header-clean py-3 px-5 sticky z-50" :class="[!isOnline ? 'top-6' : 'top-0', darkMode ? 'bg-dark-900 border-white/10' : '']" role="banner">
       <div class="max-w-md mx-auto flex items-center justify-between">
-        <div>
-          <h1 class="text-base font-bold tracking-tight text-white">WANWAN COFFEE</h1>
-        </div>
         <div class="flex items-center gap-3">
-          <button @click="showTutorial" class="text-white/70 hover:text-white text-lg" title="ดูคู่มือ" aria-label="เปิดคู่มือการใช้งาน">❓</button>
-          <div class="text-right">
-            <p class="text-[10px] text-white/70">Appia Life XT · F64 Evo Pro</p>
+          <div class="w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center" :class="darkMode ? 'bg-white' : ''">
+            <svg class="w-5 h-5" :class="darkMode ? 'text-gray-900' : 'text-white'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-base font-semibold" :class="darkMode ? 'text-white' : 'text-gray-900'">Coffee Tuner</h1>
+            <p class="text-xs text-gray-500">Shot #{{ shotNumber }}</p>
           </div>
         </div>
+        <button @click="showTutorial" class="w-9 h-9 rounded-full flex items-center justify-center transition-colors" :class="darkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-100 hover:bg-gray-200'" title="ดูคู่มือ" aria-label="เปิดคู่มือการใช้งาน">
+          <svg class="w-5 h-5" :class="darkMode ? 'text-white' : 'text-gray-600'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <main class="max-w-md mx-auto px-5 py-6 pb-28">
+    <main class="max-w-md mx-auto px-5 py-4 pb-28">
       <!-- ==================== PAGE 1: INPUT ==================== -->
-      <div v-if="page === 'input'" class="page-slide space-y-6">
-        <!-- Smart Tuning Header -->
-        <div class="text-center pt-2">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-3">
-            <span class="text-3xl">{{ shotNumber === 1 ? '☕' : (fixedGrind ? '🎯' : '🔧') }}</span>
-          </div>
-          <h2 class="text-2xl font-bold">Shot #{{ shotNumber }}</h2>
-
-          <!-- Tuning Progress -->
-          <div class="mt-4 px-4">
-            <div class="flex items-center justify-between text-xs font-medium mb-2">
-              <span :class="!fixedGrind ? 'text-accent' : 'text-green-500'">
-                {{ !fixedGrind ? '🔧 Step 1: หาเบอร์บด' : '✅ เบอร์บด OK' }}
-              </span>
-              <span :class="fixedGrind && !tdsIsGood ? 'text-accent' : (tdsIsGood ? 'text-green-500' : 'text-gray-400')">
-                {{ tdsIsGood ? '✅ TDS OK' : (fixedGrind ? '🎯 Step 2: ปรับ Yield' : '⏳ รอ') }}
+      <div v-if="page === 'input'" class="page-slide space-y-5">
+        <!-- Tuning Progress - Clean Design -->
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                :class="!fixedGrind ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'">1</div>
+              <span class="text-sm font-medium" :class="!fixedGrind ? 'text-gray-900' : 'text-green-600'">
+                {{ !fixedGrind ? 'หาเบอร์บด' : 'เบอร์บด OK' }}
               </span>
             </div>
-            <div class="h-2 bg-gray-100 rounded-none overflow-hidden">
-              <div class="h-full rounded-none transition-all duration-500"
-                :class="tdsIsGood && fixedGrind ? 'bg-green-500 w-full' : (fixedGrind ? 'bg-accent w-1/2' : 'bg-accent/50 w-1/4')"
-                :style="{ width: tdsIsGood && fixedGrind ? '100%' : (fixedGrind ? '75%' : '25%') }">
-              </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium" :class="fixedGrind && !tdsIsGood ? 'text-gray-900' : (tdsIsGood ? 'text-green-600' : 'text-gray-400')">
+                {{ tdsIsGood ? 'TDS OK' : 'ปรับ TDS' }}
+              </span>
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                :class="tdsIsGood ? 'bg-green-500 text-white' : (fixedGrind ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500')">2</div>
             </div>
           </div>
-
-          <!-- Smart Hint -->
-          <p class="text-gray-600 text-sm mt-3">
-            {{ shotNumber === 1 ? '📝 ใส่ค่าทั้ง 6 ช่อง แล้วกดวิเคราะห์' :
-               (!fixedGrind ? '🔧 กำลังหาเบอร์บดที่ใช่ (EY 18-22%)' : '🎯 เบอร์บดโอเคแล้ว! ปรับ Yield ให้ TDS 8-12%') }}
+          <div class="progress-bar">
+            <div class="progress-bar-fill" :class="isPerfect || (tdsIsGood && fixedGrind) ? 'bg-green-500' : 'bg-blue-500'"
+              :style="{ width: (tdsIsGood && fixedGrind) ? '100%' : (fixedGrind ? '50%' : '25%') }"></div>
+          </div>
+          <p class="text-xs text-gray-500 text-center mt-2">
+            {{ shotNumber === 1 ? 'ใส่ค่าทั้ง 6 ช่อง แล้วกดวิเคราะห์' :
+               (!fixedGrind ? 'กำลังหาเบอร์บดที่ใช่ (EY 18-22%)' : 'เบอร์บดโอเคแล้ว ปรับ Yield ให้ TDS 8-12%') }}
           </p>
         </div>
 
@@ -362,393 +529,322 @@
           <!-- Bean Name (only on first shot) -->
           <div v-if="shotNumber === 1">
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">☕ เมล็ดกาแฟ</label>
-              <span class="text-[10px] text-gray-400">ไม่บังคับ</span>
+              <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">เมล็ดกาแฟ</label>
+              <span class="text-xs text-gray-400">ไม่บังคับ</span>
             </div>
-            <input type="text" v-model="beanName" placeholder="เช่น Ethiopia Yirgacheffe, Brazil..."
-              class="input-field w-full h-12 text-sm text-center rounded-none outline-none px-4">
+            <input type="text" v-model="beanName" placeholder="Ethiopia Yirgacheffe, Brazil..."
+              class="input-field w-full h-12 text-sm text-center outline-none px-4">
           </div>
 
           <!-- Show Bean Name (locked after first shot) -->
           <div v-else-if="beanName" class="text-center">
-            <span class="px-4 py-2 rounded-none text-sm font-medium bg-accent/10 text-accent">
-              ☕ {{ beanName }}
+            <span class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+              {{ beanName }}
             </span>
           </div>
 
-          <!-- Row 1: Grind + Dose (Lock หลัง Shot 1 - แสดงค่าที่แนะนำ) -->
-          <div v-if="shotNumber === 1" class="grid grid-cols-2 gap-4">
+          <!-- Row 1: Grind + Dose -->
+          <div v-if="shotNumber === 1" class="grid grid-cols-2 gap-3">
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">เบอร์บด</label>
-                <span class="text-[10px] text-gray-400">1-12</span>
-              </div>
-              <input type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500/50' : ''">
+              <label for="input-grind" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Grind</label>
+              <input id="input-grind" type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500' : ''"
+                aria-describedby="grind-hint"
+                @keydown.enter.prevent="document.getElementById('input-dose')?.focus()">
+              <span id="grind-hint" class="sr-only">Enter grind size between 1 and 12</span>
             </div>
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Dose (g)</label>
-                <span class="text-[10px] text-gray-400">10-30</span>
-              </div>
-              <input type="number" v-model.number="shot.dose" step="0.1" min="10" max="30" placeholder="18"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="shot.dose && (shot.dose < 10 || shot.dose > 30) ? 'border-red-500/50' : ''">
+              <label for="input-dose" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Dose (g)</label>
+              <input id="input-dose" type="number" v-model.number="shot.dose" step="0.1" min="10" max="30" placeholder="18"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.dose && (shot.dose < 10 || shot.dose > 30) ? 'border-red-500' : ''"
+                aria-describedby="dose-hint"
+                @keydown.enter.prevent="document.getElementById('input-yield')?.focus()">
+              <span id="dose-hint" class="sr-only">Enter dose in grams between 10 and 30</span>
             </div>
           </div>
 
           <!-- CONFIRMATION MODE: Lock Grind + Dose + Yield -->
-          <div v-else-if="confirmationMode" class="card p-4 bg-green-500/10 border border-green-500/30">
+          <div v-else-if="confirmationMode" class="bg-green-50 rounded-xl p-4 border border-green-200">
             <div class="flex items-center justify-between mb-3">
-              <p class="text-xs text-green-400 font-medium">🔐 CONFIRMATION MODE ({{ confirmationCount }}/2)</p>
-              <p class="text-[10px] text-green-500">ยืนยันสูตรอีก {{ 2 - confirmationCount }} ครั้ง</p>
+              <p class="text-xs text-green-700 font-medium">Confirmation {{ confirmationCount }}/2</p>
+              <p class="text-xs text-green-600">ยืนยันอีก {{ 2 - confirmationCount }} ครั้ง</p>
             </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
-                <div class="text-center">
-                  <p class="text-[10px] text-gray-500 uppercase">เบอร์บด</p>
-                  <p class="text-2xl font-bold text-green-400">{{ shot.grind }}</p>
-                  <p class="text-[10px] text-green-500">🔒</p>
-                </div>
-                <div class="text-center">
-                  <p class="text-[10px] text-gray-500 uppercase">Dose</p>
-                  <p class="text-2xl font-bold text-green-400">{{ shot.dose }}g</p>
-                  <p class="text-[10px] text-green-500">🔒</p>
-                </div>
-                <div class="text-center">
-                  <p class="text-[10px] text-gray-500 uppercase">Yield</p>
-                  <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
-                  <p class="text-[10px] text-green-500">🔒</p>
-                </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Grind</p>
+                <p class="text-xl font-bold text-green-600">{{ shot.grind }}</p>
               </div>
-              <div class="text-right">
-                <p class="text-xs text-gray-600">Ratio</p>
-                <p class="text-lg font-bold text-green-400" v-if="shot.dose && shot.yield">1:{{ (shot.yield / shot.dose).toFixed(1) }}</p>
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Dose</p>
+                <p class="text-xl font-bold text-green-600">{{ shot.dose }}g</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Yield</p>
+                <p class="text-xl font-bold text-green-600">{{ shot.yield }}g</p>
               </div>
             </div>
           </div>
 
-          <!-- Shot 2+: Grind + Dose แสดงค่าที่แนะนำ (Locked) -->
-          <div v-else class="card p-4 bg-gray-100/50">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
-                <div class="text-center">
-                  <p class="text-[10px] text-gray-500 uppercase">เบอร์บด</p>
-                  <p class="text-2xl font-bold" :class="fixedGrind ? 'text-green-400' : 'text-accent'">{{ shot.grind }}</p>
-                  <p v-if="!fixedGrind" class="text-[10px] text-accent">🔧 ปรับตรงนี้</p>
-                  <p v-else class="text-[10px] text-green-500">✅ OK</p>
-                </div>
-                <div class="text-center">
-                  <p class="text-[10px] text-gray-500 uppercase">Dose</p>
-                  <p class="text-2xl font-bold text-sbux-brown">{{ shot.dose }}g</p>
-                  <p class="text-[10px] text-accent">🔒 Fixed</p>
-                </div>
+          <!-- Shot 2+: Locked values display -->
+          <div v-else class="bg-gray-50 rounded-xl p-4">
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Grind</p>
+                <p class="text-xl font-bold" :class="fixedGrind ? 'text-green-600' : 'text-blue-600'">{{ shot.grind }}</p>
+                <p class="text-[10px]" :class="fixedGrind ? 'text-green-500' : 'text-blue-500'">{{ fixedGrind ? 'Locked' : 'Adjusting' }}</p>
               </div>
-              <div class="text-right">
-                <p class="text-xs text-gray-600">Ratio</p>
-                <p class="text-lg font-bold text-accent" v-if="shot.dose">1:{{ targetYield ? (targetYield / shot.dose).toFixed(1) : '?' }}</p>
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Dose</p>
+                <p class="text-xl font-bold text-gray-700">{{ shot.dose }}g</p>
+                <p class="text-[10px] text-gray-400">Fixed</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase mb-1">Ratio</p>
+                <p class="text-xl font-bold text-gray-700" v-if="shot.dose">1:{{ targetYield ? (targetYield / shot.dose).toFixed(1) : '?' }}</p>
               </div>
             </div>
           </div>
 
           <!-- Row 2: Yield + Time -->
-          <div class="grid grid-cols-2 gap-4">
-            <!-- Yield: Shot 1 = input, Shot 2+ = Locked display -->
+          <div class="grid grid-cols-2 gap-3">
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-green-400' : 'text-gray-600'">
-                  {{ shotNumber > 1 ? '🔒 Yield (g)' : 'Yield (g)' }}
-                </label>
-                <span v-if="shotNumber > 1" class="text-[10px] text-green-500">Locked</span>
-                <span v-else-if="shot.dose && shot.yield" class="text-xs text-accent font-medium">1:{{ (shot.yield / shot.dose).toFixed(1) }}</span>
+              <label for="input-yield" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">
+                Yield (g) <span v-if="shotNumber > 1" class="text-green-500 normal-case">Locked</span>
+              </label>
+              <div v-if="shotNumber > 1" class="input-field w-full h-14 flex items-center justify-center bg-green-50 border-green-200" role="status" aria-label="Yield locked">
+                <p class="text-xl font-semibold text-green-600">{{ shot.yield }}g</p>
               </div>
-              <!-- Shot 2+: Display locked value -->
-              <div v-if="shotNumber > 1" class="input-field w-full h-14 flex items-center justify-center rounded-none bg-green-500/10 border-green-500/30">
-                <p class="text-2xl font-bold text-green-400">{{ shot.yield }}g</p>
-              </div>
-              <!-- Shot 1: Editable input -->
-              <input v-else type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" placeholder="36"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500/50' : ''">
+              <input v-else id="input-yield" type="number" v-model.number="shot.yield" step="0.1" min="15" max="80" placeholder="36"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.yield && (shot.yield < 15 || shot.yield > 80) ? 'border-red-500' : ''"
+                aria-describedby="yield-hint"
+                @keydown.enter.prevent="document.getElementById('input-time')?.focus()">
+              <span id="yield-hint" class="sr-only">Enter yield in grams between 15 and 80</span>
             </div>
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium uppercase tracking-wider" :class="shotNumber > 1 ? 'text-blue-400' : 'text-gray-600'">
-                  {{ shotNumber > 1 ? '📖 Time (s)' : 'Time (s)' }}
-                </label>
-                <span class="text-[10px] text-gray-400">อ่านจากจอ</span>
-              </div>
-              <input type="number" v-model.number="shot.time" min="15" max="60" placeholder="28"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="[
-                  (shotNumber > 1 && !shot.time) ? 'border-blue-500/50 ring-1 ring-blue-500/30' : '',
-                  shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500/50' : ''
-                ]">
+              <label for="input-time" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Time (s)</label>
+              <input id="input-time" type="number" v-model.number="shot.time" min="15" max="60" placeholder="28"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.time && (shot.time < 15 || shot.time > 60) ? 'border-red-500' : ''"
+                aria-describedby="time-hint"
+                @keydown.enter.prevent="document.getElementById('input-tds')?.focus()">
+              <span id="time-hint" class="sr-only">Enter extraction time in seconds between 15 and 60</span>
             </div>
           </div>
 
           <!-- Divider -->
-          <div class="flex items-center gap-3">
-            <div class="flex-1 h-px bg-gray-200 dark:bg-dark-700"></div>
-            <span class="text-xs text-gray-500 font-medium">REFRACTOMETER</span>
-            <div class="flex-1 h-px bg-gray-200 dark:bg-dark-700"></div>
-          </div>
+          <div class="divider my-4"></div>
 
           <!-- Row 3: TDS + Brix -->
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-3">
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">TDS %</label>
-                <span class="text-[10px] text-gray-400">8-12 ideal</span>
-              </div>
-              <input type="number" v-model.number="shot.tds" step="0.1" min="1" max="20" placeholder="10"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="shot.tds && (shot.tds < 1 || shot.tds > 20) ? 'border-red-500/50' : ''">
+              <label for="input-tds" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">TDS %</label>
+              <input id="input-tds" type="number" v-model.number="shot.tds" step="0.1" min="1" max="20" placeholder="10"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.tds && (shot.tds < 1 || shot.tds > 20) ? 'border-red-500' : ''"
+                aria-describedby="tds-hint"
+                @keydown.enter.prevent="document.getElementById('input-brix')?.focus()">
+              <span id="tds-hint" class="sr-only">Enter TDS percentage between 1 and 20</span>
             </div>
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Brix %</label>
-                <span class="text-[10px] text-gray-400">1-25</span>
-              </div>
-              <input type="number" v-model.number="shot.brix" step="0.1" min="1" max="25" placeholder="12"
-                class="input-field w-full h-14 text-2xl font-bold text-center rounded-none outline-none"
-                :class="shot.brix && (shot.brix < 1 || shot.brix > 25) ? 'border-red-500/50' : ''">
+              <label for="input-brix" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Brix %</label>
+              <input id="input-brix" type="number" v-model.number="shot.brix" step="0.1" min="1" max="25" placeholder="12"
+                class="input-field w-full h-14 text-xl font-semibold text-center outline-none"
+                :class="shot.brix && (shot.brix < 1 || shot.brix > 25) ? 'border-red-500' : ''"
+                aria-describedby="brix-hint"
+                @keydown.enter.prevent="canAnalyze && analyze()">
+              <span id="brix-hint" class="sr-only">Enter Brix percentage between 1 and 25</span>
             </div>
           </div>
 
         </div>
 
         <!-- Validation Errors -->
-        <div v-if="validationErrors.length > 0" class="card p-4 border-red-500/20 bg-red-500/5">
-          <p class="text-xs text-red-500/70 font-medium mb-2">⚠️ ค่าไม่ถูกต้อง:</p>
-          <ul class="text-sm text-red-400 space-y-1">
-            <li v-for="err in validationErrors" :key="err">• {{ err }}</li>
+        <div v-if="validationErrors.length > 0" class="card p-4 bg-red-50 border border-red-200 shake" :class="darkMode && 'bg-red-500/10 border-red-500/30'" role="alert" aria-live="polite">
+          <p class="text-xs font-medium mb-2" :class="darkMode ? 'text-red-400' : 'text-red-600'">Invalid Values</p>
+          <ul class="text-sm space-y-1" :class="darkMode ? 'text-red-300' : 'text-red-500'" aria-label="Validation errors list">
+            <li v-for="err in validationErrors" :key="err">{{ err }}</li>
           </ul>
         </div>
 
         <!-- Quick Stats (show after first shot) -->
         <div v-if="history.length > 0" class="card p-4">
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">📊 สถิติ Session นี้</p>
-            <span class="text-[10px] text-gray-400">{{ history.length }} shots</span>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <div class="bg-gray-50 p-2 rounded-none">
-              <p class="text-lg font-bold text-sbux-green">{{ history.filter(h => h.ey >= 18 && h.ey <= 22).length }}</p>
-              <p class="text-[9px] text-gray-500">EY OK</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">Session Stats</p>
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="text-lg font-bold text-green-600">{{ history.filter(h => h.ey >= 18 && h.ey <= 22).length }}</p>
+              <p class="text-xs text-gray-500">EY OK</p>
             </div>
-            <div class="bg-gray-50 p-2 rounded-none">
-              <p class="text-lg font-bold text-sbux-green">{{ history.filter(h => h.tds >= 8 && h.tds <= 12).length }}</p>
-              <p class="text-[9px] text-gray-500">TDS OK</p>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="text-lg font-bold text-green-600">{{ history.filter(h => h.tds >= 8 && h.tds <= 12).length }}</p>
+              <p class="text-xs text-gray-500">TDS OK</p>
             </div>
-            <div class="bg-gray-50 p-2 rounded-none">
-              <p class="text-lg font-bold" :class="history.some(h => h.isPerfect) ? 'text-green-500' : 'text-gray-400'">{{ history.filter(h => h.isPerfect).length }}</p>
-              <p class="text-[9px] text-gray-500">Perfect</p>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="text-lg font-bold" :class="history.some(h => h.isPerfect) ? 'text-green-600' : 'text-gray-400'">{{ history.filter(h => h.isPerfect).length }}</p>
+              <p class="text-xs text-gray-500">Perfect</p>
             </div>
           </div>
         </div>
 
         <!-- Submit Button -->
         <button @click="analyze" :disabled="!canAnalyze"
-          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white" aria-label="วิเคราะห์ผลการชง">
+          class="btn-primary w-full h-14 font-semibold text-base" aria-label="วิเคราะห์ผลการชง">
           วิเคราะห์ผล
         </button>
       </div>
 
       <!-- ==================== PAGE 2: RESULT ==================== -->
-      <div v-if="page === 'result'" class="page-slide space-y-5">
+      <div v-if="page === 'result'" class="page-slide space-y-4" role="region" aria-label="Analysis Results">
 
-        <!-- Status Badge -->
-        <div class="text-center pt-2">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4"
-            :class="isPerfect ? 'bg-green-500/10 glow-green' : 'bg-amber-500/10 glow-amber'">
-            <span class="text-4xl">{{ isPerfect ? '🎯' : (direction === 'under' ? '🔵' : '🔴') }}</span>
+        <!-- Tuning Progress Card -->
+        <div class="card p-4" role="status" aria-live="polite">
+          <p class="text-xs text-gray-500 text-center mb-3 font-medium uppercase tracking-wider">Tuning Progress</p>
+          <div class="flex items-center justify-between text-xs font-medium mb-2">
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                :class="eyIsGood ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'">
+                <svg v-if="eyIsGood" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                <span v-else>1</span>
+              </div>
+              <span :class="eyIsGood ? 'text-green-600' : 'text-gray-700'">EY {{ ey }}%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span :class="tdsIsGood ? 'text-green-600' : 'text-gray-500'">TDS {{ shot.tds }}%</span>
+              <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                :class="tdsIsGood ? 'bg-green-500 text-white' : (eyIsGood ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500')">
+                <svg v-if="tdsIsGood" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                <span v-else>2</span>
+              </div>
+            </div>
           </div>
-          <h2 class="text-2xl font-bold" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">
-            {{ isPerfect ? 'สมบูรณ์แบบ!' : (direction === 'under' ? 'สกัดน้อยไป' : 'สกัดมากไป') }}
-          </h2>
-        </div>
-
-        <!-- Extraction Chart -->
-        <div class="card p-4">
-          <p class="text-xs text-gray-500 text-center mb-3 font-medium uppercase tracking-wider">แผนที่การสกัด</p>
-          <svg viewBox="0 0 200 120" class="w-full h-32">
-            <!-- Grid lines -->
-            <line x1="10" y1="60" x2="190" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-            <line x1="100" y1="10" x2="100" y2="110" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-
-            <!-- Zones -->
-            <rect x="10" y="10" width="55" height="100" fill="rgba(245,158,11,0.1)" rx="4"/>
-            <rect x="135" y="10" width="55" height="100" fill="rgba(239,68,68,0.1)" rx="4"/>
-            <rect x="65" y="30" width="70" height="60" fill="rgba(34,197,94,0.15)" rx="6" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
-
-            <!-- Labels -->
-            <text x="37" y="65" text-anchor="middle" class="text-[9px] fill-amber-500/70 font-medium">UNDER</text>
-            <text x="100" y="58" text-anchor="middle" class="text-[9px] fill-green-500/70 font-medium">PERFECT</text>
-            <text x="100" y="70" text-anchor="middle" class="text-[7px] fill-green-500/50">18-22%</text>
-            <text x="163" y="65" text-anchor="middle" class="text-[9px] fill-red-500/70 font-medium">OVER</text>
-
-            <!-- Axis -->
-            <text x="100" y="118" text-anchor="middle" class="text-[8px] fill-dark-500">EY%</text>
-
-            <!-- Current position -->
-            <circle :cx="chartX" :cy="chartY" r="10"
-              :fill="isPerfect ? 'rgba(34,197,94,0.9)' : 'rgba(245,158,11,0.9)'"
-              :stroke="isPerfect ? '#22c55e' : '#f59e0b'" stroke-width="2"/>
-            <text :x="chartX" :y="chartY + 4" text-anchor="middle" class="text-[10px] fill-white font-bold">{{ ey }}</text>
-
-            <!-- Arrow -->
-            <line v-if="!isPerfect" :x1="chartX" :y1="chartY" x2="100" y2="60"
-              stroke="rgba(34,197,94,0.5)" stroke-width="2" stroke-dasharray="4,4"/>
-          </svg>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" :class="isPerfect ? 'bg-green-500' : 'bg-blue-500'"
+              :style="{ width: isPerfect ? '100%' : (eyIsGood ? '50%' : '25%') }"></div>
+          </div>
+          <p class="text-xs text-gray-500 text-center mt-2">
+            {{ isPerfect ? 'Perfect Zone!' : (eyIsGood ? 'Step 2: Adjust TDS to 8-12%' : 'Step 1: Adjust EY to 18-22%') }}
+          </p>
         </div>
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-4 gap-2">
           <div class="stat-box p-3 text-center">
             <p class="text-[10px] text-gray-500 font-medium uppercase">Ratio</p>
-            <p class="text-lg font-bold text-sbux-brown mt-1">1:{{ ratio }}</p>
+            <p class="text-lg font-bold text-gray-800 mt-1">1:{{ ratio }}</p>
           </div>
-          <div class="stat-box p-3 text-center" :class="isPerfect ? 'bg-green-500/10' : 'bg-amber-500/10'">
-            <p class="text-[10px] font-medium uppercase" :class="isPerfect ? 'text-green-500/70' : 'text-amber-500/70'">EY%</p>
-            <p class="text-lg font-bold mt-1" :class="isPerfect ? 'text-green-400' : 'text-amber-400'">{{ ey }}</p>
+          <div class="stat-box p-3 text-center" :class="eyIsGood ? 'bg-green-50' : 'bg-orange-50'">
+            <p class="text-[10px] font-medium uppercase" :class="eyIsGood ? 'text-green-600' : 'text-orange-600'">EY%</p>
+            <p class="text-lg font-bold mt-1" :class="eyIsGood ? 'text-green-600' : 'text-orange-600'">{{ ey }}</p>
           </div>
           <div class="stat-box p-3 text-center">
             <p class="text-[10px] text-gray-500 font-medium uppercase">Time</p>
-            <p class="text-lg font-bold text-sbux-brown mt-1">{{ shot.time }}s</p>
+            <p class="text-lg font-bold text-gray-800 mt-1">{{ shot.time }}s</p>
           </div>
-          <div class="stat-box p-3 text-center">
-            <p class="text-[10px] text-gray-500 font-medium uppercase">TDS</p>
-            <p class="text-lg font-bold text-sbux-brown mt-1">{{ shot.tds }}%</p>
+          <div class="stat-box p-3 text-center" :class="tdsIsGood ? 'bg-green-50' : ''">
+            <p class="text-[10px] font-medium uppercase" :class="tdsIsGood ? 'text-green-600' : 'text-gray-500'">TDS</p>
+            <p class="text-lg font-bold mt-1" :class="tdsIsGood ? 'text-green-600' : 'text-gray-800'">{{ shot.tds }}%</p>
           </div>
         </div>
 
-        <!-- Smart Tuning Progress (Result Page) -->
-        <div class="card p-4">
-          <p class="text-xs text-gray-500 text-center mb-3 font-medium uppercase tracking-wider">🎯 Tuning Progress</p>
-          <div class="flex items-center justify-between text-xs font-medium mb-2">
-            <span :class="eyIsGood ? 'text-green-500' : 'text-accent'">
-              {{ eyIsGood ? '✅ EY OK' : '🔧 EY: ' + ey + '%' }}
-            </span>
-            <span :class="tdsIsGood ? 'text-green-500' : (eyIsGood ? 'text-accent' : 'text-gray-400')">
-              {{ tdsIsGood ? '✅ TDS OK' : '🎯 TDS: ' + shot.tds + '%' }}
-            </span>
-          </div>
-          <div class="h-3 bg-gray-100 rounded-none overflow-hidden">
-            <div class="h-full rounded-none transition-all duration-500"
-              :class="isPerfect ? 'bg-green-500' : (eyIsGood ? 'bg-accent' : 'bg-amber-500/70')"
-              :style="{ width: isPerfect ? '100%' : (eyIsGood ? '75%' : '35%') }">
-            </div>
-          </div>
-          <p class="text-xs text-gray-500 text-center mt-2">
-            {{ isPerfect ? '🎉 สมบูรณ์แบบ!' : (eyIsGood ? 'Step 2: ปรับ Yield ให้ TDS 8-12%' : 'Step 1: ปรับเบอร์บดให้ EY 18-22%') }}
-          </p>
-        </div>
-
-        <!-- Action Card (Smart & Clear) -->
-        <div v-if="!isPerfect" class="card p-6 border-2"
-          :class="action.step === 1 ? 'border-amber-500/30 bg-amber-500/5' : 'border-blue-500/30 bg-blue-500/5'">
-
-          <!-- What to do - BIG & CLEAR -->
+        <!-- Action Card (Not Perfect) -->
+        <div v-if="!isPerfect" class="card p-5">
           <div class="text-center mb-4">
-            <p class="text-4xl font-black mb-2" :class="action.step === 1 ? 'text-amber-400' : 'text-blue-400'">
+            <p class="text-3xl font-bold mb-1" :class="action.step === 1 ? 'text-orange-500' : 'text-blue-500'">
               {{ action.do }}
             </p>
-            <p class="text-sm" :class="action.step === 1 ? 'text-amber-500/70' : 'text-blue-500/70'">
-              {{ action.reason }}
-            </p>
+            <p class="text-sm text-gray-500">{{ action.reason }}</p>
           </div>
 
-          <!-- What stays SAME vs CHANGE -->
-          <div class="bg-sbux-mint/50 rounded-none p-4 space-y-3">
-            <!-- เท่าเดิม -->
-            <div class="flex items-center gap-2">
-              <span class="text-green-500 text-sm font-medium w-16">เท่าเดิม:</span>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">☕ Dose {{ shot.dose }}g</span>
-                <span v-if="action.step === 2" class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">🔧 Grind {{ shot.grind }}</span>
+          <div class="bg-gray-50 rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500 uppercase">Keep Same</span>
+              <div class="flex gap-2">
+                <span class="px-2 py-1 rounded-lg bg-white text-gray-700 text-xs font-medium">Dose {{ shot.dose }}g</span>
+                <span v-if="action.step === 2" class="px-2 py-1 rounded-lg bg-white text-gray-700 text-xs font-medium">Grind {{ shot.grind }}</span>
               </div>
             </div>
-            <!-- ปรับ -->
-            <div class="flex items-center gap-2">
-              <span class="text-amber-500 text-sm font-medium w-16">🔧 ปรับ:</span>
-              <span class="px-3 py-1.5 rounded bg-amber-500/20 text-amber-400 text-sm font-bold">{{ action.do }}</span>
-            </div>
-            <!-- ต้องอ่าน -->
-            <div class="flex items-center gap-2">
-              <span class="text-blue-400 text-sm font-medium w-16">📖 อ่าน:</span>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">⏱️ Time (จากจอ)</span>
-                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">🍯 Yield (จากตาชั่ง)</span>
-                <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">📊 TDS/Brix (Refract.)</span>
-              </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500 uppercase">Adjust</span>
+              <span class="px-3 py-1.5 rounded-lg text-sm font-bold"
+                :class="action.step === 1 ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'">
+                {{ action.do }}
+              </span>
             </div>
           </div>
 
-          <!-- Quick Tip -->
-          <p class="text-xs text-gray-500 text-center mt-3">💡 {{ action.hint }}</p>
+          <p class="text-xs text-gray-400 text-center mt-3">{{ action.hint }}</p>
         </div>
 
         <!-- Perfect Result -->
-        <div v-else class="card p-6 border-2 border-green-500/30 bg-green-500/5">
+        <div v-else class="card p-6 bg-green-50 border border-green-200">
           <div class="text-center">
-            <span class="text-5xl mb-3 block">🎉</span>
-            <p class="text-2xl font-bold text-green-400 mb-2">พบสูตรที่ใช่แล้ว!</p>
-            <p v-if="beanName" class="text-sm text-accent mb-2">☕ {{ beanName }}</p>
-            <div class="bg-sbux-mint/50 rounded-none p-4 mt-4">
-              <p class="text-lg font-bold text-sbux-brown">
-                🔧 Grind {{ shot.grind }} · ☕ Dose {{ shot.dose }}g
-              </p>
-              <p class="text-lg font-bold text-sbux-brown mt-1">
-                🍯 Yield {{ shot.yield }}g · ⏱️ {{ shot.time }}s
-              </p>
-              <p class="text-sm text-green-400 mt-2">EY {{ ey }}% · TDS {{ shot.tds }}%</p>
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500 flex items-center justify-center">
+              <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
             </div>
-            <p class="text-sm text-green-500/70 mt-3">บันทึกสูตรนี้ไว้ใช้ครั้งหน้า!</p>
+            <p class="text-2xl font-bold text-green-700 mb-1">Perfect!</p>
+            <p v-if="beanName" class="text-sm text-green-600 mb-4">{{ beanName }}</p>
 
-            <!-- Action Buttons -->
-            <div class="flex gap-2 mt-4 justify-center flex-wrap">
-              <button @click="saveRecipe" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-none text-sm font-medium text-sbux-brown transition-all">
-                {{ recipeSaved ? '✅ บันทึกแล้ว!' : '💾 บันทึกสูตร' }}
+            <div class="bg-white rounded-xl p-4 mt-4 text-left">
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><span class="text-gray-500">Grind</span> <span class="font-semibold float-right">{{ shot.grind }}</span></div>
+                <div><span class="text-gray-500">Dose</span> <span class="font-semibold float-right">{{ shot.dose }}g</span></div>
+                <div><span class="text-gray-500">Yield</span> <span class="font-semibold float-right">{{ shot.yield }}g</span></div>
+                <div><span class="text-gray-500">Time</span> <span class="font-semibold float-right">{{ shot.time }}s</span></div>
+              </div>
+              <div class="divider my-3"></div>
+              <div class="text-center">
+                <span class="text-green-600 font-semibold">EY {{ ey }}%</span>
+                <span class="text-gray-400 mx-2">·</span>
+                <span class="text-green-600 font-semibold">TDS {{ shot.tds }}%</span>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mt-5 justify-center">
+              <button @click="saveRecipe" class="px-4 py-2.5 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-medium text-white transition-all">
+                {{ recipeSaved ? 'Saved!' : 'Save Recipe' }}
               </button>
-              <button @click="copyRecipe" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-none text-sm font-medium text-sbux-brown transition-all">
-                {{ copied ? '✅ คัดลอก!' : '📋 Copy' }}
+              <button @click="copyRecipe" class="px-4 py-2.5 bg-white hover:bg-gray-50 rounded-xl text-sm font-medium text-gray-700 border border-gray-200 transition-all">
+                {{ copied ? 'Copied!' : 'Copy' }}
               </button>
-              <button v-if="canShare" @click="shareRecipe" class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-none text-sm font-medium text-white transition-all">
-                📤 แชร์
+              <button v-if="canShare" @click="shareRecipe" class="px-4 py-2.5 bg-blue-500 hover:bg-blue-600 rounded-xl text-sm font-medium text-white transition-all">
+                Share
               </button>
             </div>
           </div>
         </div>
 
         <!-- Next Button -->
-        <button @click="nextShot"
-          class="btn-primary w-full h-14 rounded-none font-semibold text-lg text-sbux-white">
-          {{ isPerfect ? '🎉 เริ่ม Session ใหม่' : '→ Shot ถัดไป (ปรับตามคำแนะนำ)' }}
+        <button @click="nextShot" class="btn-primary w-full h-14 font-semibold text-base">
+          {{ isPerfect ? 'Start New Session' : 'Next Shot' }}
         </button>
 
-        <!-- Reset Button (when not perfect) -->
+        <!-- Reset Button -->
         <button v-if="!isPerfect && shotNumber > 2" @click="resetSession"
-          class="w-full text-center text-sm text-gray-500 hover:text-red-400 py-2 mt-2">
-          🔄 เริ่มจูนใหม่ทั้งหมด
+          class="w-full text-center text-sm text-gray-400 hover:text-red-500 py-2">
+          Reset Session
         </button>
 
-        <!-- History -->
+        <!-- History Toggle -->
         <button v-if="history.length > 0" @click="showHistory = !showHistory"
-          class="w-full text-center text-sm text-gray-500 hover:text-dark-300 py-2">
-          {{ showHistory ? '▲ ซ่อนประวัติ' : '▼ ประวัติ (' + history.length + ')' }}
+          class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-2">
+          {{ showHistory ? 'Hide History' : 'History (' + history.length + ')' }}
         </button>
 
+        <!-- History List -->
         <div v-if="showHistory && history.length > 0" class="card p-4 space-y-2">
           <div v-for="(h, i) in reversedHistory" :key="h.id"
-            class="p-3 bg-sbux-mint/30 rounded-none">
-            <div class="flex items-center gap-3">
-              <span class="text-xl">{{ h.isPerfect ? '🎯' : '🔄' }}</span>
-              <div class="flex-1">
-                <p class="font-medium text-sm">#{{ history.length - i }} · Grind {{ h.grind }} · {{ h.time }}s</p>
-                <p class="text-xs text-gray-500">EY {{ h.ey }}% · TDS {{ h.tds }}%</p>
-              </div>
+            class="p-3 bg-gray-50 rounded-xl flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+              :class="h.isPerfect ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'">
+              {{ history.length - i }}
+            </div>
+            <div class="flex-1">
+              <p class="font-medium text-sm text-gray-800">Grind {{ h.grind }} · {{ h.time }}s</p>
+              <p class="text-xs text-gray-500">EY {{ h.ey }}% · TDS {{ h.tds }}%</p>
             </div>
           </div>
         </div>
@@ -757,13 +853,22 @@
       <!-- ==================== PAGE 3: RECIPES ==================== -->
       <div v-if="page === 'recipes'" class="page-slide space-y-5">
         <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold">📚 Recipe Library</h2>
-          <button @click="page = 'input'" class="text-sm text-gray-600 hover:text-sbux-brown">← กลับ</button>
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <svg class="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/>
+              <path d="M8 7h8M8 11h8M8 15h5"/>
+            </svg>
+            Recipe Library
+          </h2>
+          <button @click="page = 'input'" class="text-sm text-gray-500 hover:text-accent">← กลับ</button>
         </div>
 
         <div v-if="recipes.length === 0" class="card p-8 text-center">
-          <span class="text-4xl mb-3 block">📭</span>
-          <p class="text-gray-600">ยังไม่มีสูตรที่บันทึกไว้</p>
+          <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+            <path d="M12 8v8M8 12h8" stroke-linecap="round"/>
+          </svg>
+          <p class="text-gray-600 font-medium">ยังไม่มีสูตรที่บันทึกไว้</p>
           <p class="text-xs text-gray-400 mt-2">จูนจนถึง Perfect Zone แล้วกด "บันทึกสูตร"</p>
         </div>
 
@@ -771,19 +876,25 @@
           <div v-for="(r, i) in recipes" :key="r.id" class="card p-4">
             <div class="flex items-start justify-between">
               <div class="flex-1">
-                <p class="font-bold text-accent">{{ r.bean || 'No Name' }}</p>
-                <p class="text-sm text-sbux-brown mt-1">
-                  🔧 {{ r.grind }} · ☕ {{ r.dose }}g · 🍯 {{ r.yield }}g · ⏱️ {{ r.time }}s
-                </p>
-                <p class="text-xs text-green-400 mt-1">EY {{ r.ey }}% · TDS {{ r.tds }}%</p>
-                <p class="text-[10px] text-gray-400 mt-2">{{ new Date(r.savedAt).toLocaleDateString('th-TH') }}</p>
+                <p class="font-semibold text-gray-900" :class="darkMode && 'text-white'">{{ r.bean || 'No Name' }}</p>
+                <div class="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
+                  <span>Grind <b class="text-gray-700" :class="darkMode && 'text-gray-300'">{{ r.grind }}</b></span>
+                  <span>Dose <b class="text-gray-700" :class="darkMode && 'text-gray-300'">{{ r.dose }}g</b></span>
+                  <span>Yield <b class="text-gray-700" :class="darkMode && 'text-gray-300'">{{ r.yield }}g</b></span>
+                  <span>Time <b class="text-gray-700" :class="darkMode && 'text-gray-300'">{{ r.time }}s</b></span>
+                </div>
+                <p class="text-xs text-green-600 mt-2 font-medium">EY {{ r.ey }}% · TDS {{ r.tds }}%</p>
+                <p class="text-[10px] text-gray-400 mt-1">{{ new Date(r.savedAt).toLocaleDateString('th-TH') }}</p>
               </div>
               <div class="flex gap-2">
-                <button @click="loadRecipe(r)" class="px-3 py-1.5 rounded-none text-xs bg-accent/20 text-accent hover:bg-accent/30">
+                <button @click="loadRecipe(r)" class="px-3 py-1.5 rounded-lg text-xs bg-accent text-white hover:bg-accent/90 font-medium">
                   ใช้สูตรนี้
                 </button>
-                <button @click="deleteRecipe(i)" class="px-2 py-1.5 rounded-none text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20">
-                  🗑️
+                <button @click="deleteRecipe(i)" class="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/>
+                    <path d="M10 11v6M14 11v6"/>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -793,130 +904,157 @@
 
       <!-- ==================== PAGE 4: SETTINGS ==================== -->
       <div v-if="page === 'settings'" class="page-slide space-y-5">
-        <h2 class="text-xl font-bold">⚙️ ตั้งค่า</h2>
+        <h2 class="text-xl font-bold flex items-center gap-2">
+          <svg class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          Settings
+        </h2>
 
         <!-- Shot Statistics -->
         <div v-if="history.length > 0" class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">📊 สถิติการจูน</p>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="text-center p-3 rounded-none bg-gray-100/50">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">STATISTICS</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="text-center p-3 rounded-lg" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
               <p class="text-2xl font-bold text-accent">{{ stats.totalShots }}</p>
               <p class="text-[10px] text-gray-500 uppercase">Total Shots</p>
             </div>
-            <div class="text-center p-3 rounded-none bg-gray-100/50">
-              <p class="text-2xl font-bold text-green-400">{{ stats.perfectShots }}</p>
+            <div class="text-center p-3 rounded-lg" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+              <p class="text-2xl font-bold text-green-500">{{ stats.perfectShots }}</p>
               <p class="text-[10px] text-gray-500 uppercase">Perfect Zone</p>
             </div>
-            <div class="text-center p-3 rounded-none bg-gray-100/50">
-              <p class="text-2xl font-bold text-sbux-brown">{{ stats.avgEY }}%</p>
+            <div class="text-center p-3 rounded-lg" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+              <p class="text-2xl font-bold" :class="darkMode ? 'text-gray-300' : 'text-gray-700'">{{ stats.avgEY }}%</p>
               <p class="text-[10px] text-gray-500 uppercase">Avg EY%</p>
             </div>
-            <div class="text-center p-3 rounded-none bg-gray-100/50">
-              <p class="text-2xl font-bold text-sbux-brown">{{ stats.avgTDS }}%</p>
+            <div class="text-center p-3 rounded-lg" :class="darkMode ? 'bg-dark-700' : 'bg-gray-50'">
+              <p class="text-2xl font-bold" :class="darkMode ? 'text-gray-300' : 'text-gray-700'">{{ stats.avgTDS }}%</p>
               <p class="text-[10px] text-gray-500 uppercase">Avg TDS%</p>
             </div>
           </div>
           <!-- Best Shot -->
-          <div v-if="stats.bestShot" class="mt-4 p-3 rounded-none bg-gradient-to-r from-accent/20 to-transparent border border-accent/30">
-            <p class="text-xs text-accent font-medium mb-2">🏆 Best Shot</p>
+          <div v-if="stats.bestShot" class="mt-4 p-3 rounded-lg" :class="darkMode ? 'bg-accent/20' : 'bg-green-50'">
+            <p class="text-xs text-accent font-medium mb-2 flex items-center gap-1">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+              Best Shot
+            </p>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Grind {{ stats.bestShot.grind }} · {{ stats.bestShot.dose }}g → {{ stats.bestShot.yield }}g</span>
-              <span class="text-green-400 font-medium">EY {{ stats.bestShot.ey }}%</span>
+              <span :class="darkMode ? 'text-gray-400' : 'text-gray-600'">Grind {{ stats.bestShot.grind }} · {{ stats.bestShot.dose }}g → {{ stats.bestShot.yield }}g</span>
+              <span class="text-green-500 font-medium">EY {{ stats.bestShot.ey }}%</span>
             </div>
           </div>
         </div>
 
         <!-- Equipment Info -->
         <div class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">อุปกรณ์</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">EQUIPMENT</p>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-600">เครื่องชง</span>
-              <span class="text-sbux-brown">Appia Life XT 2GR</span>
+              <span :class="darkMode ? 'text-gray-400' : 'text-gray-600'">Machine</span>
+              <span :class="darkMode ? 'text-gray-200' : 'text-gray-800'" class="font-medium">Appia Life XT 2GR</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">เครื่องบด</span>
-              <span class="text-sbux-brown">F64 Evo Pro (1-12)</span>
+              <span :class="darkMode ? 'text-gray-400' : 'text-gray-600'">Grinder</span>
+              <span :class="darkMode ? 'text-gray-200' : 'text-gray-800'" class="font-medium">F64 Evo Pro (1-12)</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">แรงดัน</span>
-              <span class="text-sbux-brown">12 bar (Fixed)</span>
+              <span :class="darkMode ? 'text-gray-400' : 'text-gray-600'">Pressure</span>
+              <span :class="darkMode ? 'text-gray-200' : 'text-gray-800'" class="font-medium">12 bar (Fixed)</span>
             </div>
           </div>
         </div>
 
         <!-- Data Management -->
         <div class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">จัดการข้อมูล</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">DATA</p>
           <div class="space-y-3">
-            <button @click="exportData" class="w-full py-3 rounded-none bg-gray-100 text-sbux-brown text-sm font-medium hover:bg-gray-200 touch-feedback">
-              📤 Export ข้อมูลทั้งหมด
+            <button @click="exportData" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2"
+              :class="darkMode ? 'bg-dark-700 text-gray-300 hover:bg-dark-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              Export Data
             </button>
-            <button @click="importData" class="w-full py-3 rounded-none bg-gray-100 text-sbux-brown text-sm font-medium hover:bg-gray-200 touch-feedback">
-              📥 Import ข้อมูล
+            <button @click="importData" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2"
+              :class="darkMode ? 'bg-dark-700 text-gray-300 hover:bg-dark-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Import Data
             </button>
-            <button @click="clearAllData" class="w-full py-3 rounded-none bg-red-500/10 text-red-400 text-sm font-medium hover:bg-red-500/20 touch-feedback">
-              🗑️ ล้างข้อมูลทั้งหมด
+            <button @click="clearAllData" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2 bg-red-50 text-red-500 hover:bg-red-100"
+              :class="darkMode && 'bg-red-500/10 hover:bg-red-500/20'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+              Clear All Data
             </button>
           </div>
         </div>
 
         <!-- Appearance -->
         <div class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">ธีม</p>
-          <button @click="toggleDarkMode" class="w-full py-3 rounded-none text-sm font-medium touch-feedback"
-            :class="darkMode ? 'bg-dark-700 text-white hover:bg-dark-600' : 'bg-gray-100 text-sbux-brown hover:bg-gray-200'">
-            {{ darkMode ? '☀️ เปลี่ยนเป็นธีมสว่าง' : '🌙 เปลี่ยนเป็นธีมมืด' }}
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">APPEARANCE</p>
+          <button @click="toggleDarkMode" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2"
+            :class="darkMode ? 'bg-dark-700 text-white hover:bg-dark-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+            <svg v-if="darkMode" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
           </button>
         </div>
 
         <!-- Help & Tutorial -->
         <div class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">วิธีใช้งาน</p>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">HELP</p>
           <div class="space-y-3">
-            <button @click="showTutorial" class="w-full py-3 rounded-none bg-sbux-green/10 text-sbux-green text-sm font-medium hover:bg-sbux-green/20 touch-feedback">
-              📖 ดูคู่มือการใช้งาน
+            <button @click="showTutorial" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2 bg-accent/10 text-accent hover:bg-accent/20">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+              View Tutorial
             </button>
-            <button @click="resetOnboarding" class="w-full py-3 rounded-none text-sm font-medium touch-feedback"
-              :class="darkMode ? 'bg-dark-700 text-dark-300 hover:bg-dark-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
-              🔄 รีเซ็ตการแนะนำ (สำหรับมือใหม่)
+            <button @click="resetOnboarding" class="w-full py-3 rounded-lg text-sm font-medium touch-feedback flex items-center justify-center gap-2"
+              :class="darkMode ? 'bg-dark-700 text-gray-400 hover:bg-dark-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Reset Tutorial
             </button>
           </div>
         </div>
 
         <!-- App Installation -->
         <div v-if="deferredPrompt || canInstallPWA" class="card p-4">
-          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">ติดตั้งแอป</p>
-          <button @click="installPWA" class="w-full py-3 rounded-none bg-sbux-green text-white text-sm font-medium hover:bg-sbux-greenLight touch-feedback">
-            📱 เพิ่มลงหน้า Home
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">INSTALL</p>
+          <button @click="installPWA" class="w-full py-3 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 touch-feedback flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            Add to Home Screen
           </button>
-          <p class="text-xs text-gray-400 mt-2 text-center">ใช้งานได้เร็วขึ้น แม้ไม่มีอินเทอร์เน็ต</p>
+          <p class="text-xs text-gray-400 mt-2 text-center">Works faster, even offline</p>
         </div>
 
         <!-- About -->
         <div class="card p-4 text-center">
           <p class="text-lg font-bold text-accent">WANWAN COFFEE TUNER</p>
-          <p class="text-xs text-gray-500 mt-1">v7.1 · Made with ❤️</p>
+          <p class="text-xs text-gray-500 mt-1">v8.0 · Universal App Design</p>
           <p class="text-xs text-gray-400 mt-2">SCA Standards: EY 18-22% · TDS 8-12%</p>
         </div>
       </div>
     </main>
 
-    <!-- Bottom Navigation (Native App Style) -->
+    <!-- Bottom Navigation (Clean iOS Style) -->
     <nav class="bottom-nav" role="navigation" aria-label="เมนูหลัก">
       <div class="max-w-md mx-auto flex justify-around py-2">
-        <button @click="page = 'input'; showHistory = false" class="nav-item touch-feedback" :class="{ active: page === 'input' }" aria-label="หน้าจูนกาแฟ" :aria-current="page === 'input' ? 'page' : null">
-          <span class="nav-icon" aria-hidden="true">☕</span>
-          <span class="nav-label">จูน</span>
+        <button @click="navigateTo('input'); showHistory = false" class="nav-item touch-feedback" :class="{ active: page === 'input' }" aria-label="หน้าจูนกาแฟ">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/>
+          </svg>
+          <span class="nav-label">Tune</span>
         </button>
-        <button @click="page = 'recipes'" class="nav-item touch-feedback" :class="{ active: page === 'recipes' }" aria-label="คลังสูตรกาแฟ" :aria-current="page === 'recipes' ? 'page' : null">
-          <span class="nav-icon" aria-hidden="true">📚</span>
-          <span class="nav-label">สูตร</span>
-          <span v-if="recipes.length" class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-none text-[10px] text-sbux-white font-bold flex items-center justify-center" aria-label="จำนวนสูตร">{{ recipes.length }}</span>
+        <button @click="navigateTo('recipes')" class="nav-item touch-feedback relative" :class="{ active: page === 'recipes' }" aria-label="คลังสูตรกาแฟ">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/>
+          </svg>
+          <span class="nav-label">Recipes</span>
+          <span v-if="recipes.length" class="absolute top-0 right-4 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white font-bold flex items-center justify-center">{{ recipes.length }}</span>
         </button>
-        <button @click="page = 'settings'" class="nav-item touch-feedback" :class="{ active: page === 'settings' }" aria-label="หน้าตั้งค่า" :aria-current="page === 'settings' ? 'page' : null">
-          <span class="nav-icon" aria-hidden="true">⚙️</span>
-          <span class="nav-label">ตั้งค่า</span>
+        <button @click="navigateTo('settings')" class="nav-item touch-feedback" :class="{ active: page === 'settings' }" aria-label="หน้าตั้งค่า">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span class="nav-label">Settings</span>
         </button>
       </div>
     </nav>
@@ -1070,22 +1208,22 @@
           const tds = shot.value.tds
 
           if (eyv < 18) {
-            flavors.push({ icon: '🍋', name: 'เปรี้ยว', type: 'bad' })
-            flavors.push({ icon: '💧', name: 'จืด', type: 'bad' })
+            flavors.push({ name: 'Sour', type: 'bad' })
+            flavors.push({ name: 'Thin', type: 'bad' })
           } else if (eyv > 22) {
-            flavors.push({ icon: '☕', name: 'ขม', type: 'bad' })
-            flavors.push({ icon: '🔥', name: 'ฝาด', type: 'bad' })
+            flavors.push({ name: 'Bitter', type: 'bad' })
+            flavors.push({ name: 'Astringent', type: 'bad' })
           } else {
-            flavors.push({ icon: '🍯', name: 'หวาน', type: 'good' })
-            flavors.push({ icon: '⚖️', name: 'สมดุล', type: 'good' })
+            flavors.push({ name: 'Sweet', type: 'good' })
+            flavors.push({ name: 'Balanced', type: 'good' })
           }
 
           if (tds > 12) {
-            flavors.push({ icon: '💪', name: 'เข้มมาก', type: 'warn' })
+            flavors.push({ name: 'Very Strong', type: 'warn' })
           } else if (tds < 8) {
-            flavors.push({ icon: '💧', name: 'เบาบาง', type: 'warn' })
+            flavors.push({ name: 'Weak', type: 'warn' })
           } else {
-            flavors.push({ icon: '👌', name: 'บอดี้ดี', type: 'good' })
+            flavors.push({ name: 'Good Body', type: 'good' })
           }
 
           return flavors
@@ -1105,22 +1243,22 @@
 
           if (eyv < 16) {
             acid = 80; sweet = 20; bitter = 10
-            description = '🍋 เปรี้ยวจัด - สกัดน้อยเกินไป'
+            description = 'Very Sour - Under-extracted'
           } else if (eyv < 18) {
             acid = 60; sweet = 40; bitter = 20
-            description = '🍋 เปรี้ยวนำ - สกัดน้อยไป'
+            description = 'Sour - Under-extracted'
           } else if (eyv <= 20) {
             acid = 35; sweet = 50; bitter = 30
-            description = '🍯 สมดุลหวาน - Perfect Zone!'
+            description = 'Sweet & Balanced - Perfect!'
           } else if (eyv <= 22) {
             acid = 25; sweet = 45; bitter = 40
-            description = '⚖️ สมดุล - Good extraction'
+            description = 'Balanced - Good extraction'
           } else if (eyv <= 24) {
             acid = 15; sweet = 30; bitter = 60
-            description = '☕ ขมนำ - สกัดมากไป'
+            description = 'Bitter - Over-extracted'
           } else {
             acid = 10; sweet = 15; bitter = 80
-            description = '🔥 ขมฝาด - สกัดมากเกินไป'
+            description = 'Very Bitter - Over-extracted'
           }
 
           return { acid, sweet, bitter, description }
@@ -1268,7 +1406,7 @@
               if (atMinBoundary || (noChange && eyError > 0)) {
                 return {
                   step: 1,
-                  do: `⚠️ เบอร์บดต่ำสุดแล้ว (${GRIND_MIN})`,
+                  do: `Grind at minimum (${GRIND_MIN})`,
                   reason: reason,
                   hint: `ลองเพิ่ม Dose หรือลด Yield แทน`,
                   lockGrind: false,
@@ -1279,7 +1417,7 @@
               if (atMaxBoundary || (noChange && eyError < 0)) {
                 return {
                   step: 1,
-                  do: `⚠️ เบอร์บดสูงสุดแล้ว (${GRIND_MAX})`,
+                  do: `Grind at maximum (${GRIND_MAX})`,
                   reason: reason,
                   hint: `ลองลด Dose หรือเพิ่ม Yield แทน`,
                   lockGrind: false,
@@ -1292,7 +1430,7 @@
                 step: 1,
                 do: `เบอร์บด ${g} → ${newGrind}`,
                 reason: reason,
-                hint: `บด${direction} · ⚠️ บดทิ้ง 2-3g ก่อน`,
+                hint: `บด${direction} · Purge 2-3g first`,
                 lockGrind: false,
                 correction: correction,
                 newValue: parseFloat(newGrind)
@@ -1302,7 +1440,7 @@
             if (eyIsGood.value && !tdsIsGood.value) {
               return {
                 step: 1,
-                do: `🔒 Lock เบอร์บด ${g}`,
+                do: `Lock Grind ${g}`,
                 reason: `EY ${eyv}% ดีแล้ว! (ใน ${TARGET_EY}±${EY_TOLERANCE}%)`,
                 hint: 'กด "Shot ถัดไป" เพื่อไปปรับ Yield',
                 lockGrind: true,
@@ -1334,7 +1472,7 @@
             if (atMinBoundary || (noChange && tdsError < 0)) {
               return {
                 step: 2,
-                do: `⚠️ Yield ต่ำสุดแล้ว (${YIELD_MIN}g)`,
+                do: `Yield at minimum (${YIELD_MIN}g)`,
                 reason: reason,
                 hint: `ลองเพิ่ม Dose หรือบดละเอียดขึ้นแทน`,
                 lockGrind: false,
@@ -1345,7 +1483,7 @@
             if (atMaxBoundary || (noChange && tdsError > 0)) {
               return {
                 step: 2,
-                do: `⚠️ Yield สูงสุดแล้ว (${YIELD_MAX}g)`,
+                do: `Yield at maximum (${YIELD_MAX}g)`,
                 reason: reason,
                 hint: `ลองลด Dose หรือบดหยาบขึ้นแทน`,
                 lockGrind: false,
@@ -1388,9 +1526,15 @@
           }
         }
 
-        function analyze() { page.value = 'result' }
+        function analyze() {
+          haptic('medium')
+          page.value = 'result'
+        }
 
         function nextShot() {
+          // Haptic feedback - success for perfect, medium for continue
+          haptic(isPerfect.value ? 'success' : 'medium')
+
           // Create shot record
           const shotRecord = {
             id: Date.now().toString(),
@@ -1518,16 +1662,19 @@
         }
 
         function copyRecipe() {
-          const recipe = `☕ ${beanName.value || 'Coffee Recipe'}
-🔧 Grind: ${shot.value.grind}
-☕ Dose: ${shot.value.dose}g
-🍯 Yield: ${shot.value.yield}g
-⏱️ Time: ${shot.value.time}s
-📊 EY: ${ey.value}% | TDS: ${shot.value.tds}%
+          const recipe = `${beanName.value || 'Coffee Recipe'}
+
+Grind: ${shot.value.grind}
+Dose: ${shot.value.dose}g
+Yield: ${shot.value.yield}g
+Time: ${shot.value.time}s
+EY: ${ey.value}% | TDS: ${shot.value.tds}%
+
 ---
 Made with WANWAN COFFEE TUNER`
 
           navigator.clipboard.writeText(recipe.trim()).then(() => {
+            haptic('success')
             copied.value = true
             setTimeout(() => { copied.value = false }, 2000)
           })
@@ -1537,25 +1684,25 @@ Made with WANWAN COFFEE TUNER`
         const canShare = computed(() => navigator.share !== undefined)
 
         async function shareRecipe() {
-          const recipe = `☕ ${beanName.value || 'Coffee Recipe'}
-🔧 Grind: ${shot.value.grind}
-☕ Dose: ${shot.value.dose}g
-🍯 Yield: ${shot.value.yield}g
-⏱️ Time: ${shot.value.time}s
-📊 EY: ${ey.value}% | TDS: ${shot.value.tds}%
+          const recipe = `${beanName.value || 'Coffee Recipe'}
+
+Grind: ${shot.value.grind}
+Dose: ${shot.value.dose}g
+Yield: ${shot.value.yield}g
+Time: ${shot.value.time}s
+EY: ${ey.value}% | TDS: ${shot.value.tds}%
 
 Made with WANWAN COFFEE TUNER
 https://vongsagon-git.github.io/coffee-tune/`
 
           try {
             await navigator.share({
-              title: `☕ ${beanName.value || 'Perfect Espresso Recipe'}`,
+              title: `${beanName.value || 'Perfect Espresso Recipe'}`,
               text: recipe.trim(),
               url: 'https://vongsagon-git.github.io/coffee-tune/'
             })
           } catch (err) {
-            // User cancelled or error
-            console.log('Share cancelled')
+            // User cancelled or share not supported - silent fail
           }
         }
 
@@ -1577,11 +1724,13 @@ https://vongsagon-git.github.io/coffee-tune/`
           }
           recipes.value.push(newRecipe)
           localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
+          haptic('success')
           recipeSaved.value = true
           setTimeout(() => { recipeSaved.value = false }, 2000)
         }
 
         function loadRecipe(r) {
+          haptic('medium')
           beanName.value = r.bean || ''
           shot.value.grind = r.grind
           shot.value.dose = r.dose
@@ -1592,7 +1741,7 @@ https://vongsagon-git.github.io/coffee-tune/`
         }
 
         function deleteRecipe(index) {
-          if (confirm('🗑️ ลบสูตรนี้?')) {
+          if (confirm('Delete this recipe?')) {
             recipes.value.splice(index, 1)
             localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
           }
@@ -1644,7 +1793,7 @@ https://vongsagon-git.github.io/coffee-tune/`
         }
 
         function clearAllData() {
-          if (confirm('🗑️ ล้างข้อมูลทั้งหมด?\n\n⚠️ สูตร และประวัติทั้งหมดจะถูกลบ')) {
+          if (confirm('Clear all data?\n\nWARNING: All recipes and history will be deleted')) {
             localStorage.clear()
             recipes.value = []
             history.value = []
@@ -1663,7 +1812,7 @@ https://vongsagon-git.github.io/coffee-tune/`
         }
 
         function resetSession() {
-          if (confirm('🔄 เริ่มจูนใหม่ทั้งหมด?\n\n⚠️ ประวัติ shot จะถูกลบ')) {
+          if (confirm('Start new tuning session?\n\nWARNING: Shot history will be cleared')) {
             history.value = []
             localStorage.removeItem('wanwan_history')
             localStorage.removeItem('wanwan_session')
@@ -1685,11 +1834,21 @@ https://vongsagon-git.github.io/coffee-tune/`
         function finishOnboarding() {
           showOnboarding.value = false
           localStorage.setItem('wanwan_onboarded', 'true')
+          // Auto-focus first input after closing onboarding
+          setTimeout(() => {
+            const firstInput = document.getElementById('input-grind')
+            if (firstInput) firstInput.focus()
+          }, 100)
         }
 
         function skipOnboarding() {
           showOnboarding.value = false
           localStorage.setItem('wanwan_onboarded', 'true')
+          // Auto-focus first input after skipping onboarding
+          setTimeout(() => {
+            const firstInput = document.getElementById('input-grind')
+            if (firstInput) firstInput.focus()
+          }, 100)
         }
 
         function showTutorial() {
@@ -1710,6 +1869,7 @@ https://vongsagon-git.github.io/coffee-tune/`
 
         // Dark Mode functions
         function toggleDarkMode() {
+          haptic('light')
           darkMode.value = !darkMode.value
           localStorage.setItem('wanwan_darkmode', darkMode.value ? 'true' : 'false')
           applyDarkMode()
@@ -1725,6 +1885,25 @@ https://vongsagon-git.github.io/coffee-tune/`
             document.body.classList.remove('bg-dark-900', 'text-dark-100')
             document.body.classList.add('bg-sbux-cream', 'text-sbux-brown')
           }
+        }
+
+        // Haptic feedback function (mobile vibrate API)
+        function haptic(type = 'light') {
+          if (!navigator.vibrate) return
+          const patterns = {
+            light: 10,      // Short tap
+            medium: 25,     // Button press
+            success: [15, 50, 15],  // Double tap for success
+            error: [50, 30, 50, 30, 50]  // Triple tap for error
+          }
+          navigator.vibrate(patterns[type] || patterns.light)
+        }
+
+        // Page navigation with haptic
+        function navigateTo(targetPage) {
+          if (page.value === targetPage) return
+          haptic('light')
+          page.value = targetPage
         }
 
         // PWA Install functions
@@ -1757,8 +1936,44 @@ https://vongsagon-git.github.io/coffee-tune/`
           localStorage.setItem('wanwan_session', JSON.stringify(state))
         }
 
+        // Focus trap for modals (accessibility)
+        function trapFocus(e) {
+          if (!showOnboarding.value) return
+
+          const modal = document.querySelector('[role="dialog"]')
+          if (!modal) return
+
+          const focusableElements = modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+          const firstEl = focusableElements[0]
+          const lastEl = focusableElements[focusableElements.length - 1]
+
+          if (e.key === 'Tab') {
+            if (e.shiftKey && document.activeElement === firstEl) {
+              e.preventDefault()
+              lastEl.focus()
+            } else if (!e.shiftKey && document.activeElement === lastEl) {
+              e.preventDefault()
+              firstEl.focus()
+            }
+          }
+
+          // Close modal on Escape
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            skipOnboarding()
+          }
+        }
+
         // Keyboard shortcut handler
         function handleKeyboard(e) {
+          // Focus trap for modals
+          if (showOnboarding.value) {
+            trapFocus(e)
+            return
+          }
+
           // Enter key to analyze (when on input page and can analyze)
           if (e.key === 'Enter' && page.value === 'input' && canAnalyze.value) {
             e.preventDefault()
@@ -1821,23 +2036,43 @@ https://vongsagon-git.github.io/coffee-tune/`
             recipes.value = JSON.parse(savedRecipes)
           }
 
-          // Load session state
-          const session = localStorage.getItem('wanwan_session')
-          if (session && history.value.length > 0) {
-            const state = JSON.parse(session)
-            shotNumber.value = state.shotNumber || history.value.length + 1
-            fixedDose.value = state.fixedDose || false
-            fixedGrind.value = state.fixedGrind || false
-            targetYield.value = state.targetYield || null
-            beanName.value = state.beanName || ''
-            confirmationMode.value = state.confirmationMode || false
-            confirmationCount.value = state.confirmationCount || 0
-            confirmedRecipe.value = state.confirmedRecipe || null
-            if (state.lastGrind) shot.value.grind = state.lastGrind
-            if (state.lastDose) shot.value.dose = state.lastDose
-          } else {
+          // Restore state from history (more reliable than session state)
+          if (history.value.length > 0) {
+            const lastShot = history.value[history.value.length - 1]
             shotNumber.value = history.value.length + 1
+
+            // Restore from last shot in history
+            beanName.value = lastShot.bean || ''
+            fixedDose.value = true  // Dose is always fixed after shot 1
+            targetYield.value = lastShot.yield
+
+            // Check if grind was locked (EY was good)
+            fixedGrind.value = lastShot.ey >= 18 && lastShot.ey <= 22
+
+            // Pre-fill next shot values
+            shot.value.dose = lastShot.dose
+            shot.value.yield = lastShot.yield
+
+            // Calculate next grind from action (if EY not good yet)
+            if (!fixedGrind.value) {
+              const eyError = 20 - lastShot.ey
+              const correction = 0.08 * eyError * (1.5 - (lastShot.grind - 1) * 0.1)
+              const clampedCorrection = Math.max(-1, Math.min(1, correction))
+              shot.value.grind = parseFloat(Math.max(1, Math.min(12, lastShot.grind - clampedCorrection)).toFixed(1))
+            } else {
+              shot.value.grind = lastShot.grind
+            }
+          } else {
+            shotNumber.value = 1
           }
+
+          // Auto-focus first input after onboarding is done (with slight delay for animation)
+          setTimeout(() => {
+            if (!showOnboarding.value) {
+              const firstInput = document.getElementById('input-grind')
+              if (firstInput) firstInput.focus()
+            }
+          }, 300)
         })
 
         return {
@@ -1851,7 +2086,8 @@ https://vongsagon-git.github.io/coffee-tune/`
           exportData, importData, clearAllData,
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
-          isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt
+          isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt,
+          haptic, navigateTo
         }
       }
     }).mount('#app')

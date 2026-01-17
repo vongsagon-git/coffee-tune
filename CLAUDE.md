@@ -62,6 +62,14 @@
 3. **FORMAT:** Output ต้องสวยงาม อ่านง่าย
 4. **NEVER STOP:** ห้ามหยุด ต้องวนลูปไปเรื่อยๆ
 5. **INCREMENTAL PUSH:** ทยอย push ทุกครั้งที่ทำ feature เสร็จ (อย่ารอ push ทีเดียวตอนจบ)
+6. **UPDATE MAP IMMEDIATELY:** เมื่อมีการเปลี่ยนแปลง task (เพิ่ม/แก้/เสร็จ) ต้อง update AXON_MAP.md ทันที ไม่ต้องรอจบ (ป้องกันลืมตอน context compact)
+7. **ENLIGHTEN → ADD TASK:** เมื่อตรัสรู้/พบปัญหา/มีไอเดียใหม่ระหว่างทาง ให้ add task ลง AXON_MAP.md ทันที
+8. **ZENITH CHECK:** ทุกครั้งที่ update MAP ต้องถามตัวเองว่า "ดีพอยัง? ลึกพอยัง? ตรวจสอบปัญหายัง? zenith ยัง?" แล้วเพิ่ม task ใหม่จากคำถามเหล่านี้
+
+### Task Source Tags:
+- `[e]` = ตรัสรู้ (Enlighten) - พบเองระหว่างทำงาน
+- `[c]` = concept - จากการวางแผน
+- `[h]` = user hint - จาก user บอก
 
 ---
 

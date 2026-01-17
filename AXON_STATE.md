@@ -2,13 +2,13 @@
 
 **Last Update:** 2026-01-17
 **Quality Score:** 100/100
-**Version:** v7.1 Edge Case Handling
+**Version:** v8.2 Advanced Accessibility
 
 ## 🎯 Current Execution (Resume Point)
 
-**Active Task:** v7.1 Edge Cases ✅
-**Progress:** C001 (15/15), C002 (8/8), C003 (8/8), Testing (12/12), C005 (6/6), C006 (4/4), C007 (4/4), C008 (1/1), C009 (2/2), C010 (4/4)
-**Last Action:** v7.1 - Fixed boundary edge cases in tuning recommendations
+**Active Task:** v8.2 Advanced Accessibility ✅
+**Progress:** C011 (All done) + Enlighten (Focus trap, Auto-focus, Reduced motion)
+**Last Action:** v8.2 - Focus trap, auto-focus, prefers-reduced-motion support
 
 ## 📋 Completed Features
 
@@ -74,6 +74,19 @@
 - ✅ Clear messages when at boundaries with alternative suggestions
 - ✅ Bump service worker cache to v5
 
+### C011 - v8.0-8.2 Universal App + Accessibility (COMPLETED)
+- ✅ iOS-style solid color system
+- ✅ SVG icons replacing all emoji
+- ✅ Clean Result/Recipe/Settings pages
+- ✅ Haptic feedback (light, medium, success, error)
+- ✅ Page transitions with animations (slide, shake, pop, pulse)
+- ✅ ARIA labels for all inputs and results
+- ✅ Screen reader support (sr-only hints)
+- ✅ Focus trap for modals (Tab cycling + Escape to close)
+- ✅ Auto-focus first input on page load
+- ✅ prefers-reduced-motion support
+- ✅ Service worker cache v10
+
 ## 🛠️ Active Tools Protocol
 
 - [x] Read/Write Files
@@ -84,8 +97,8 @@
 
 ## 📝 Context Dump
 
-**โปรเจค:** Coffee Dial-In Web App v7.1
-**Theme:** Starbucks-inspired (Green + Cream + Sharp)
+**โปรเจค:** Coffee Dial-In Web App v8.1
+**Theme:** Universal App (iOS-style solid colors)
 **Equipment:** Appia Life XT (12 bar), F64 Evo Pro (1-12)
 **Formula:** EY% = (Yield × TDS) / Dose
 **Perfect Zone:** EY 18-22%, TDS 8-12% (SCA Standards)
@@ -99,11 +112,19 @@
 - Non-linear sensitivity: finer grind = more sensitive
 - Aggressive steps early (0.5-1.0), fine-tune later (0.1-0.3)
 
-### Starbucks Color Palette
-- Primary Green: #006241
-- Light Green: #00754A
-- Mint: #D4E9E2
-- Cream: #F7F5F2
+### iOS Color Palette (v8.0+)
+- Primary Blue: #007AFF
+- Success Green: #34C759
+- Warning Orange: #FF9500
+- Error Red: #FF3B30
+- Dark Background: #1C1C1E
+- Light Background: #F5F5F5
+
+### Haptic Patterns (v8.1)
+- light: 10ms (tap)
+- medium: 25ms (button press)
+- success: [15, 50, 15] (double tap)
+- error: [50, 30, 50, 30, 50] (triple tap)
 
 ## 🚀 IGNITE Protocol
 
@@ -116,10 +137,12 @@
 ## 💡 ENLIGHTEN Discoveries
 
 สิ่งที่ค้นพบระหว่าง enlighten mode:
-- User ต้องการ UI สว่างแบบ Starbucks
-- User ต้องการมุมคม ไม่ round
+- User ต้องการ UI สว่างแบบ Starbucks → เปลี่ยนเป็น iOS Universal (v8.0)
+- User ต้องการมุมคม ไม่ round → เปลี่ยนเป็น 12-16px rounded (v8.0)
 - การจูนต้องเร็ว ประหยัดกาแฟ
 - ต้องเตือนให้บดทิ้งก่อน
+- Haptic feedback ช่วยให้ interaction รู้สึกดีขึ้น (v8.1)
+- ARIA labels สำคัญสำหรับ accessibility (v8.1)
 
 **Next:** Continue enlighten + Find more improvements
 
