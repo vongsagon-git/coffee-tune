@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wanwan-dialin-v14';
+const CACHE_NAME = 'wanwan-dialin-v15';
 
 // Install - cache essential files
 self.addEventListener('install', event => {

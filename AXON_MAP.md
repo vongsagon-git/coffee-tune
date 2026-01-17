@@ -238,6 +238,7 @@
 - [x] [e] Button loading states - DONE (Analyze button spinner)
 - [x] [e] Skeleton loading states - DONE (shimmer animation, dark mode support)
 - [x] [e] High contrast mode support - DONE (prefers-contrast: more media query)
+- [x] [e] Confetti celebration on Perfect Zone - DONE (50 particles, respects reduced-motion)
 
 ---
 
@@ -260,7 +261,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 8.5 High Contrast Mode
+**Current Version:** 8.6 Confetti Celebration
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -282,3 +283,4 @@
 | v8.3    | Button Loading States (Analyze spinner) | 2026-01-17 |
 | v8.4    | Skeleton Loading (shimmer + dark mode) | 2026-01-17 |
 | v8.5    | High Contrast Mode (prefers-contrast) | 2026-01-17 |
+| v8.6    | Confetti Celebration on Perfect Zone | 2026-01-17 |
