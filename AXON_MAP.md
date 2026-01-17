@@ -239,6 +239,7 @@
 - [x] [e] Skeleton loading states - DONE (shimmer animation, dark mode support)
 - [x] [e] High contrast mode support - DONE (prefers-contrast: more media query)
 - [x] [e] Confetti celebration on Perfect Zone - DONE (50 particles, respects reduced-motion)
+- [x] [e] Toast notification system - DONE (success/error/warning/info variants)
 
 ---
 
@@ -261,7 +262,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 8.6 Confetti Celebration
+**Current Version:** 8.7 Toast Notifications
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -284,3 +285,4 @@
 | v8.4    | Skeleton Loading (shimmer + dark mode) | 2026-01-17 |
 | v8.5    | High Contrast Mode (prefers-contrast) | 2026-01-17 |
 | v8.6    | Confetti Celebration on Perfect Zone | 2026-01-17 |
+| v8.7    | Toast Notifications (replaced alerts) | 2026-01-17 |

@@ -461,6 +461,49 @@
     @media (prefers-reduced-motion: reduce) {
       .confetti { animation: none; display: none; }
     }
+
+    /* ═══════════════════════════════════════════════════════════
+       TOAST NOTIFICATIONS
+    ═══════════════════════════════════════════════════════════ */
+    .toast-container {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .toast {
+      background: #1C1C1E;
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: toast-slide-up 0.3s ease-out, toast-fade-out 0.3s ease-out 2.7s forwards;
+      pointer-events: auto;
+    }
+    .toast.success { background: #34C759; }
+    .toast.error { background: #FF3B30; }
+    .toast.warning { background: #FF9500; }
+    .toast.info { background: #007AFF; }
+    @keyframes toast-slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes toast-fade-out {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .toast {
+        animation: none;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen">
@@ -1780,7 +1823,7 @@
               confirmationCount.value++
               if (confirmationCount.value >= 2) {
                 // Recipe confirmed! Save and reset
-                alert('🎉 สูตรยืนยันแล้ว! สกัดได้ Perfect 2 ครั้งติด')
+                showToast('สูตรยืนยันแล้ว! Perfect 2 ครั้งติด', 'success')
                 confirmationMode.value = false
                 confirmationCount.value = 0
                 confirmedRecipe.value = null
@@ -1895,6 +1938,7 @@ Made with WANWAN COFFEE TUNER`
           navigator.clipboard.writeText(recipe.trim()).then(() => {
             haptic('success')
             copied.value = true
+            showToast('Copied to clipboard!', 'success')
             setTimeout(() => { copied.value = false }, 2000)
           })
         }
@@ -1945,6 +1989,7 @@ https://vongsagon-git.github.io/coffee-tune/`
           localStorage.setItem('wanwan_recipes', JSON.stringify(recipes.value))
           haptic('success')
           recipeSaved.value = true
+          showToast('Recipe saved!', 'success')
           setTimeout(() => { recipeSaved.value = false }, 2000)
         }
 
@@ -2001,9 +2046,9 @@ https://vongsagon-git.github.io/coffee-tune/`
                   history.value = data.history
                   localStorage.setItem('wanwan_history', JSON.stringify(history.value))
                 }
-                alert('✅ Import สำเร็จ!')
+                showToast('Import สำเร็จ!', 'success')
               } catch (err) {
-                alert('❌ ไฟล์ไม่ถูกต้อง')
+                showToast('ไฟล์ไม่ถูกต้อง', 'error')
               }
             }
             reader.readAsText(file)
@@ -2026,7 +2071,7 @@ https://vongsagon-git.github.io/coffee-tune/`
               time: null, tds: null, brix: null, notes: '', rating: 0, flavors: []
             }
             page.value = 'input'
-            alert('✅ ล้างข้อมูลเรียบร้อย')
+            showToast('ล้างข้อมูลเรียบร้อย', 'success')
           }
         }
 
@@ -2116,6 +2161,26 @@ https://vongsagon-git.github.io/coffee-tune/`
             error: [50, 30, 50, 30, 50]  // Triple tap for error
           }
           navigator.vibrate(patterns[type] || patterns.light)
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'default') {
+          const container = document.querySelector('.toast-container') || (() => {
+            const c = document.createElement('div')
+            c.className = 'toast-container'
+            document.body.appendChild(c)
+            return c
+          })()
+
+          const toast = document.createElement('div')
+          toast.className = `toast ${type}`
+          toast.textContent = message
+          toast.setAttribute('role', 'alert')
+          toast.setAttribute('aria-live', 'polite')
+          container.appendChild(toast)
+
+          // Remove after animation
+          setTimeout(() => toast.remove(), 3000)
         }
 
         // Confetti celebration for Perfect Zone
