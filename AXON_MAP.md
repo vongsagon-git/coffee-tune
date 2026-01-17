@@ -241,6 +241,7 @@
 - [x] [e] Confetti celebration on Perfect Zone - DONE (50 particles, respects reduced-motion)
 - [x] [e] Toast notification system - DONE (success/error/warning/info variants)
 - [x] [e] Grind stepper buttons - DONE (+/- buttons with 0.1 step)
+- [x] [e] Long press for larger grind step - DONE (hold for 0.5 step + auto-repeat)
 
 ---
 
@@ -263,7 +264,7 @@
 ## 🗂️ Archive - Completed Versions
 
 **Live URL:** https://vongsagon-git.github.io/coffee-tune/
-**Current Version:** 8.8 Grind Stepper
+**Current Version:** 8.9 Long Press Support
 
 | Version | Features                         | Date       |
 | ------- | -------------------------------- | ---------- |
@@ -288,3 +289,4 @@
 | v8.6    | Confetti Celebration on Perfect Zone | 2026-01-17 |
 | v8.7    | Toast Notifications (replaced alerts) | 2026-01-17 |
 | v8.8    | Grind Stepper (+/- buttons) | 2026-01-17 |
+| v8.9    | Long Press Support (0.5 step + repeat) | 2026-01-17 |

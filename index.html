@@ -792,7 +792,14 @@
             <div>
               <label for="input-grind" class="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-2">Grind</label>
               <div class="flex items-center gap-1">
-                <button type="button" @click="adjustGrind(-0.1)" class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Decrease grind by 0.1">
+                <button type="button"
+                  @click="adjustGrind(-0.1)"
+                  @mousedown="startGrindLongPress(-1)"
+                  @mouseup="stopGrindLongPress"
+                  @mouseleave="stopGrindLongPress"
+                  @touchstart.prevent="startGrindLongPress(-1); adjustGrind(-0.1)"
+                  @touchend="stopGrindLongPress"
+                  class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Decrease grind (hold for faster)">
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
                 </button>
                 <input id="input-grind" type="number" v-model.number="shot.grind" step="0.1" min="1" max="12" placeholder="5.0"
@@ -800,7 +807,14 @@
                   :class="shot.grind && (shot.grind < 1 || shot.grind > 12) ? 'border-red-500' : ''"
                   aria-describedby="grind-hint"
                   @keydown.enter.prevent="document.getElementById('input-dose')?.focus()">
-                <button type="button" @click="adjustGrind(0.1)" class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Increase grind by 0.1">
+                <button type="button"
+                  @click="adjustGrind(0.1)"
+                  @mousedown="startGrindLongPress(1)"
+                  @mouseup="stopGrindLongPress"
+                  @mouseleave="stopGrindLongPress"
+                  @touchstart.prevent="startGrindLongPress(1); adjustGrind(0.1)"
+                  @touchend="stopGrindLongPress"
+                  class="w-10 h-14 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors touch-feedback" :class="darkMode && 'bg-dark-700 hover:bg-dark-600'" aria-label="Increase grind (hold for faster)">
                   <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
                 </button>
               </div>
@@ -1786,11 +1800,40 @@
         }
 
         // Stepper function for grind adjustment
+        // delta: 0.1 for tap, 0.5 for long press
+        let grindLongPressTimer = null
+        let grindRepeatInterval = null
+
         function adjustGrind(delta) {
           haptic('light')
           const current = shot.value.grind || 5.0
           const newValue = Math.round((current + delta) * 10) / 10 // Round to 1 decimal
           shot.value.grind = Math.max(1, Math.min(12, newValue))
+        }
+
+        function startGrindLongPress(delta) {
+          // Clear any existing timers
+          stopGrindLongPress()
+
+          // Start long press timer (300ms to trigger)
+          grindLongPressTimer = setTimeout(() => {
+            haptic('medium')
+            // Start repeating at 150ms intervals with 0.5 step
+            grindRepeatInterval = setInterval(() => {
+              adjustGrind(delta > 0 ? 0.5 : -0.5)
+            }, 150)
+          }, 300)
+        }
+
+        function stopGrindLongPress() {
+          if (grindLongPressTimer) {
+            clearTimeout(grindLongPressTimer)
+            grindLongPressTimer = null
+          }
+          if (grindRepeatInterval) {
+            clearInterval(grindRepeatInterval)
+            grindRepeatInterval = null
+          }
         }
 
         function analyze() {
@@ -2416,7 +2459,7 @@ https://vongsagon-git.github.io/coffee-tune/`
           showOnboarding, onboardingStep, finishOnboarding, skipOnboarding, showTutorial, resetOnboarding,
           darkMode, toggleDarkMode,
           isOnline, showInstallPrompt, installPWA, dismissInstallPrompt, canInstallPWA, deferredPrompt,
-          haptic, navigateTo, isAnalyzing, adjustGrind
+          haptic, navigateTo, isAnalyzing, adjustGrind, startGrindLongPress, stopGrindLongPress
         }
       }
     }).mount('#app')
